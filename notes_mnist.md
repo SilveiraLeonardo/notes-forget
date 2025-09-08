@@ -411,6 +411,116 @@ Comparing the regular net with the batch norm (which we saw has a smoother train
 
 It is also apparent the growing sparcity of the neural network.
 
+Asking ChatGPT insights about this growing sparcity, it gave me the following points:
+
+– Units specialize on small subsets of classes,  
+– biases go negative to silence them on everything else,  
+– previous tasks get overwritten so those units no longer fire even on their “old” classes.
+
+Can test this "biases go negative" to silence features of old classes, and compare this with the use of batch norm, that avoids this growing sparcity (as the follows).
+
+#### Investigating the weights/bias distribution with respect to the sparcity
+
+**Concurrent training**
+
+The histograms for biases and weights are well behaved and like you would have expected:
+
+![bias](./images_mnist/biases_histogram_concurrent.png)
+![weights](./images_mnist/weights_histogram_concurrent.png)
+
+**Sequential**
+
+*Task 1*
+
+![bias](./images_mnist/biases_histogram_sequence_task1.png)
+![weights](./images_mnist/weights_histogram_sequence_task1.png)
+
+*Task 2*
+
+![bias](./images_mnist/biases_histogram_sequence_task2.png)
+![weights](./images_mnist/weights_histogram_sequence_task2.png)
+
+*Task 3*
+
+![bias](./images_mnist/biases_histogram_sequence_task3.png)
+![weights](./images_mnist/weights_histogram_sequence_task3.png)
+
+*Task 4*
+
+![bias](./images_mnist/biases_histogram_sequence_task4.png)
+![weights](./images_mnist/weights_histogram_sequence_task4.png)
+
+*Task 5*
+
+![bias](./images_mnist/biases_histogram_sequence_task5.png)
+![weights](./images_mnist/weights_histogram_sequence_task5.png)
+
+Looking at the plots they seem very similar and offer little insight. The statistics of the weights seem in fact no to cchange meaningfully. But we put down some values for the biases, we start seeing something:
+
+| Regime    | Mean | Median | Std | Sparcity|
+| -------- | ------- |------- |------- |------- |
+| Concurrent  | 0.003    | 0.001 | 0.0487 | 0.5266 |
+| Seq, task 1 | 0.005     | 0.008 | 0.0393 | 0.4517 |
+| Seq, task 2 | -0.004    | -0.010 | 0.0495 | 0.7382 |
+| Seq, task 3 | -0.013    | -0.016 | 0.0483 | 0.8361 |
+| Seq, task 4 | -0.017    | -0.018 | 0.0534 | 0.8739 |
+| Seq, task 5 | -0.022    | -0.023 | 0.0577 | 0.8965 |
+
+Even thought the number are all small, the change that happens in the mean, and particularly in the median seem to be important: when the sparcity goes from 0.45 to 0.73 in task 2, the median change signs and increases by an order of magnitude. After this, the median is always negative and one order of magnitude larger for the sequential case than for the concurrent, and the same happens with the mean.
+
+It suggests that it is this slight change in the bias that pushes the values of the activations to the negative part of the relu, making the representations get sparser and sparser.
+
+As ChatGPT puts it:
+
+...emergent mechanism the network uses to reduce catastrophic interference: “I don’t want my old features firing all over the place on new tasks, so I’ll just push their biases down and only use a small subset of units.”
+
+...your bias‐histogram is a smoking gun: the network is solving the new tasks in part by turning down (i.e. deactivating) old units via negative bias shifts, and that is exactly what is driving your rising sparsity numbers.
+
+Looking at the latent representations learned by the model during sequential training, we can see that the network start with many features, but it start shutting them off: By task 3 it is already only using a handfull of features, and most of the neurons are shut off:
+
+*task 1*
+
+![latent](./images_mnist/mlp_sequential_task1_features.png)
+
+*task 2*
+
+![latent](./images_mnist/mlp_sequential_task2_features.png)
+
+*task 3*
+
+![latent](./images_mnist/mlp_sequential_task3_features.png)
+
+*task 4*
+
+![latent](./images_mnist/mlp_sequential_task4_features.png)
+
+*task 5*
+
+![latent](./images_mnist/mlp_sequential_task5_features.png)
+
+If we use batch norm, and plot the same representations for every task, we can see that the is not allowed to turn off its features. We hyphotese that this is why the loss using batch norm is much lower than without it. The features do not allowed the probabilities for the older classes to go to extremely small values such as 1e-9.
+
+*task 1*
+
+![latent](./images_mnist/mlp_sequential_task1_features_bn.png)
+
+*task 2*
+
+![latent](./images_mnist/mlp_sequential_task2_features_bn.png)
+
+*task 3*
+
+![latent](./images_mnist/mlp_sequential_task3_features_bn.png)
+
+*task 4*
+
+![latent](./images_mnist/mlp_sequential_task4_features_bn.png)
+
+*task 5*
+
+![latent](./images_mnist/mlp_sequential_task5_features_bn.png)
+
+
 **Batch norm**
 
 *task 1, [1, 2]*: val loss 0.015192, sparcity: 0.5112
@@ -443,9 +553,118 @@ If we force the batch norm network to be sparse, we get:
 
 The results are very similar, a little bit better perhaps, and it may be to the final distribution being more like a uniform, and not to something related to forgetting specifically.
 
+### Gradient
+
+Now looking at the gradients accumulated for each task, we can see a reflex of the sparcity of the weights.
+
+For the first task there is nothing out of ordinary:
+
+![gradients](./images_mnist/mlp_sequential_task1_grads.png)
+
+For the second task some interesting things begin to happen: Mainly, we can see that our output weight matrix is strongly updated (much more strongly than in our first task). We can already see slight traces of dead non-linearities on layer 2, but few yet.
+
+![gradients](./images_mnist/mlp_sequential_task2_grads.png)
+
+On task 3 we can see a lot of dead neurons, that are not being updated during training. The last layer is updated even more strongly than before. The second layer also have very high updates for the features it still has.
+
+![gradients](./images_mnist/mlp_sequential_task3_grads.png)
+
+Things get worse in task 4 and 5, with lots of neurons not being trained, and very high updates on all layers, but particurlaly on the second and on the final layers.
+
+![gradients](./images_mnist/mlp_sequential_task4_grads.png)
+
+![gradients](./images_mnist/mlp_sequential_task5_grads.png)
+
+**Comparing with the net with BN**
+
+If we compare the same gradients with the ones from the net with batch norm, for layers 4 and 5 that were the most dramatic:
+
+We can see that the net has a lot of features to learn, particularly on layer 2. Also, the updates for layers 1 and 2 are in a very healthy range, and even thought the updates for layer 3 are in the high side, it is still much lower than before (5 versus 40).
+
+![gradients](./images_mnist/mlp_sequential_task4_grads_bn.png)
+
+![gradients](./images_mnist/mlp_sequential_task5_grads_bn.png)
+
+**Sparsity**: If I just add a sparsity penalty for my activations, I get a picture as bad as for the normal training - even though my validation loss gets smaller. If I add sparsity + bn, it gets a little better, with less dead zone in my weight matrix that dont learn anything.
+
+Example of gradients for the fourth task:
+
+![gradients](./images_mnist/mlp_sequential_task4_grads_bn_sparse.png)
+
+### Representation strength and forgetting
+
+I experiment with three different forms of measuring the strength and the decay of the representation as training goes on and more tasks are added:
+
+*Method 1: comparing the representation of a class with the representations of all classes*
+
+```
+for c in seen:
+    m_all = all_repr.mean(axis=0)
+    std_all = all_repr.std(axis=0)
+    m_class = all_repr[all_labels==c].mean(axis=0)
+    saliency = (m_class - m_all)/(std_all + 1e-9)
+    strength = np.linalg.norm(saliency)
+```
+
+*Method 2: linear probing - strength of the coefficients*
+
+```
+# use the coefficients of the linear classifier to compute per-class strength
+W = clf.coef_ # shape (n_classes, feat_dim)
+
+# in the binary case, the strenth of both classes is the same
+if W.shape[0] == 1:
+    w_c = W[0]
+    strength = np.linalg.norm(w_c)
+    for c in seen:
+        print(f"Class {c}, strength, coeff weight norm: {strength:.4f}")
+else:
+    for i, c in enumerate(seen):
+        w_c = W[i]
+        strength = np.linalg.norm(w_c)
+        print(f"Class {c}, strength, coeff weight norm: {strength:.4f}")
+```
+
+*Method 3: linear probing - classifier accuracy*
+
+```
+for c in seen:
+    mask = (y_test == c)
+    if mask.sum() > 0:
+        acc_c = (y_pred[mask] == y_test[mask]).mean()
+        print(f"Class {c} accuracy on linear probing: {acc_c:.4f}")
+```
+
+The results were inconsistent between the methods, so I chose method 3 which is the most intuitive of the three.
+
+**Basic sequential training**
+
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9459 | 0.8643 | 0.6941 | 0.7190 |
+| Class 1    | 0.9953 | 0.9802 | 0.9612 | 0.8982 | 0.8973 |
+| Class 2    | 1.0000 | 0.9014 | 0.7526 | 0.6059 | 0.7876 |
+| Class 3    |        | 0.9219 | 0.7941 | 0.3401 | 0.6275 |
+| Class 4    |        | 0.9807 | 0.9144 | 0.8009 | 0.6393 |
+| Class 5    |        |        | 0.8159 | 0.4318 | 0.3149 |  
+| Class 6    |        |        | 0.9455 | 0.7676 | 0.7604 |  
+| Class 7    |        |        |        | 0.9219 | 0.8916 |  
+| Class 8    |        |        |        | 0.7295 | 0.5902 |  
+| Class 9    |        |        |        |        | 0.6987 |  
+| Class 0    |        |        |        |        | 0.9141 | 
+
+What is very interesting is that the decay is not as bad as I expected, and overall the representations learned are not too bad: the classifier can get around 72% accuracy. Which is worse than the 98% one can get training the neural net concurrently, but is much better than the sequential learning result.
+
+Particularly, the representations of the classes remain in the network, some of them strongly, such as for the number 1, that is trained in the first task, and by the fifth task the linear probe still can classify it 89% correctly.
+
+This suggests that the representation still exist in the network, but the prediction head ignores them, in favor of predicting only the classes presented in the last class. This effect could be seen in the gradients observed from task to task, where the last task is highly modified in order to classify the current classes and ignore the classes from the previous task.
+
+![probing](./images_mnist/linear_probing.png)
+
 ## Orthogonal Gradient Descent
 
-Train to train the neural net until it achieves 0.98 accuracy on each task.
+Train the neural net until it achieves 0.98 accuracy on each task.
 
 The method is hard to get it right, because the learning rate needs to be very small for it to work, and SGD seems to be preferable than Adam. Using the simple net, without normalization, it did not make any difference for the validation accuracy, but the losses were somehow smaller, because the net is giving more probability for the correct classes (even though not enough probability to pick them)
 
@@ -500,6 +719,8 @@ registering gradients for the task
 4 gradients stored
 
 Sparcity analysis - population sparcity: 0.3855
+
+It is interesting that it did not allow the network to grow sparse over time, as it happened with the normal training. My intuition is that it has a relation with the probabilities of the previous classes not shrinking to very small sizes (e.g. 10e-9), a consequently resulting in the smaller loss)
 
 **task 5, [9, 0]**
 
@@ -643,7 +864,7 @@ So we can see there is a definite improvement here.
 
 **Second experiment**
 
-If we do force the net to go above 95% accuracy on the training set of every task, the final validation accuracy on the fifth task 36.9%, and the latent space looks nices:
+If we do not force the net to go above 95% accuracy on the training set of every task, the final validation accuracy on the fifth task 36.9%, and the latent space looks nices:
 
 5, train loss 0.917523, train acc 0.961328, val loss 1.804248, val acc 0.369000
 
