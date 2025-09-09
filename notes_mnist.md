@@ -498,7 +498,11 @@ Looking at the latent representations learned by the model during sequential tra
 
 ![latent](./images_mnist/mlp_sequential_task5_features.png)
 
-If we use batch norm, and plot the same representations for every task, we can see that the is not allowed to turn off its features. We hyphotese that this is why the loss using batch norm is much lower than without it. The features do not allowed the probabilities for the older classes to go to extremely small values such as 1e-9.
+If we force the network to have sparse representations using a penaly, we get the sparse representation from the beginning (task 1), and one thing that is different from this spontanous sparsity is that the values of the non-sparse features are much lower (more well behaved). This is probably a result of using the penalty itself, which does not allow the representation to grow uncheked. For instance, for the features for a batch of examples in the fifth task, the values of the features are about 1/10th of before:
+
+![latent](./images_mnist/mlp_sequential_task5_features_sparse.png)
+
+If we use batch norm (no sparsity penalty), and plot the same representations for every task, we can see that the is not allowed to turn off its features. We hyphotese that this is why the loss using batch norm is much lower than without it. The features do not allowed the probabilities for the older classes to go to extremely small values such as 1e-9.
 
 *task 1*
 
@@ -662,6 +666,130 @@ This suggests that the representation still exist in the network, but the predic
 
 ![probing](./images_mnist/linear_probing.png)
 
+**Training with Batch Normalization**
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9582 | 0.9288 | 0.9220 | 0.8925 |
+| Class 1    | 0.9953 | 0.9802 | 0.9709 | 0.9779 | 0.9598 |
+| Class 2    | 1.0000 | 0.9202 | 0.9175 | 0.8670 | 0.9067 |
+| Class 3    |        | 0.9479 | 0.8824 | 0.8680 | 0.8775 |
+| Class 4    |        | 0.9855 | 0.9572 | 0.9722 | 0.8798 |
+| Class 5    |        |        | 0.8756 | 0.8239 | 0.7624 |
+| Class 6    |        |        | 0.9703 | 0.9730 | 0.9479 |
+| Class 7    |        |        |        | 0.9688 | 0.9261 |
+| Class 8    |        |        |        | 0.9082 | 0.8470 |
+| Class 9    |        |        |        |        | 0.8619 |
+| Class 0    |        |        |        |        | 0.9394 |
+
+The result with batch norm is very interesting: we can see that the network does conserve significantly its hidden representation, considerably better than without batch norm: from 0.7190 to 0.8925, reducing the difference to the 0.9646 achieved in concurrent learning.
+
+This suggest the conservation of the features resulting from the BN acting is beneficial to the keeping of the representational power of the network, and that in this case the forgetting of the network is even more a role of the prediction head - therefore of a more shallow form.
+
+![probing](./images_mnist/linear_probing_bn.png)
+
+**Training with sparsity**
+
+If we add a sparse penalty `l1=1.0` to the representations, we see that the forgetting is more complete: The network cannot keep good representations of past classes. In fact, 3 classes have zero accuracy at the end of the fifth task, and the overall accuracy of the classifies is 0.3140, and the network consistently does considerably better on the newly introduced classes (the class 5 is the exception, that seems to be specially hard to predict).
+
+It suggest that forcing the sparcity from the beginning in the network does not allow it to learn features reach enough or numerous enough to represent the several classes without overwritting it.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9952 | 0.6450 | 0.5938 | 0.4863 | 0.3140 |
+| Class 1    | 0.9907 | 0.4901 | 0.8592 | 0.7832 | 0.1830 |
+| Class 2    | 1.0000 | 0.2394 | 0.3144 | 0.0739 | 0.4093 |
+| Class 3    |        | 0.8802 | 0.7451 | 0.4365 | 0.0196 |
+| Class 4    |        | 0.9952 | 0.4973 | 0.5602 | 0.0000 |
+| Class 5    |        |        | 0.2338 | 0.0398 | 0.0000 |
+| Class 6    |        |        | 0.8861 | 0.1189 | 0.3750 |
+| Class 7    |        |        |        | 0.9323 | 0.5123 |
+| Class 8    |        |        |        | 0.8309 | 0.0000 |
+| Class 9    |        |        |        |        | 0.6360 |
+| Class 0    |        |        |        |        | 0.8889 |
+
+![probing](./images_mnist/linear_probing_sparse.png)
+
+**Training with BN + sparsity**
+
+Adding batch norm and sparsity is considerably better than sparsity alone. Batch norm seems to counter-balance, not allowing it to shrink all information. But the result is considerably be worse than BN alone, and slighly worse than just training the basic net.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9533 | 0.8802 | 0.7984 | 0.6920 |
+| Class 1    | 0.9953 | 0.9752 | 0.9515 | 0.9204 | 0.9420 |
+| Class 2    | 1.0000 | 0.9014 | 0.8041 | 0.6355 | 0.6943 |
+| Class 3    |        | 0.9427 | 0.8284 | 0.8274 | 0.6471 |
+| Class 4    |        | 0.9952 | 0.9305 | 0.8750 | 0.4754 |
+| Class 5    |        |        | 0.7910 | 0.5341 | 0.2983 |
+| Class 6    |        |        | 0.9752 | 0.8649 | 0.7604 |
+| Class 7    |        |        |        | 0.9583 | 0.7488 |
+| Class 8    |        |        |        | 0.7343 | 0.5902 |
+| Class 9    |        |        |        |        | 0.7155 |
+| Class 0    |        |        |        |        | 0.9545 |
+
+![probing](./images_mnist/linear_probing_bn_sparse.png)
+
+**Training with dropout**
+
+Adding dropout `p=0.2` with the basic training made things worse. The network showed it usual sign of increasing sparsity with training, and dropout cutting its capacity even more suggests for us the cause of the worse performance.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9595 | 0.7580 | 0.6142 | 0.6415 |
+| Class 1    | 0.9953 | 0.9802 | 0.9126 | 0.8761 | 0.9241 |
+| Class 2    | 1.0000 | 0.9577 | 0.7268 | 0.1921 | 0.6062 |
+| Class 3    |        | 0.9115 | 0.7108 | 0.5584 | 0.5637 |
+| Class 4    |        | 0.9855 | 0.8182 | 0.7454 | 0.3497 |
+| Class 5    |        |        | 0.5124 | 0.3693 | 0.3646 |
+| Class 6    |        |        | 0.8663 | 0.6595 | 0.8542 |
+| Class 7    |        |        |        | 0.9062 | 0.5567 |
+| Class 8    |        |        |        | 0.5556 | 0.6612 |
+| Class 9    |        |        |        |        | 0.5732 |
+| Class 0    |        |        |        |        | 0.9040 |
+
+![probing](./images_mnist/linear_probing_dropout.png)
+
+**Training with BN + dropout**
+
+We postulate that dropout might be beneficial in conjunction with BN - once BN avoids the growing sparcity in the network, allowing capacity enough for the dropping of features of dropout, and also avoiding features to grow to unduly values, as it happens in the basic training and happend with dropout as well - which may make generalization for previous classes harder.
+
+The results suggest that dropout + BN did ripped most of the benefits we thought it would. The result was in line if a little worse than using BN alone, but it may have other benefits resulting from avoiding the co-adaptation of neurons that we cannot observe just yet.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9952 | 0.9693 | 0.9363 | 0.9170 | 0.8835 |
+| Class 1    | 0.9953 | 0.9851 | 0.9563 | 0.9735 | 0.9598 |
+| Class 2    | 0.9951 | 0.9343 | 0.9175 | 0.8621 | 0.8860 |
+| Class 3    |        | 0.9688 | 0.9020 | 0.8883 | 0.8676 |
+| Class 4    |        | 0.9903 | 0.9786 | 0.9583 | 0.8634 |
+| Class 5    |        |        | 0.8806 | 0.8125 | 0.7845 |
+| Class 6    |        |        | 0.9851 | 0.9730 | 0.9271 |
+| Class 7    |        |        |        | 0.9635 | 0.8966 |
+| Class 8    |        |        |        | 0.8889 | 0.8525 |
+| Class 9    |        |        |        |        | 0.8494 |
+| Class 0    |        |        |        |        | 0.9343 |
+
+![probing](./images_mnist/linear_probing_bn_dropout.png)
+
+**Training with BN + dropout + sparsity**
+
+For completeness, we did the same thing with BN, dropout and sparsity. The results were worse, suggesting that dropout and sparcity may have reduced the capacity of the net too much to keep good representations for everything.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9521 | 0.8727 | 0.8196 | 0.7065 |
+| Class 1    | 0.9953 | 0.9802 | 0.9272 | 0.9159 | 0.9107 |
+| Class 2    | 1.0000 | 0.8967 | 0.7938 | 0.6355 | 0.6528 |
+| Class 3    |        | 0.9427 | 0.8627 | 0.8173 | 0.5392 |
+| Class 4    |        | 0.9903 | 0.8770 | 0.8241 | 0.5191 |
+| Class 5    |        |        | 0.8060 | 0.7159 | 0.4420 |
+| Class 6    |        |        | 0.9653 | 0.8919 | 0.8333 |
+| Class 7    |        |        |        | 0.9375 | 0.8768 |
+| Class 8    |        |        |        | 0.8068 | 0.5902 |
+| Class 9    |        |        |        |        | 0.6987 |
+| Class 0    |        |        |        |        | 0.9343 |
+
 ## Orthogonal Gradient Descent
 
 Train the neural net until it achieves 0.98 accuracy on each task.
@@ -733,6 +861,114 @@ registering gradients for the task
 ![probs](./images_mnist/sequential_orthogonal_sgd_task4_probs.png)
 
 ![latent](./images_mnist/sequential_orthogonal_sgd_task5_latent.png)
+
+**Working with Adam**
+
+Working with Adam gives a much faster converge, but it may not be ideal, once you probably are violating more stronly the locality assumption. Training until the net achieves 98% on the current task does not afford any improvement in the overall accuracy than using the regular training, but a feel interesting things can be observed.
+
+```
+lr = 1e-4
+optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+
+lambda_l1 = 0.0
+
+for task in tasks:
+    ...
+    # decreasing lr for tasks other than the first
+    if previous is not None:
+        for group in optimizer.param_groups:
+            group['lr'] = lr / 5
+```
+
+1. The method does not allow sparcity to grow:
+
+task 1, [3, 4]
+
+Sparcity analysis - population sparcity: 0.3378
+
+task 2, [3, 4]
+
+Sparcity analysis - population sparcity: 0.2514
+
+task 3, [5, 6]
+
+Sparcity analysis - population sparcity: 0.2317
+
+task 4, [7, 8]
+
+Sparcity analysis - population sparcity: 0.2496
+
+task 5, [9, 0]
+
+Sparcity analysis - population sparcity: 0.2805
+
+We can observe it clearly looking at the features of the net at the fifth task:
+
+![features](./images_mnist/sequential_orthogonal_adam_task5_features.png)
+
+2. The method retains well information, but as the net is overtrained in the current task, the performance in the previous task do not have a plateou where they stop decreasing. So as long as you are training in the current task, the performance on the previous tasks will continue approaching zero. This is different from humans, who have a plateou, and usually do not forget all the information.
+
+This may be do the network continue updating the classification layer, decreasing ever more the probabilities of predicting a class that is not present in the current task. But if this is the case, the representation of the older classes are still lingering inside the network, are just not been expressed.
+
+This can be seen at the forgetting curves:
+
+Task 1:
+
+![features](./images_mnist/sequential_orthogonal_adam_task1_forgetting_curve.png)
+
+Task 2:
+
+![features](./images_mnist/sequential_orthogonal_adam_task2_forgetting_curve.png)
+
+Task 3:
+
+![features](./images_mnist/sequential_orthogonal_adam_task3_forgetting_curve.png)
+
+Task 4:
+
+![features](./images_mnist/sequential_orthogonal_adam_task4_forgetting_curve.png)
+
+Looking at the stength of the representation was pretty remarkable:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9928 | 0.9693 | 0.9447 | 0.9201 | 0.9165 |
+| Class 1    | 0.9907 | 0.9901 | 0.9903 | 0.9867 | 0.9732 |
+| Class 2    | 0.9951 | 0.9390 | 0.9588 | 0.8818 | 0.9067 |
+| Class 3    |        | 0.9635 | 0.8873 | 0.8883 | 0.8775 |
+| Class 4    |        | 0.9855 | 0.9572 | 0.9583 | 0.9235 |
+| Class 5    |        |        | 0.9154 | 0.8636 | 0.8785 |
+| Class 6    |        |        | 0.9604 | 0.9514 | 0.9531 |
+| Class 7    |        |        |        | 0.9323 | 0.9360 |
+| Class 8    |        |        |        | 0.8841 | 0.8907 |
+| Class 9    |        |        |        |        | 0.9038 |
+| Class 0    |        |        |        |        | 0.9141 |
+
+The results were better than with BN with the regular training (which was the best result so far), and it showed how much the representation is still held in the NN - and that the orthogonalization indeed helps the network not to remove/overwrite features important for previous task - altought it is not strong enough to avoid it changing the output layer.
+
+![representation](./images_mnist/linear_probing_orthogonal_adam.png)
+
+Comparing with the final network accuracies between the network and the linear probing we see a big gap, that is much concentrated on the prediction head, and therefore there is a suggestion that it is shallow sort:
+
+task 1, [1, 2]
+
+1, train loss 0.048748, train acc 0.985961, val loss 0.040498, val acc 0.989938
+
+task 2, [3, 4]
+
+4, train loss 0.088861, train acc 0.983989, val loss 1.716111, val acc 0.478485
+
+task 3, [5, 6]
+
+13, train loss 0.061551, train acc 0.980295, val loss 4.737431, val acc 0.312720
+
+task 4, [7, 8]
+
+5, train loss 0.084525, train acc 0.981145, val loss 3.660242, val acc 0.250187
+
+task 5, [9, 0]
+
+3, train loss 0.094343, train acc 0.981575, val loss 3.720836, val acc 0.196400
 
 ### Adding batch normalization
 
@@ -861,6 +1097,105 @@ If we compare the losses of the regular training, training with bn, and training
 *task 5*, val loss*: 9.311 --- 5.838 --- 1.969
 
 So we can see there is a definite improvement here.
+
+**Working with Batch Norm and Adam**
+
+Evaluating the strenth of the representation, we can see that the linear probe got a slighter smaller accuracy from the representations of the model.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9880 | 0.9668 | 0.9397 | 0.9151 | 0.8900 |
+| Class 1    | 0.9860 | 0.9950 | 0.9709 | 0.9735 | 0.9643 |
+| Class 2    | 0.9901 | 0.9437 | 0.9227 | 0.9163 | 0.8860 |
+| Class 3    |        | 0.9479 | 0.8971 | 0.8376 | 0.8480 |
+| Class 4    |        | 0.9807 | 0.9733 | 0.9630 | 0.8415 |
+| Class 5    |        |        | 0.9104 | 0.8239 | 0.8011 |
+| Class 6    |        |        | 0.9653 | 0.9676 | 0.9531 |
+| Class 7    |        |        |        | 0.9531 | 0.9163 |
+| Class 8    |        |        |        | 0.8696 | 0.8251 |
+| Class 9    |        |        |        |        | 0.8787 |
+| Class 0    |        |        |        |        | 0.9646 |
+
+![representation](./images_mnist/linear_probing_orthogonal_adam_bn.png)
+
+But batch norm gave much smoother forgetting curves, and it allowed the model for the first time to retain some information and get a final accuracy better than the baseline (around 10 p.p., the same as trainig with SGD):
+
+task 1, [1, 2]
+
+1, train loss 0.406158, train acc 0.989258, val loss 0.272051, val acc 0.988979
+
+task 2, [3, 4]
+
+6, train loss 0.548262, train acc 0.981587, val loss 0.821321, val acc 0.746988
+
+Looking at the forgetting curve, we can see much more resilience than before to forgetting - it forgets surely, but slowly. This suggest that BN is providing a smoother loss landscape, where moving the the direction of the new minima is not outright a bad position for the last task.
+
+![forgetting](./images_mnist/sequential_orthogonal_adam_task1_forgetting_curve_bn.png)
+
+task 3, [5, 6]
+
+12, train loss 0.380191, train acc 0.982625, val loss 1.631609, val acc 0.379923
+
+![forgetting](./images_mnist/sequential_orthogonal_adam_task3_forgetting_curve_bn.png)
+
+task 4, [7, 8]
+
+8, train loss 0.625929, train acc 0.981641, val loss 1.653679, val acc 0.364726
+
+![forgetting](./images_mnist/sequential_orthogonal_adam_task4_forgetting_curve_bn.png)
+
+task 5, [9, 0]
+
+10, train loss 0.602138, train acc 0.981980, val loss 1.969599, val acc 0.295300
+
+![forgetting](./images_mnist/sequential_orthogonal_adam_task5_forgetting_curve_bn.png)
+
+**BN + Sparcity**
+
+Adding sparcity `lambda_l1 = 1.0`:
+
+The classification accuracy with the linear probe was pretty much the same, and the validation accuracy of the network was slightly better.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9904 | 0.9717 | 0.9405 | 0.9139 | 0.8890 |
+| Class 1    | 0.9814 | 0.9802 | 0.9709 | 0.9690 | 0.9688 |
+| Class 2    | 1.0000 | 0.9671 | 0.9433 | 0.8916 | 0.9119 |
+| Class 3    |        | 0.9479 | 0.8971 | 0.8528 | 0.8088 |
+| Class 4    |        | 0.9903 | 0.9733 | 0.9444 | 0.8142 |
+| Class 5    |        |        | 0.8905 | 0.8295 | 0.8674 |
+| Class 6    |        |        | 0.9703 | 0.9784 | 0.9271 |
+| Class 7    |        |        |        | 0.9688 | 0.9163 |
+| Class 8    |        |        |        | 0.8647 | 0.8579 |
+| Class 9    |        |        |        |        | 0.8452 |
+| Class 0    |        |        |        |        | 0.9646 |
+
+task 5, [9, 0]
+
+14, train loss 1.253531, train acc 0.983296, val loss 1.983489, val acc 0.304800
+
+**BN + Dropout**
+
+Using BN and dropout gave similar results in the linear probe test, but slightly worse network accuracy:
+
+task 5, [9, 0]
+
+17, train loss 0.343513, train acc 0.980462, val loss 2.239344, val acc 0.265100
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9856 | 0.9631 | 0.9322 | 0.9064 | 0.8915 |
+| Class 1    | 0.9814 | 0.9802 | 0.9757 | 0.9735 | 0.9554 |
+| Class 2    | 0.9901 | 0.9437 | 0.8608 | 0.8818 | 0.8860 |
+| Class 3    |        | 0.9375 | 0.9216 | 0.8274 | 0.8382 |
+| Class 4    |        | 0.9903 | 0.9733 | 0.9583 | 0.8579 |
+| Class 5    |        |        | 0.8856 | 0.7955 | 0.8177 |
+| Class 6    |        |        | 0.9752 | 0.9622 | 0.9531 |
+| Class 7    |        |        |        | 0.9635 | 0.9212 |
+| Class 8    |        |        |        | 0.8696 | 0.8634 |
+| Class 9    |        |        |        |        | 0.8577 |
+| Class 0    |        |        |        |        | 0.9545 |
+
 
 **Second experiment**
 
