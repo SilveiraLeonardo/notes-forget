@@ -228,6 +228,159 @@ But what was funny is that it gave very elongated shapes for the latent space (a
 
 ![latent](./images_mnist/mlp_sequential_task5_latent_drop.png)
 
+### Sequential training with weight decay
+
+The use of weight decay was not very successfull at first, but it may be more to it.
+
+It was not able to arrest the growing sparsity, and resulted in very few feature with high activation values.
+
+The loss of the network was less than using the regular training, but the network also had more difficulty training, specially for high penality values (e.g., 1.0, 5.0).
+
+As the penality values increased, the representation of the latent space got worse (as measured by the linear probe), althought it was better than the one from the regular training at first, with l2 value of 0.1 (instead of the default value of 0.01).
+
+* Lambda l2: 0.1
+
+**task 1, [1, 2]**
+
+1, train loss 0.024787, train acc 0.992274, val loss 0.017167, val acc 0.994729
+
+Sparcity analysis - population sparcity: 0.4906
+
+**task 2, [3, 4]**
+
+1, train loss 0.017797, train acc 0.994896, val loss 9.147215, val acc 0.484632
+
+Sparcity analysis - population sparcity: 0.7679
+
+**task 3, [5, 6]**
+
+1, train loss 0.051606, train acc 0.982413, val loss 10.311390, val acc 0.313558
+
+Sparcity analysis - population sparcity: 0.8402
+
+**task 4, [7, 8]**
+
+1, train loss 0.020093, train acc 0.993649, val loss 9.786181, val acc 0.252186
+
+Sparcity analysis - population sparcity: 0.8803
+
+**task 5, [9, 0]**
+
+1, train loss 0.020455, train acc 0.993622, val loss 10.147829, val acc 0.198200
+
+Sparcity analysis - population sparcity: 0.8938
+
+*This was a little bit of improvement over the version with the default weight decay value: 0.71 acc on task 5*
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9521 | 0.8308 | 0.7459 | 0.7660 |
+| Class 1    | 0.9953 | 0.9752 | 0.9272 | 0.9027 | 0.9152 |
+| Class 2    | 1.0000 | 0.9155 | 0.6959 | 0.5074 | 0.8083 |
+| Class 3    |        | 0.9271 | 0.7892 | 0.6701 | 0.6569 |
+| Class 4    |        | 0.9903 | 0.8824 | 0.8426 | 0.7268 |
+| Class 5    |        |        | 0.8209 | 0.5227 | 0.5856 |
+| Class 6    |        |        | 0.8663 | 0.8000 | 0.8750 |
+| Class 7    |        |        |        | 0.9271 | 0.8177 |
+| Class 8    |        |        |        | 0.7536 | 0.6940 |
+| Class 9    |        |        |        |        | 0.6653 |
+| Class 0    |        |        |        |        | 0.8990 |
+
+* Lambda l2: 1.0
+
+**task 1, [1, 2]**
+
+1, train loss 0.024242, train acc 0.992556, val loss 0.016717, val acc 0.995208
+
+Sparcity analysis - population sparcity: 0.4586
+
+**task 2, [3, 4]**
+
+1, train loss 0.017370, train acc 0.994996, val loss 4.635416, val acc 0.484878
+
+Sparcity analysis - population sparcity: 0.7733
+
+**task 3, [5, 6]**
+
+1, train loss 0.050839, train acc 0.983473, val loss 6.033093, val acc 0.313055
+
+Sparcity analysis - population sparcity: 0.7696
+
+**task 4, [7, 8]**
+
+1, train loss 0.025013, train acc 0.991664, val loss 6.586073, val acc 0.251811
+
+Sparcity analysis - population sparcity: 0.8913
+
+**task 5, [9, 0]**
+
+1, train loss 0.022257, train acc 0.993420, val loss 7.834760, val acc 0.198200
+
+Sparcity analysis - population sparcity: 0.8903
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9545 | 0.7797 | 0.6866 | 0.6815 |
+| Class 1    | 0.9907 | 0.9752 | 0.9466 | 0.9159 | 0.8884 |
+| Class 2    | 1.0000 | 0.9296 | 0.6392 | 0.5419 | 0.5855 |
+| Class 3    |        | 0.9271 | 0.7206 | 0.2944 | 0.6029 |
+| Class 4    |        | 0.9855 | 0.8503 | 0.7639 | 0.4809 |
+| Class 5    |        |        | 0.6318 | 0.5568 | 0.3812 |
+| Class 6    |        |        | 0.8861 | 0.8108 | 0.6875 |
+| Class 7    |        |        |        | 0.9219 | 0.8276 |
+| Class 8    |        |        |        | 0.6522 | 0.7705 |
+| Class 9    |        |        |        |        | 0.6192 |
+| Class 0    |        |        |        |        | 0.9192 |
+
+* Lambda l2: 5.0
+
+**task 1, [1, 2]**
+
+1, train loss 0.034112, train acc 0.990106, val loss 0.033527, val acc 0.989459
+
+Accuracy larger than 0.98, breaking from training...
+
+Sparcity analysis - population sparcity: 0.4263
+
+**task 2, [3, 4]**
+
+1, train loss 0.033530, train acc 0.992495, val loss 2.765567, val acc 0.483649
+
+Sparcity analysis - population sparcity: 0.7230
+
+**task 3, [5, 6]**
+
+2, train loss 0.073173, train acc 0.980824, val loss 4.213092, val acc 0.312888
+
+Sparcity analysis - population sparcity: 0.8075
+
+**task 4, [7, 8]**
+
+1, train loss 0.038519, train acc 0.991962, val loss 4.627779, val acc 0.251686
+
+Sparcity analysis - population sparcity: 0.8785
+
+**task 5, [9, 0]**
+
+1, train loss 0.042587, train acc 0.992306, val loss 5.418901, val acc 0.197800
+
+Sparcity analysis - population sparcity: 0.9204
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9856 | 0.7764 | 0.7035 | 0.5774 | 0.5885 |
+| Class 1    | 0.9814 | 0.8911 | 0.9126 | 0.8673 | 0.8661 |
+| Class 2    | 0.9901 | 0.4742 | 0.4845 | 0.4433 | 0.4249 |
+| Class 3    |        | 0.7760 | 0.7794 | 0.1269 | 0.3382 |
+| Class 4    |        | 0.9758 | 0.6471 | 0.7778 | 0.4973 |
+| Class 5    |        |        | 0.5075 | 0.3466 | 0.2155 |
+| Class 6    |        |        | 0.8713 | 0.4541 | 0.4010 |
+| Class 7    |        |        |        | 0.8698 | 0.8177 |
+| Class 8    |        |        |        | 0.6473 | 0.6339 |
+| Class 9    |        |        |        |        | 0.6695 |
+| Class 0    |        |        |        |        | 0.9242 |
+
+
 ## Trying to increase sparsity
 
 ### Concurrent training
@@ -789,6 +942,91 @@ For completeness, we did the same thing with BN, dropout and sparsity. The resul
 | Class 8    |        |        |        | 0.8068 | 0.5902 |
 | Class 9    |        |        |        |        | 0.6987 |
 | Class 0    |        |        |        |        | 0.9343 |
+
+#### Forward transfer - representation strength for future tasks
+
+We can see in this experiment that the network had pretty much learned the features necessary to separate unseen digits (using 0 and 9 as a proxy) from the first task. It means that for the next tasks, the most it had to do was to try to make the current classes more far apart - as we can observe was the case for the fifth task, where the digits [9, 0] were finally seen on training - and change the weight in the classification layer, so that the new classes are predicted.
+
+* To make sure this was not because of some charactersitics of 1's and 2's that make them specially good prototypes, the same experiment was done again starting training with [3, 8] and [1, 4], and the same results were obtained. 
+
+**Task 1, [1, 2]**
+
+Linear probe overall acc: 0.9774
+
+Class 9 accuracy on linear probing: 0.9848
+
+Class 0 accuracy on linear probing: 0.9703
+
+![latent](./images_mnist/linear_probing_bn_unseen_task1.png)
+
+**Task 2, [3, 4]**
+
+Linear probe overall acc: 0.9950
+
+Class 9 accuracy on linear probing: 0.9949
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_unseen_task2.png)
+
+**Task 3, [5, 6]**
+
+Linear probe overall acc: 0.9900
+
+Class 9 accuracy on linear probing: 0.9898
+
+Class 0 accuracy on linear probing: 0.9901
+
+![latent](./images_mnist/linear_probing_bn_unseen_task3.png)
+
+**Task 4, [7, 8]**
+
+Linear probe overall acc: 0.9950
+
+Class 9 accuracy on linear probing: 0.9949
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_unseen_task4.png)
+
+**Task 5, [9, 0]**
+
+Linear probe overall acc: 0.9975
+
+Class 9 accuracy on linear probing: 1.0000
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_seen_task5.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|-------- |------- |------- |------- |------- |
+| Classifier | 0.9774 | 0.9950 | 0.9900 | 0.9950 | 0.9975 |
+| Class 0    | 0.9703 | 0.9950 | 0.9901 | 0.9950 | 0.9950 |
+| Class 9    | 0.9848 | 0.9949 | 0.9898 | 0.9949 | 1.0000 |
+
+
+![latent](./images_mnist/linear_probing_bn_unseen_progress.png)
+
+##### Performance on all classes
+
+It seems that the features that are important to separate digits in the latent space were for a large part learned during the first task. From task 1 to task 5, around 5 p.p. were gained in performance, showing that there was some refiniment in the representation.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.8470 | 0.8820 | 0.8835 | 0.8935 | 0.8905 |
+| Class 0    | 0.9343 | 0.9293 | 0.8788 | 0.9091 | 0.9596 |
+| Class 1    | 0.9688 | 0.9554 | 0.9598 | 0.9688 | 0.9688 |
+| Class 2    | 0.8912 | 0.8653 | 0.9067 | 0.9067 | 0.8808 |
+| Class 3    | 0.8235 | 0.8284 | 0.8922 | 0.8873 | 0.9020 |
+| Class 4    | 0.7869 | 0.9235 | 0.8743 | 0.8579 | 0.8470 |
+| Class 5    | 0.8011 | 0.7790 | 0.7624 | 0.8122 | 0.7901 |
+| Class 6    | 0.8750 | 0.9323 | 0.9583 | 0.9219 | 0.9375 |
+| Class 7    | 0.8276 | 0.9015 | 0.8818 | 0.9261 | 0.9163 |
+| Class 8    | 0.7158 | 0.8142 | 0.8470 | 0.8907 | 0.8470 |
+| Class 9    | 0.8201 | 0.8745 | 0.8577 | 0.8452 | 0.8410 |
+
+![latent](./images_mnist/linear_probing_bn_all.png)
 
 ## Orthogonal Gradient Descent
 
