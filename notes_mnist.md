@@ -732,6 +732,24 @@ Things get worse in task 4 and 5, with lots of neurons not being trained, and ve
 
 ![gradients](./images_mnist/mlp_sequential_task5_grads.png)
 
+It is interesting to see that in the classification layer the parameters of the current and the past task are being very strongly updated, so that the current classes get higher probabilities and the previous classes smaller ones. The other classes are dormant.
+
+**Looking at the parameters of the network**
+
+At the first task we cannot see anything to noticeable, the only thing is that in the classfication layer, the row for classes 1 and 2 seem to have more positive values than the others. This theme of the 2 current classes having higher values in the classification layer is consistent, altought perhaps last pronounced than expected.
+
+What is very pronounced and very noticeable is the movement of the biases of layers 1 and 2 to the negative side, starting on task 2. This shows how the growing of the sparsity in the activations came about.
+
+![weights](./images_mnist/mlp_sequential_task1_weights.png)
+
+![weights](./images_mnist/mlp_sequential_task2_weights.png)
+
+![weights](./images_mnist/mlp_sequential_task3_weights.png)
+
+![weights](./images_mnist/mlp_sequential_task4_weights.png)
+
+![weights](./images_mnist/mlp_sequential_task5_weights.png)
+
 **Comparing with the net with BN**
 
 If we compare the same gradients with the ones from the net with batch norm, for layers 4 and 5 that were the most dramatic:
@@ -742,11 +760,32 @@ We can see that the net has a lot of features to learn, particularly on layer 2.
 
 ![gradients](./images_mnist/mlp_sequential_task5_grads_bn.png)
 
+**Looking at the parameters of the network**
+
+It is very interesting to look at the parameters of the network with batch normalization, particularly the last layer. Differently for the case without BN, now it is crystal clear which are the two classes that were just trained.
+
+Another interesting fact is that in the training progresses, it is very easy to differentiate the classes *currently being trained*, *classes already trained*, and *classes not yet trained*.
+
+![weights](./images_mnist/mlp_sequential_task1_weights_bn.png)
+
+![weights](./images_mnist/mlp_sequential_task2_weights_bn.png)
+
+![weights](./images_mnist/mlp_sequential_task3_weights_bn.png)
+
+![weights](./images_mnist/mlp_sequential_task4_weights_bn.png)
+
+![weights](./images_mnist/mlp_sequential_task5_weights_bn.png)
+
+If we do the same analysis for the network trained concurrently (with BN), we get that the classification layer is more smooth, as expected, having no stark difference between the lines with values for different classes:
+
+![weights](./images_mnist/mlp_concurrent_weights_bn.png)
+
 **Sparsity**: If I just add a sparsity penalty for my activations, I get a picture as bad as for the normal training - even though my validation loss gets smaller. If I add sparsity + bn, it gets a little better, with less dead zone in my weight matrix that dont learn anything.
 
 Example of gradients for the fourth task:
 
 ![gradients](./images_mnist/mlp_sequential_task4_grads_bn_sparse.png)
+
 
 ### Representation strength and forgetting
 
@@ -1027,6 +1066,115 @@ It seems that the features that are important to separate digits in the latent s
 | Class 9    | 0.8201 | 0.8745 | 0.8577 | 0.8452 | 0.8410 |
 
 ![latent](./images_mnist/linear_probing_bn_all.png)
+
+### Changing the loss function
+
+Once we observed that most of the forgetting is happening in the classification layer, and not on the features or the representations, we investigate if we can act directly on the classification layer to mitigate the problem.
+
+#### Negative log of the probability of the correct class
+
+Usually in the multi-class classification problem, the softmax is used, once it pushes up the probability of the correct class and pushes down the probabilities of the incorrect classes. This is a problem in the sequential learning scenario because not all classes are seen at each task. Therefore, the classes trained previously have their probabilities pushed down a disproportionate amount in order to decrease the loss for the classes being currently trained.
+
+We change the loss function to be:
+
+```
+base_loss = -torch.log(F.sigmoid(logits[range(n), yb])).sum()/n
+```
+
+Where now the loss relies only the the probability given to the correct class. The model will try to make this probability bigger, without making the other probabilities smaller (in fact, it will not change anything in the other probabilities).
+
+Therefore, for a given task where two classes are being trained, only the weights responsible for the calculation of the logits of those two classes will be updated.
+
+This formulation keeps the representations learned as good as when trained with cross-entropy, and we are able to get a 7 p.p. improvement in the accuracy of the model, finally getting better than the lower bound. (this network is trained with batch normalization)
+
+But this formulation has several problems:
+
+* It does not make any effort to separate the classes, it is only worried in making the correct label get a larger probability (as close to one as possible).
+* One effect of this is that the weights for classes trained in later tasks seems to be getting larger than weights for classes in the previous tasks, in a way to get probabilities larger than them.
+
+As it is the case that the weights in the output layer are much larger than in the rest of the network, a larger weight decay might be beneficial here.
+
+Weight decay: 0.01
+
+lambda L1: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.006407, train acc 0.990672, val loss 0.055343, val acc 0.989938
+
+Sparcity analysis - population sparcity: 0.5092
+
+![sigmoid](./images_mnist/mlp_sequential_task1_weights_sigmoid.png)
+
+task 2, [3, 4]
+
+1, train loss 0.001526, train acc 0.988992, val loss 1.071949, val acc 0.485616
+
+Sparcity analysis - population sparcity: 0.4712
+
+![sigmoid](./images_mnist/mlp_sequential_task2_probs_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task2_latent_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task2_weights_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task2_grads_sigmoid.png)
+
+task 3, [5, 6]
+
+8, train loss 0.000160, train acc 0.980189, val loss 2.440988, val acc 0.322272
+
+Sparcity analysis - population sparcity: 0.4651
+
+![sigmoid](./images_mnist/mlp_sequential_task3_probs_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task3_latent_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task3_weights_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task3_grads_sigmoid.png)
+
+task 4, [7, 8]
+
+7, train loss 0.000124, train acc 0.980153, val loss 2.503215, val acc 0.327504
+
+Sparcity analysis - population sparcity: 0.4394
+
+![sigmoid](./images_mnist/mlp_sequential_task4_latent_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task4_weights_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task4_grads_sigmoid.png)
+
+**task 5, [9, 0]**
+
+11, train loss 0.000036, train acc 0.981474, val loss 3.333156, val acc 0.260000
+
+Sparcity analysis - population sparcity: 0.4243
+
+![sigmoid](./images_mnist/mlp_sequential_task5_probs_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task5_latent_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task5_weights_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task5_grads_sigmoid.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9631 | 0.9347 | 0.9032 | 0.8825 |
+| Class 1    | 0.9907 | 0.9752 | 0.9757 | 0.9646 | 0.9509 |
+| Class 2    | 1.0000 | 0.9484 | 0.9124 | 0.8916 | 0.8912 |
+| Class 3    |        | 0.9427 | 0.9020 | 0.8426 | 0.8333 |
+| Class 4    |        | 0.9855 | 0.9519 | 0.9352 | 0.8689 |
+| Class 5    |        |        | 0.8856 | 0.7898 | 0.7956 |
+| Class 6    |        |        | 0.9802 | 0.9676 | 0.9531 |
+| Class 7    |        |        |        | 0.9531 | 0.8916 |
+| Class 8    |        |        |        | 0.8647 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8494 |
+| Class 0    |        |        |        |        | 0.9495 |
+
+![sigmoid](./images_mnist/linear_probing_bn_sigmoid.png)
 
 ## Orthogonal Gradient Descent
 
