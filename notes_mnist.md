@@ -736,6 +736,8 @@ It is interesting to see that in the classification layer the parameters of the 
 
 **Looking at the parameters of the network**
 
+(this is without BN. See below to find with BN)
+
 At the first task we cannot see anything to noticeable, the only thing is that in the classfication layer, the row for classes 1 and 2 seem to have more positive values than the others. This theme of the 2 current classes having higher values in the classification layer is consistent, altought perhaps last pronounced than expected.
 
 What is very pronounced and very noticeable is the movement of the biases of layers 1 and 2 to the negative side, starting on task 2. This shows how the growing of the sparsity in the activations came about.
@@ -1481,6 +1483,610 @@ task 5, [9, 0]
 | Class 8    |        |        |        | 0.8213 | 0.8087 |
 | Class 9    |        |        |        |        | 0.8494 |
 | Class 0    |        |        |        |        | 0.9091 |
+
+### Investigating the amount of change in the weight space versus forgetting
+
+Testing hyphothesis that I can correlate some kinds of forgetting to where the changes happen in the neural network architecture. For instance, some forgetting will be shallow, like when training with cross-entropy, where most changes are localized at the classification head. Other forgettings may be deeper, for instance if forcing more changes to the latent space.
+
+This could in turn be correlated with the *savings* metric, where more savings would indicate a latent space more preserved (or with more general features), and therefore a shallower sort of forgetting.
+
+I want to test if I can see this looking at the weight changes.
+
+All training unless otherwised stated use the 3-layer network with BN.
+
+#### Cross-entropy training
+
+The usual approach:
+
+Weight decay: 0.01
+
+lambda L1: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.026846, train acc 0.994629, val loss 0.016472, val acc 0.996646
+
+task 2, [3, 4]
+
+1, train loss 0.019200, train acc 0.996397, val loss 2.768203, val acc 0.484878
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn.png)
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_relative_bn.png)
+
+task 3, [5, 6]
+
+1, train loss 0.041286, train acc 0.989618, val loss 4.058978, val acc 0.315401
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_relative_bn.png)
+
+task 4, [7, 8]
+
+1, train loss 0.028197, train acc 0.993947, val loss 4.382470, val acc 0.253060
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_relative_bn.png)
+
+task 5, [9, 0]
+
+1, train loss 0.026106, train acc 0.994331, val loss 4.808394, val acc 0.198300
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_relative_bn.png)
+
+tensor([1.0656, 1.6441, 1.5086, 1.4410, 1.4004, 1.3496, 1.2717, 1.2006, 1.3006,
+        1.0420])
+
+Sparcity analysis - population sparcity: 0.5206
+
+Classification bias vector:
+
+tensor([ 0.0332,  0.0100, -0.0765, -0.0136, -0.1652,  0.0224, -0.1575, -0.0593,
+         0.0142,  0.0010], requires_grad=True)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9644 | 0.9389 | 0.9170 | 0.8815 |
+| Class 1    | 0.9953 | 0.9802 | 0.9660 | 0.9646 | 0.9598 |
+| Class 2    | 1.0000 | 0.9531 | 0.9227 | 0.8916 | 0.8653 |
+| Class 3    |        | 0.9271 | 0.8824 | 0.8629 | 0.8480 |
+| Class 4    |        | 0.9952 | 0.9679 | 0.9630 | 0.8251 |
+| Class 5    |        |        | 0.9104 | 0.8295 | 0.7901 |
+| Class 6    |        |        | 0.9851 | 0.9676 | 0.9479 |
+| Class 7    |        |        |        | 0.9583 | 0.9261 |
+| Class 8    |        |        |        | 0.8841 | 0.8415 |
+| Class 9    |        |        |        |        | 0.8410 |
+| Class 0    |        |        |        |        | 0.9545 |
+
+### Sigmoid - Cross-entropy only in the correct class
+
+Weight decay: 0.01
+
+lambda L1: 0.0007 # l2 norm only in the line of the correct class on the classication layer
+
+task 1, [1, 2]
+
+0, train loss 0.047578, train acc 0.980778, val loss 0.096569, val acc 0.989938
+
+task 2, [3, 4]
+
+1, train loss 0.003808, train acc 0.990593, val loss 0.986332, val acc 0.552987
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_sigmoid.png)
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_relative_bn_sigmoid.png)
+
+task 3, [5, 6]
+
+9, train loss 0.002000, train acc 0.980083, val loss 2.228415, val acc 0.338529
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_sigmoid.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_relative_bn_sigmoid.png)
+
+task 4, [7, 8]
+
+example
+
+Correct class
+
+tensor(7)
+
+All probs
+
+tensor([0.5992, 0.9228, 0.9853, 0.9943, 0.9892, 0.9904, 0.9967, 0.9998, 0.8598,
+        0.6661], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9998, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0100, grad_fn=<PowBackward0>)
+
+14, train loss 0.001341, train acc 0.939367, val loss 2.274370, val acc 0.360105
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn_sigmoid.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_relative_bn_sigmoid.png)
+
+task 5, [9, 0]
+
+example
+
+Correct class
+
+tensor(0)
+
+All probs
+
+tensor([0.9997, 0.9632, 0.9947, 0.9974, 0.9889, 0.9961, 0.9987, 0.9965, 0.9922,
+        0.9036], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9997, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0099, grad_fn=<PowBackward0>)
+
+14, train loss 0.001068, train acc 0.958392, val loss 2.454173, val acc 0.329800
+
+Checking norm of the class. layer weights
+tensor([0.7771, 0.8450, 0.8739, 0.9778, 0.9404, 1.0107, 1.0209, 0.8739, 0.8307,
+        0.7832])
+
+Classification bias vector:
+
+tensor([ 0.0632,  0.0803,  0.0562,  0.1646, -0.0313,  0.0242,  0.1453,  0.1242,
+         0.0778,  0.1131], requires_grad=True)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_sigmoid.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_relative_bn_sigmoid.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9644 | 0.9213 | 0.9089 | 0.8760 |
+| Class 1    | 0.9907 | 0.9901 | 0.9757 | 0.9735 | 0.9509 |
+| Class 2    | 0.9951 | 0.9437 | 0.9124 | 0.8522 | 0.8756 |
+| Class 3    |        | 0.9323 | 0.8627 | 0.8477 | 0.8333 |
+| Class 4    |        | 0.9903 | 0.9626 | 0.9630 | 0.8361 |
+| Class 5    |        |        | 0.8607 | 0.8295 | 0.7569 |
+| Class 6    |        |        | 0.9554 | 0.9568 | 0.9323 |
+| Class 7    |        |        |        | 0.9479 | 0.8916 |
+| Class 8    |        |        |        | 0.8841 | 0.8415 |
+| Class 9    |        |        |        |        | 0.8619 |
+| Class 0    |        |        |        |        | 0.9596 |
+
+### Sigmoid - Cross-entropy on the correct class + repel loss on the incorrect class
+
+Now we can force changes in the latent layers, by adding a loss function to decrease the logits in the incorrect classes:
+
+* We keep the sigmoid loss on the correct class
+* We add sigmoid losses on the incorrect class, to make the reduce the logits values - but we propagate this gradients only to the latent layers, and not to the classification layer (which cannot change)
+
+```
+            logits, (h1, h2) = model(xb)
+
+            base_loss = -torch.log(F.sigmoid(logits[range(n), yb])).sum()/n
+            
+            # loss for the incorrect classes
+            # do not backprop through the classification layer, only latent layers
+            # 1) create fake final layer, whose weights and bias are detached
+            fake_logits = F.linear(
+                    h2, 
+                    model.fc3.weight.detach(),
+                    model.fc3.bias.detach())
+            fake_probs = F.sigmoid(fake_logits)
+            # 2) mask to select only the incorrect classes
+            mask = torch.ones_like(fake_probs, dtype=torch.bool)
+            mask[range(n), yb] = False
+            # 3) calculate the loss for the incorrect classes
+            repel_loss = -torch.log(1 - fake_probs[mask]).sum()/n
+
+            l1_norm = 0.0
+            for name, param in model.named_parameters():
+                if name == "fc3.weight":
+                    l1_norm += param[task_classes, :].pow(2).sum()
+                elif name == "fc3.bias":
+                    l1_norm += param[task_classes].pow(2).sum()
+
+            loss = base_loss + lambda_repel * repel_loss + lambda_l1 * l1_norm
+
+            loss.backward()
+```
+
+Now we can see what effect changes in the latent layer have on the learning. What is see is fast forgetting, and also growing sparsity (BN is not able to stop it here). This sparsity (on the activations) is probably the easy way the network have to reduce the logits of the incorrect classes, and we can see how it comes about: most of the biases of the latent layers are negative. This is probably also the cause the norm of the classification layer grows for lines (classes) that are trained later: because they need to receive more sparse inputs. 
+
+Also as a consequence of all this, the representational power of the latent space is very much reduced.
+
+This is definetely a more deep forgetting than just using regular cross-entropy, even though on the surface they have the *same resulting accuracies*. Therefore, we would expect that the *savings* metric would be smaller for this case.
+
+Accuracies for cross-entropy:
+
+task 1, [1, 2]
+
+1, train loss 0.026846, train acc 0.994629, val loss 0.016472, val acc 0.996646
+
+task 2, [3, 4]
+
+1, train loss 0.019200, train acc 0.996397, val loss 2.768203, val acc 0.484878
+
+task 3, [5, 6]
+
+1, train loss 0.041286, train acc 0.989618, val loss 4.058978, val acc 0.315401
+
+task 4, [7, 8]
+
+1, train loss 0.028197, train acc 0.993947, val loss 4.382470, val acc 0.253060
+
+task 5, [9, 0]
+
+1, train loss 0.026106, train acc 0.994331, val loss 4.808394, val acc 0.198300
+
+Accuracies for sigmoid accuracy on correct and incorrect classes (forcing gradients to the latent layers):
+
+task 1, [1, 2]
+
+0, train loss 0.624714, train acc 0.980967, val loss 0.104157, val acc 0.990896
+
+task 2, [3, 4]
+
+1, train loss 0.685754, train acc 0.994996, val loss 1.596057, val acc 0.478485
+
+task 3, [5, 6]
+
+1, train loss 0.855084, train acc 0.986227, val loss 2.142583, val acc 0.308195
+
+Task 4:
+
+1, train loss 0.894710, train acc 0.992260, val loss 2.303631, val acc 0.245441
+
+Task 5:
+
+1, train loss 0.991418, train acc 0.980259, val loss 2.350173, val acc 0.197300
+
+Experiment:
+
+Weight decay: 0.01
+
+lambda L1: 0.0007
+
+lambda repel: 0.1
+
+task 1, [1, 2]
+
+0, train loss 0.624714, train acc 0.980967, val loss 0.104157, val acc 0.990896
+
+task 2, [3, 4]
+
+1, train loss 0.685754, train acc 0.994996, val loss 1.596057, val acc 0.478485
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_relative_bn_sigmoid_repel.png)
+
+task 3, [5, 6]
+
+1, train loss 0.855084, train acc 0.986227, val loss 2.142583, val acc 0.308195
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_relative_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_features_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_weights_bn_sigmoid_repel.png)
+
+task 4, [7, 8]
+
+example
+
+Correct class
+
+tensor(8)
+
+All probs
+
+tensor([0.5274, 0.5533, 0.5196, 0.6691, 0.6659, 0.6594, 0.6436, 0.6813, 0.9309,
+        0.4694], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9309, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0010, grad_fn=<PowBackward0>)
+
+1, train loss 0.894710, train acc 0.992260, val loss 2.303631, val acc 0.245441
+
+Sparcity analysis - population sparcity: 0.7527
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_relative_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_features_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_weights_bn_sigmoid_repel.png)
+
+task 5, [9, 0]
+
+example
+
+Correct class
+
+tensor(9)
+
+All probs
+
+tensor([0.6825, 0.5535, 0.5289, 0.6587, 0.6445, 0.5925, 0.6655, 0.6871, 0.7249,
+        0.9208], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9208, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0004, grad_fn=<PowBackward0>)
+
+1, train loss 0.991418, train acc 0.980259, val loss 2.350173, val acc 0.197300
+
+tensor([1.6967, 0.8886, 0.8768, 1.2190, 1.2046, 1.6922, 1.6655, 1.8190, 2.0558,
+        1.8166])
+
+Sparcity analysis - population sparcity: 0.7856
+
+Classification bias vector:
+
+tensor([0.5852, 0.1374, 0.0780, 0.1814, 0.1944, 0.1765, 0.2142, 0.4880, 0.4428,
+        0.3810], requires_grad=True)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_relative_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_features_bn_sigmoid_repel.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_weights_bn_sigmoid_repel.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9631 | 0.8702 | 0.7216 | 0.4940 |
+| Class 1    | 0.9907 | 0.9802 | 0.9417 | 0.8761 | 0.8304 |
+| Class 2    | 1.0000 | 0.9343 | 0.7474 | 0.5419 | 0.4145 |
+| Class 3    |        | 0.9427 | 0.8431 | 0.6751 | 0.1127 |
+| Class 4    |        | 0.9952 | 0.9144 | 0.8472 | 0.2459 |
+| Class 5    |        |        | 0.8109 | 0.3750 | 0.2818 |
+| Class 6    |        |        | 0.9604 | 0.7622 | 0.4688 |
+| Class 7    |        |        |        | 0.8958 | 0.5764 |
+| Class 8    |        |        |        | 0.7391 | 0.2678 |
+| Class 9    |        |        |        |        | 0.7113 |
+| Class 0    |        |        |        |        | 0.8939 |
+
+### Cross-entropy - different learning rates
+
+We tried have the network suffer *deep* forgetting by changing the learning rates, making the latent layers be updated more than the classification layer.
+
+This made the network forget slower, but it seemed that the forgetting still was localized in the classification head. Even though it learned slowly, it did learn just enough to modify its distribution to predict the current training classes and shut off the rest.
+
+This is indicated by the fact that the latent representation continued to be as good as it was before. Also, this might be the case of the choice of learning rates: making them larger to the latent layers and even smaller to the latent layers might have done a different result.
+
+Experiment:
+
+Weight decay: 0.01
+
+lr1: 0.001, lr2: 1e-05
+
+lambda L1: 0.0007
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+0, train loss 1.070318, train acc 0.958541, val loss 0.786608, val acc 0.992333
+
+task 2, [3, 4]
+
+1, train loss 0.301710, train acc 0.995097, val loss 1.671277, val acc 0.484878
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_diff_lr.png)
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_relative_bn_diff_lr.png)
+
+task 3, [5, 6]
+
+1, train loss 0.421450, train acc 0.986969, val loss 2.079249, val acc 0.314899
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_diff_lr.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_relative_bn_diff_lr.png)
+
+task 4, [7, 8]
+
+1, train loss 0.217794, train acc 0.993748, val loss 2.467439, val acc 0.252810
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn_diff_lr.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_relative_bn_diff_lr.png)
+
+task 5, [9, 0]
+
+example
+
+Correct class
+
+tensor(9)
+
+All probs
+
+tensor([0.0539, 0.4056, 0.4499, 0.4979, 0.5305, 0.5100, 0.3572, 0.5102, 0.2929,
+        0.9047], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9047, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(2.2461e-05, grad_fn=<PowBackward0>)
+
+1, train loss 0.326901, train acc 0.992812, val loss 2.746435, val acc 0.201800
+
+tensor([0.6455, 0.6389, 0.5406, 0.5894, 0.6304, 0.5588, 0.6111, 0.6101, 0.6074,
+        0.5813])
+
+Sparcity analysis - population sparcity: 0.4454
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_diff_lr.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_relative_bn_diff_lr.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_weights_bn_diff_lr.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9717 | 0.9389 | 0.9195 | 0.8870 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9690 | 0.9554 |
+| Class 2    | 1.0000 | 0.9531 | 0.9175 | 0.9015 | 0.9016 |
+| Class 3    |        | 0.9531 | 0.9020 | 0.8376 | 0.8382 |
+| Class 4    |        | 0.9952 | 0.9679 | 0.9537 | 0.8579 |
+| Class 5    |        |        | 0.8905 | 0.8466 | 0.7624 |
+| Class 6    |        |        | 0.9802 | 0.9784 | 0.9583 |
+| Class 7    |        |        |        | 0.9688 | 0.9212 |
+| Class 8    |        |        |        | 0.8889 | 0.8634 |
+| Class 9    |        |        |        |        | 0.8368 |
+| Class 0    |        |        |        |        | 0.9646 |
+
+
+### Cross-entropy - learning rate only on latent layers
+
+To force the network to have a *deep* forgetting, I zeroed the learning rate for the classification head, so that it would learn only on the latent layers. What is surprising is that, even though the forgetting was somewhat slower (but not much), the neural did forget as before, perhaps just a little less. But once this forgetting was happening on the hidden layers, you would guess the neural net would have to change the generalizability of its feature extractors, but, they continued to be as good as before. So it seems to be an example of a deeper forgetting, but without loss in the representation space.
+
+One thing that is apparent is that it does not care (I cannot care) about putting down too much the probabilities of the other classes, once it has no control of each classification layer. So it fiddles its parameters just enough so the correct class gets a good value, and the other can stay about 0.6 or 0.7 (it is a much smooth distribution). This can be seen in this example predicting the number 8 in the 4th task:
+
+ChatGPT on why this is the case:
+
+Why that doesn’t destroy your old “linear probe” separability  
+  •  **Overcomplete / null‐space trick.**  In 84 dimensions there is an enormous subspace “orthogonal” to all the old task hyperplanes.  You only need to move h₂ along a *few* directions (essentially the difference vectors W₄–Wᵢ, W₅–Wᵢ for the new task).  Everything orthogonal to that can remain untouched.  
+  •  **Minimal‐effort updates.**  The network is lazy: it finds the smallest perturbation of h₂ that makes W₄·h₂ large enough, etc.  Those minimal shifts need not wreck the margins on the old digits 0–3, 6–9.  
+  •  **BatchNorm adaptation.**  Don’t forget that bn2’s running mean/var will also adjust, subtly rescaling axes so that your pushes for new classes come “for free” while leaving much of the old structure intact.
+
+The *representations* themselves remain linearly separable because the network only nudges them in a tiny subspace needed to satisfy the frozen‐head constraints for the new task.
+
+All probs
+
+tensor([0.4664, 0.2677, 0.7572, 0.6573, 0.6563, 0.6851, 0.5284, 0.0161, 0.9801,
+        0.5029], grad_fn=<SigmoidBackward0>)
+
+Experiment:
+
+Weight decay: 0.01
+
+lr1: 0.001, lr2: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.518907, train acc 0.992462, val loss 0.425977, val acc 0.991854
+
+task 2, [3, 4]
+
+1, train loss 0.585812, train acc 0.993996, val loss 1.642325, val acc 0.486108
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_lr_only_hidden.png)
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_relative_bn_lr_only_hidden.png)
+
+task 3, [5, 6]
+
+1, train loss 0.361501, train acc 0.988028, val loss 2.197215, val acc 0.315066
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_lr_only_hidden.png)
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_relative_bn_lr_only_hidden.png)
+
+task 4, [7, 8]
+
+example
+
+Correct class
+
+tensor(8)
+
+All probs
+
+tensor([0.4664, 0.2677, 0.7572, 0.6573, 0.6563, 0.6851, 0.5284, 0.0161, 0.9801,
+        0.5029], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9801, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0064, grad_fn=<PowBackward0>)
+
+1, train loss 0.390421, train acc 0.993847, val loss 2.343677, val acc 0.259306
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn_lr_only_hidden.png)
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_relative_bn_lr_only_hidden.png)
+
+task 5, [9, 0]
+
+example
+
+Correct class
+
+tensor(0)
+
+All probs
+
+tensor([0.9825, 0.5331, 0.6986, 0.6113, 0.2206, 0.8472, 0.6221, 0.4549, 0.5668,
+        0.0090], grad_fn=<SigmoidBackward0>)
+
+Cross-entropy loss for correct class only
+
+tensor(0.9825, grad_fn=<SigmoidBackward0>)
+
+MSE loss for correct class only
+
+tensor(0.0068, grad_fn=<PowBackward0>)
+
+1, train loss 0.244753, train acc 0.994635, val loss 2.845946, val acc 0.199900
+
+Sparcity analysis - population sparcity: 0.4450
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_lr_only_hidden.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_relative_bn_lr_only_hidden.png)
+
+![weight eval](./images_mnist/mlp_sequential_task5_weights_bn_lr_only_hidden.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9730 | 0.9456 | 0.9157 | 0.8905 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9779 | 0.9598 |
+| Class 2    | 1.0000 | 0.9624 | 0.9536 | 0.8719 | 0.8912 |
+| Class 3    |        | 0.9479 | 0.8971 | 0.8629 | 0.8725 |
+| Class 4    |        | 0.9952 | 0.9626 | 0.9583 | 0.8470 |
+| Class 5    |        |        | 0.9154 | 0.7955 | 0.7956 |
+| Class 6    |        |        | 0.9703 | 0.9514 | 0.9583 |
+| Class 7    |        |        |        | 0.9479 | 0.9163 |
+| Class 8    |        |        |        | 0.9372 | 0.8525 |
+| Class 9    |        |        |        |        | 0.8410 |
+| Class 0    |        |        |        |        | 0.9596 |
 
 ## Orthogonal Gradient Descent
 
