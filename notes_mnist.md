@@ -2088,6 +2088,807 @@ Sparcity analysis - population sparcity: 0.4450
 | Class 9    |        |        |        |        | 0.8410 |
 | Class 0    |        |        |        |        | 0.9596 |
 
+
+### Savings
+
+I started to measure savings using AdamW as I have being doing so far, without resetting it between tasks, but I soon started to see negative or negligible result in savings. So I believe the question of the optimizer tends to need more consideration here.
+
+#### AdamW
+
+Looking at experiments, it seems clear that using AdamW, it should be reset on each task if to have some "savings" benefit. Otherwise, it takes more time the second time, once it carries the state of the task before.
+
+Also, it is suggested that resetting the state of BN may be beneficial when evaluating a task alone - but if we intead want that the model is able to perform anyone task, resetting the state of batch norm at each time does not make sense.
+
+All experiments used the same learning rate of 1e-3.
+
+#### Setting Adam only once
+
+##### Experiment 1
+
+Usual setup used on most experiments:
+
+Weight decay: 0.01
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 45, 31, 37, 34, 24, 40]
+
+[62, 76, 61, 59, 51, 44, 54, 73, 46, 52, 66, 66, 53, 65, 68, 66, 69, 59, 60, 56, 50, 63, 56, 51, 59]
+
+Savings: -0.753247, first try mean: 33.880000, first try std: 4.684613, second try mean: 59.400000, second try std 8.014986
+
+##### Experiment 2
+
+Setting weight decay equal to 0, to see if it may have an influence:
+
+Weight decay: 0.00
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 44, 31, 37, 34, 24, 40]
+
+[62, 76, 60, 59, 56, 58, 79, 73, 45, 52, 65, 63, 52, 65, 68, 66, 69, 59, 60, 55, 50, 64, 56, 51, 58]
+
+Savings: -0.797872, first try mean: 33.840000, first try std: 4.592864, second try mean: 60.840000, second try std 8.073066
+
+##### Experiment 3
+
+Resetting the state of BN batch to zero at the beginning of each task:
+
+Weight decay: 0.01
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 45, 31, 37, 34, 24, 40]
+
+[62, 76, 51, 53, 53, 52, 64, 60, 41, 55, 59, 56, 63, 60, 56, 70, 62, 74, 50, 54, 50, 63, 65, 53, 51]
+
+Savings: -0.715466, first try mean: 33.880000, first try std: 4.684613, second try mean: 58.120000, second try std 7.895923
+
+
+#### Resetting at each run
+
+##### Experiment 1
+
+Weight decay: 0.01
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 45, 31, 37, 34, 24, 40]
+
+[35, 17, 27, 32, 41, 40, 33, 8, 40, 40, 32, 32, 9, 48, 27, 27, 33, 38, 21, 32, 33, 23, 22, 27, 32]
+
+Savings: 0.115702, first try mean: 33.880000, first try std: 4.684613, second try mean: 29.960000, second try std 9.391400
+
+##### Experiment 2
+
+Setting weight decay to zero:
+
+Weight decay: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 44, 31, 37, 34, 24, 40]
+
+[38, 17, 27, 32, 41, 41, 34, 8, 40, 40, 32, 32, 9, 45, 27, 26, 33, 30, 15, 32, 32, 28, 26, 28, 31]
+
+Savings: 0.120567, first try mean: 33.840000, first try std: 4.592864, second try mean: 29.760000, second try std 9.279138
+
+##### Experiment 3
+
+Resetting batch norm state to zero at each new task:
+
+Weight decay: 0.01
+
+lambda L1: 0.00
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 44, 31, 37, 34, 24, 40]
+
+[45, 17, 27, 24, 42, 33, 36, 6, 22, 34, 32, 26, 9, 30, 27, 22, 33, 38, 22, 31, 32, 23, 30, 24, 30]
+
+Savings: 0.178487, first try mean: 33.840000, first try std: 4.592864, second try mean: 27.800000, second try std 8.772685
+
+#### Experiment 4
+
+Larger learning rate:
+
+Weight decay: 0.01
+
+Momentum: 0.0
+
+Learning rate: 0.01
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+List of updates for first and second time task is done:
+
+[13, 25, 6, 17, 15, 10, 12, 25, 13, 19, 12, 10, 14, 11, 11, 15, 13, 14, 10, 11, 19, 13, 14, 15, 22]
+
+[34, 18, 18, 18, 18, 23, 22, 19, 10, 16, 27, 16, 26, 28, 11, 19, 16, 19, 24, 19, 19, 21, 18, 22, 20]
+
+Savings: -0.395543, first try mean: 14.360000, first try std: 4.542070, second try mean: 20.040000, second try std 5.031739
+
+### SGD
+
+#### Experiment 1
+
+Starting with no decay or momentum, learning rate equal to the one used at Adam:
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.001
+
+Takes much longer, this learning rate in impractical:
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Task 0, [1, 2]
+Accuracy larger than 0.98, breaking from training with 1295 updates...
+
+Task 1, [3, 4]
+Accuracy larger than 0.98, breaking from training with 359 updates...
+
+Task 2, [1, 2]
+Accuracy larger than 0.98, breaking from training with 408 updates...
+
+### Experiment 2
+
+Increasing the learning rate by one order of magnitude:
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.01
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+List of updates for first and second time task is done:
+
+[194, 159, 207, 231, 165, 165, 160, 133, 186, 187, 158, 122, 184, 203, 206, 159, 190, 186, 179, 235, 167, 211, 235, 218, 161]
+
+[44, 26, 25, 35, 48, 56, 26, 32, 38, 44, 52, 67, 56, 42, 60, 45, 26, 34, 33, 33, 26, 23, 32, 23, 37]
+
+Savings: 0.790698, first try mean: 184.040000, first try std: 29.212983, second try mean: 38.520000, second try std 12.234770
+
+### Experiment 3
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.1
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+List of updates for first and second time task is done:
+
+[21, 18, 14, 26, 37, 17, 12, 21, 17, 21, 21, 15, 21, 21, 27, 21, 20, 21, 21, 21, 18, 23, 21, 22, 18]
+
+[8, 9, 3, 13, 7, 8, 7, 5, 13, 12, 14, 8, 10, 7, 13, 11, 9, 13, 11, 7, 4, 5, 5, 5, 6]
+
+Savings: 0.586408, first try mean: 20.600000, first try std: 4.664762, second try mean: 8.520000, second try std 3.188981
+
+Increase the loss to 0.5 lead to non-convergence.
+
+### Experiment 4
+
+Reducing in half to see the result:
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.05
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+List of updates for first and second time task is done:
+
+[25, 36, 36, 44, 31, 39, 25, 29, 33, 42, 34, 37, 37, 34, 35, 32, 34, 34, 37, 44, 33, 49, 36, 32, 34]
+
+[15, 11, 10, 18, 9, 4, 11, 9, 10, 24, 16, 9, 19, 21, 10, 19, 5, 6, 10, 15, 8, 8, 9, 13, 13]
+
+Savings: 0.657596, first try mean: 35.280000, first try std: 5.362984, second try mean: 12.080000, second try std 5.019323
+
+### Experiment 5
+
+Adding `momentum=0.9`, and resetting its state at each time: Does not converge.
+
+Weight decay: 0.0
+
+Momentum: 0.9
+
+Learning rate: 0.1
+
+### Experiment 6
+
+Adding `momentum=0.9`, but **NOT** resetting its state at each time: Does not converge.
+
+Weight decay: 0.0
+
+Momentum: 0.9
+
+Learning rate: 0.1
+
+### Experiment 7
+
+Keeping the moment, but decreasing the learning rate:
+
+Weight decay: 0.0
+
+Momentum: 0.9
+
+Learning rate: 0.05
+
+Also did not converge (for some tries)
+
+### Experiment 8
+
+Keeping the moment, but decreasing the learning rate to see if are able to train without getting nan values. It worked, but took considerably more time (resetting the state each time):
+
+OBS: the optimizer state is being updated at every new task.
+
+Weight decay: 0.0
+
+Momentum: 0.9
+
+Learning rate: 0.01
+
+List of updates for first and second time task is done:
+
+[33, 43, 44, 45, 41, 39, 36, 35, 35, 44, 41, 44, 43, 42, 37, 41, 41, 50, 41, 47, 36, 46, 39, 34, 38]
+
+[47, 41, 47, 45, 46, 43, 51, 47, 41, 47, 38, 43, 41, 47, 38, 49, 44, 44, 38, 43, 48, 46, 39, 45, 41]
+
+Savings: -0.082759, first try mean: 40.600000, first try std: 4.280187, second try mean: 43.960000, second try std 3.560674
+
+### Experiment 9
+
+For curiosity, allowing Nesterov momentum. It gave slightly better results - but even though worst than for without momentum.
+
+Weight decay: 0.0
+
+Momentum: 0.9
+
+Learning rate: 0.01
+
+List of updates for first and second time task is done:
+
+[38, 42, 34, 45, 31, 38, 35, 34, 33, 44, 35, 42, 42, 39, 36, 37, 37, 42, 39, 45, 32, 37, 37, 33, 37]
+
+[36, 39, 31, 44, 40, 37, 44, 47, 36, 42, 40, 40, 37, 34, 32, 37, 36, 40, 33, 31, 40, 24, 31, 34, 45]
+
+Savings: 0.014831, first try mean: 37.760000, first try std: 3.962625, second try mean: 37.200000, second try std 5.192302
+
+### Experiment 10
+
+Same as experiment 8, but with SGD being initialized only once:
+
+Momentum: 0.9
+
+Learning rate: 0.01
+
+List of updates for first and second time task is done:
+
+[33, 43, 44, 45, 41, 39, 36, 35, 35, 44, 41, 44, 43, 42, 37, 41, 41, 50, 41, 47, 36, 46, 39, 34, 38]
+
+[46, 46, 39, 46, 47, 42, 51, 48, 40, 45, 44, 41, 44, 54, 43, 49, 42, 47, 35, 43, 56, 50, 39, 41, 38]
+
+Savings: -0.099507, first try mean: 40.600000, first try std: 4.280187, second try mean: 44.640000, second try std 4.906159
+
+### Experiment 11
+
+Back to regular momentum, state updated every time, now changing the learning rate to be the same as with Adam and RMSProp:
+
+Momentum: 0.9
+
+Learning rate: 0.001
+
+Takes a long time:
+
+
+Task 0, [1, 2]
+Accuracy larger than 0.98, breaking from training with 217 updates...
+
+Task 1, [3, 4]
+Accuracy larger than 0.98, breaking from training with 81 updates...
+
+Task 2, [1, 2]
+Accuracy larger than 0.98, breaking from training with 58 updates...
+
+Running test: 1
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Task 0, [1, 2]
+Accuracy larger than 0.98, breaking from training with 182 updates...
+
+Task 1, [3, 4]
+Accuracy larger than 0.98, breaking from training with 89 updates...
+
+Task 2, [1, 2]
+Accuracy larger than 0.98, breaking from training with 65 updates...
+
+### RMSProp
+
+#### Experiment 1
+
+Updating at each task:
+
+Weight decay: 0.0
+
+Learning rate: 0.001
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+List of updates for first and second time task is done:
+
+[25, 24, 11, 35, 17, 17, 24, 23, 21, 21, 21, 29, 30, 18, 19, 32, 18, 33, 19, 23, 10, 33, 29, 15, 19]
+
+[6, 6, 3, 5, 5, 5, 3, 14, 5, 10, 12, 6, 4, 3, 7, 6, 9, 3, 5, 5, 8, 9, 6, 9, 5]
+
+Savings: 0.719081, first try mean: 22.640000, first try std: 6.656606, second try mean: 6.360000, second try std 2.769549
+
+### Experiment 2
+
+Same setup, with RMSProp being initialized only once:
+
+Learning rate: 0.001
+
+List of updates for first and second time task is done:
+
+[25, 24, 11, 35, 17, 17, 24, 23, 21, 21, 21, 29, 30, 18, 19, 32, 18, 33, 19, 23, 10, 33, 29, 15, 19]
+
+[10, 16, 8, 14, 5, 10, 11, 14, 11, 8, 10, 5, 6, 8, 17, 14, 11, 8, 11, 9, 8, 5, 11, 12, 13]
+
+Savings: 0.549470, first try mean: 22.640000, first try std: 6.656606, second try mean: 10.200000, second try std 3.237283
+
+### Experiment 3
+
+Keeping RMSProp being initialized only once, and increasing the learning rate:
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.01
+
+List of updates for first and second time task is done:
+
+[48, 75, 29, 139, 27, 22, 20, 118, 61, 69, 95, 49, 21, 27, 32, 28, 44, 54, 71, 31, 67, 16, 67, 24, 32]
+
+[6, 56, 20, 15, 18, 8, 43, 53, 17, 41, 31, 87, 119, 6, 66, 24, 10, 27, 40, 22, 22, 57, 29, 33, 9]
+
+Savings: 0.321485, first try mean: 50.640000, first try std: 31.043041, second try mean: 34.360000, second try std 26.543368
+
+### Experiment 4
+
+Weight decay: 0.0
+
+Momentum: 0.0
+
+Learning rate: 0.01
+
+Now keeping the learning rate high, but reseting the optimizer at every task:
+
+List of updates for first and second time task is done:
+
+[48, 75, 29, 139, 27, 22, 20, 118, 61, 69, 95, 49, 21, 27, 32, 28, 44, 54, 71, 31, 67, 16, 67, 24, 32]
+
+[14, 7, 12, 15, 9, 19, 9, 9, 8, 13, 8, 12, 9, 10, 10, 11, 6, 8, 18, 10, 13, 10, 20, 8, 14]
+
+Savings: 0.777251, first try mean: 50.640000, first try std: 31.043041, second try mean: 11.280000, second try std 3.649877
+
+### Trying to see the big picture with the optimizers
+
+Removing weight decay, using the best configuration for each:
+
+#### Adam
+
+Weight decay: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.024557, train acc 0.995100, val loss 0.016028, val acc 0.995688
+
+Checking norm of the class. layer weights
+
+tensor([0.8039, 0.9723, 0.9244, 0.8060, 0.7545, 0.6931, 0.7622, 0.8546, 0.8539,
+        0.8350])
+
+![weight eval](./images_mnist/opt_adam_task1_weights.png)
+
+task 2, [3, 4]
+
+1, train loss 0.019101, train acc 0.995697, val loss 3.074304, val acc 0.485370
+
+![weight eval](./images_mnist/opt_adam_task2_grads_norm.png)
+
+![weight eval](./images_mnist/opt_adam_task2_grads_relative.png)
+
+task 3, [5, 6]
+
+1, train loss 0.039961, train acc 0.990147, val loss 4.188488, val acc 0.315401
+
+![weight eval](./images_mnist/opt_adam_task3_weigths.png)
+
+![weight eval](./images_mnist/opt_adam_task3_grads_norm.png)
+
+![weight eval](./images_mnist/opt_adam_task3_grads_relative.png)
+
+task 4, [7, 8]
+
+1, train loss 0.028492, train acc 0.992260, val loss 4.351372, val acc 0.253060
+
+tensor([1.4029, 1.3819, 1.3620, 1.2553, 1.1562, 1.1182, 1.1828, 1.0418, 0.9943,
+        1.4437])
+
+tensor([-0.2551,  0.0081, -0.0708,  0.0416, -0.1025,  0.0132, -0.0318,  0.0448,
+         0.1050, -0.1019], requires_grad=True)
+
+![weight eval](./images_mnist/opt_adam_task4_weigths.png)
+
+![weight eval](./images_mnist/opt_adam_task4_grads_norm.png)
+
+![weight eval](./images_mnist/opt_adam_task4_grads_relative.png)
+
+task 5, [9, 0]
+
+example
+
+Correct class
+
+tensor(9)
+
+All probs
+
+tensor([0.0429, 0.0352, 0.0055, 0.0207, 0.0237, 0.0382, 0.0194, 0.0337, 0.0837,
+        0.9893], grad_fn=<SigmoidBackward0>)
+
+1, train loss 0.027037, train acc 0.994837, val loss 4.632474, val acc 0.198400
+
+Checking norm of the class. layer weights
+
+tensor([1.1393, 1.5266, 1.5174, 1.4094, 1.3142, 1.2556, 1.3222, 1.2720, 1.2185,
+        1.0136])
+
+Sparcity analysis - population sparcity: 0.5273
+
+Classification bias vector:
+
+tensor([-0.0452, -0.0130, -0.0928,  0.0237, -0.1226, -0.0081, -0.0538, -0.0601,
+        -0.0113,  0.1013], requires_grad=True)
+
+![weight eval](./images_mnist/opt_adam_task5_weigths.png)
+
+![weight eval](./images_mnist/opt_adam_task5_grads_norm.png)
+
+![weight eval](./images_mnist/opt_adam_task5_grads_relative.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9656 | 0.9414 | 0.9182 | 0.8755 |
+| Class 1    | 0.9953 | 0.9802 | 0.9806 | 0.9690 | 0.9732 |
+| Class 2    | 0.9951 | 0.9390 | 0.9175 | 0.9064 | 0.8860 |
+| Class 3    |        | 0.9479 | 0.9069 | 0.8376 | 0.8529 |
+| Class 4    |        | 0.9952 | 0.9626 | 0.9676 | 0.7923 |
+| Class 5    |        |        | 0.9005 | 0.8125 | 0.7569 |
+| Class 6    |        |        | 0.9802 | 0.9730 | 0.9427 |
+| Class 7    |        |        |        | 0.9583 | 0.9212 |
+| Class 8    |        |        |        | 0.9034 | 0.8142 |
+| Class 9    |        |        |        |        | 0.8494 |
+| Class 0    |        |        |        |        | 0.9394 |
+
+### Adam (Resetting for every new task)
+
+Weight decay: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+0, train loss 0.210614, train acc 0.981532, val loss 0.026556, val acc 0.996167
+
+task 2, [3, 4]
+
+1, train loss 0.033173, train acc 0.995997, val loss 2.184403, val acc 0.485124
+
+![weight eval](./images_mnist/opt_adam_task2_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_adam_task2_grads_relative_reset.png)
+
+task 3, [5, 6]
+
+1, train loss 0.067398, train acc 0.990889, val loss 3.039928, val acc 0.316072
+
+![weight eval](./images_mnist/opt_adam_task3_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_adam_task3_grads_relative_reset.png)
+
+task 4, [7, 8]
+
+1, train loss 0.062663, train acc 0.994145, val loss 3.894152, val acc 0.253310
+
+![weight eval](./images_mnist/opt_adam_task4_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_adam_task4_grads_relative_reset.png)
+
+task 5, [9, 0]
+
+1, train loss 0.087557, train acc 0.994331, val loss 4.253892, val acc 0.200100
+
+tensor([2.6787, 3.9515, 4.1026, 3.4629, 3.5826, 3.0791, 3.1667, 2.8415, 2.9532,
+        2.7330])
+
+tensor([-0.1471, -0.3646, -0.3844, -0.4281, -0.3293, -0.2089, -0.3077, -0.3079,
+        -0.3510, -0.2119], requires_grad=True)
+
+![weight eval](./images_mnist/opt_adam_task5_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_adam_task5_grads_relative_reset.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9742 | 0.9472 | 0.9157 | 0.8790 |
+| Class 1    | 0.9953 | 0.9752 | 0.9757 | 0.9867 | 0.9598 |
+| Class 2    | 1.0000 | 0.9624 | 0.9175 | 0.8670 | 0.8653 |
+| Class 3    |        | 0.9688 | 0.9363 | 0.8426 | 0.8235 |
+| Class 4    |        | 0.9903 | 0.9572 | 0.9583 | 0.8415 |
+| Class 5    |        |        | 0.9154 | 0.8011 | 0.7514 |
+| Class 6    |        |        | 0.9802 | 0.9568 | 0.9479 |
+| Class 7    |        |        |        | 0.9635 | 0.9212 |
+| Class 8    |        |        |        | 0.9275 | 0.8251 |
+| Class 9    |        |        |        |        | 0.8703 |
+| Class 0    |        |        |        |        | 0.9596 |
+
+### RMSProp resetting for every new task
+
+Weight decay: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+0, train loss 0.083314, train acc 0.986243, val loss 0.018845, val acc 0.994250
+
+task 2, [3, 4]
+
+1, train loss 0.015376, train acc 0.997198, val loss 2.718404, val acc 0.485370
+
+![weight eval](./images_mnist/opt_rms_task2_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_rms_task2_grads_relative_reset.png)
+
+task 3, [5, 6]
+
+1, train loss 0.037566, train acc 0.991419, val loss 4.244790, val acc 0.315066
+
+![weight eval](./images_mnist/opt_rms_task3_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_rms_task3_grads_relative_reset.png)
+
+task 4, [7, 8]
+
+1, train loss 0.027247, train acc 0.995137, val loss 5.135630, val acc 0.253185
+
+
+![weight eval](./images_mnist/opt_rms_task4_grads_norm_reset.png)
+
+![weight eval](./images_mnist/opt_rms_task4_grads_relative_reset.png)
+
+task 5, [9, 0]
+
+1, train loss 0.031067, train acc 0.996760, val loss 5.697281, val acc 0.198700
+
+Checking norm of the class. layer weights
+
+tensor([3.2332, 4.6071, 4.7770, 4.0955, 4.2362, 3.7274, 3.7302, 3.4191, 3.3435,
+        3.0641])
+
+Sparcity analysis - population sparcity: 0.5144
+
+Classification bias vector:
+
+tensor([-0.4008, -0.5701, -0.4966, -0.4345, -0.3934, -0.3507, -0.3413, -0.2750,
+        -0.2327, -0.3069], requires_grad=True)
+
+![weight eval](./images_mnist/opt_rms_task5_grads_relative_reset.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9730 | 0.9288 | 0.9276 | 0.8950 |
+| Class 1    | 0.9953 | 0.9950 | 0.9515 | 0.9602 | 0.9598 |
+| Class 2    | 1.0000 | 0.9484 | 0.9381 | 0.8818 | 0.9016 |
+| Class 3    |        | 0.9583 | 0.8676 | 0.9137 | 0.8676 |
+| Class 4    |        | 0.9903 | 0.9626 | 0.9815 | 0.8852 |
+| Class 5    |        |        | 0.8856 | 0.8239 | 0.7845 |
+| Class 6    |        |        | 0.9703 | 0.9568 | 0.9427 |
+| Class 7    |        |        |        | 0.9635 | 0.9163 |
+| Class 8    |        |        |        | 0.9227 | 0.8415 |
+| Class 9    |        |        |        |        | 0.8828 |
+| Class 0    |        |        |        |        | 0.9495 |
+
+### SGD
+
+lr: 0.1
+
+Weight decay: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+0, train loss 0.074505, train acc 0.985772, val loss 0.014793, val acc 0.996167
+
+![weight eval](./images_mnist/opt_sgd_task1_grads_norm.png)
+
+task 2, [3, 4]
+
+1, train loss 0.012042, train acc 0.997098, val loss 3.227723, val acc 0.485862
+
+![weight eval](./images_mnist/opt_sgd_task2_grads_norm.png)
+
+task 3, [5, 6]
+
+1, train loss 0.025241, train acc 0.991948, val loss 4.169854, val acc 0.313893
+
+![weight eval](./images_mnist/opt_sgd_task3_grads_norm.png)
+
+task 4, [7, 8]
+
+1, train loss 0.014452, train acc 0.996428, val loss 5.333196, val acc 0.253685
+
+![weight eval](./images_mnist/opt_sgd_task4_grads_norm.png)
+
+task 5, [9, 0]
+
+1, train loss 0.012324, train acc 0.997064, val loss 5.434277, val acc 0.198200
+
+tensor([1.5674, 1.0982, 0.9751, 1.0316, 1.0869, 1.1861, 1.0769, 0.9918, 1.0354,
+        1.4772])
+
+Sparcity analysis - population sparcity: 0.4797
+
+![weight eval](./images_mnist/opt_sgd_task5_grads_norm.png)
+
+![weight eval](./images_mnist/opt_sgd_task5_latent.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9754 | 0.9456 | 0.9320 | 0.9125 |
+| Class 1    | 0.9953 | 0.9851 | 0.9951 | 0.9779 | 0.9866 |
+| Class 2    | 1.0000 | 0.9484 | 0.9381 | 0.9163 | 0.8964 |
+| Class 3    |        | 0.9896 | 0.8971 | 0.8883 | 0.8873 |
+| Class 4    |        | 0.9807 | 0.9626 | 0.9491 | 0.8579 |
+| Class 5    |        |        | 0.9005 | 0.8352 | 0.8564 |
+| Class 6    |        |        | 0.9802 | 0.9459 | 0.9479 |
+| Class 7    |        |        |        | 0.9740 | 0.9261 |
+| Class 8    |        |        |        | 0.9517 | 0.9071 |
+| Class 9    |        |        |        |        | 0.8996 |
+| Class 0    |        |        |        |        | 0.9444 |
+
+### SGD with momentum (no resets)
+
+Weight decay: 0.0, lr: 0.01, momentu: 0.9
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.014211, train acc 0.996419, val loss 0.008228, val acc 0.998083
+
+task 2, [3, 4]
+
+1, train loss 0.013009, train acc 0.995697, val loss 5.492000, val acc 0.485616
+
+![weight eval](./images_mnist/opt_sgd_task2_grads_norm_moment.png)
+
+task 3, [5, 6]
+
+1, train loss 0.031586, train acc 0.990995, val loss 7.185903, val acc 0.315066
+
+![weight eval](./images_mnist/opt_sgd_task3_grads_norm_moment.png)
+
+task 4, [7, 8]
+
+1, train loss 0.020824, train acc 0.994145, val loss 6.203802, val acc 0.253185
+
+![weight eval](./images_mnist/opt_sgd_task4_grads_norm_moment.png)
+
+task 5, [9, 0]
+
+1, train loss 0.021193, train acc 0.994432, val loss 5.943451, val acc 0.198200
+
+Checking norm of the class. layer weights
+
+tensor([2.3800, 1.1061, 0.9169, 0.9459, 0.9708, 1.1732, 1.0424, 1.2044, 1.2446,
+        2.5759])
+
+Sparcity analysis - population sparcity: 0.5574
+
+tensor([ 0.9196, -0.0823, -0.3366, -0.2981, -0.1764, -0.2080, -0.2490, -0.1221,
+        -0.1970,  0.8053], requires_grad=True)
+
+![weight eval](./images_mnist/opt_sgd_task5_grads_norm_moment.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 1.0000 | 0.9693 | 0.9414 | 0.9182 | 0.8945 |
+| Class 1    | 1.0000 | 0.9901 | 0.9806 | 0.9823 | 0.9688 |
+| Class 2    | 1.0000 | 0.9624 | 0.9330 | 0.9163 | 0.9223 |
+| Class 3    |        | 0.9375 | 0.8922 | 0.8680 | 0.8039 |
+| Class 4    |        | 0.9855 | 0.9626 | 0.9537 | 0.8634 |
+| Class 5    |        |        | 0.8955 | 0.8466 | 0.8508 |
+| Class 6    |        |        | 0.9851 | 0.9622 | 0.9323 |
+| Class 7    |        |        |        | 0.9479 | 0.9261 |
+| Class 8    |        |        |        | 0.8551 | 0.8415 |
+| Class 9    |        |        |        |        | 0.8745 |
+| Class 0    |        |        |        |        | 0.9495 |
+
+*Updating SGD with momentum at every iteration gives a very similar result as not updating it.*
+
 ## Orthogonal Gradient Descent
 
 Train the neural net until it achieves 0.98 accuracy on each task.
