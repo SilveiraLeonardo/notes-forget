@@ -638,5 +638,641 @@ They tested this hyphotesis and found that in general there are *savings* - indi
     * If there is no data available, how much *pseudo-replay* is needed?
 * It also suggests that methods targetting the classification layer could have good results. What has been done and what could be done here?
 
+## 17th September
+
+**Recap:** We found that despite the apparent forgetfullness of the model, its hidden layers were able to preseve good representations of the classes learned previously.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9582 | 0.9288 | 0.9220 | 0.8925 |
+| Class 1    | 0.9953 | 0.9802 | 0.9709 | 0.9779 | 0.9598 |
+| Class 2    | 1.0000 | 0.9202 | 0.9175 | 0.8670 | 0.9067 |
+| Class 3    |        | 0.9479 | 0.8824 | 0.8680 | 0.8775 |
+| Class 4    |        | 0.9855 | 0.9572 | 0.9722 | 0.8798 |
+| Class 5    |        |        | 0.8756 | 0.8239 | 0.7624 |
+| Class 6    |        |        | 0.9703 | 0.9730 | 0.9479 |
+| Class 7    |        |        |        | 0.9688 | 0.9261 |
+| Class 8    |        |        |        | 0.9082 | 0.8470 |
+| Class 9    |        |        |        |        | 0.8619 |
+| Class 0    |        |        |        |        | 0.9394 |
+
+
+Comparing:
+
+```
+NN with concurrent learning: 0.9646
+NN with sequential learning: 0.1985
+Representation sequential learning: 0.7190
+Representation sequential learning w/ BN: 0.8925 
+```
+
+This suggested to us that the forgetting was more *shallow* than previously antecipated, being mostly concentrated on the prediction layer - which was learning to get the current classes right while shutting the other classes off.
+
+### How general are the features extracted
+
+One question that we wanted to answer was: How general are the features the neural network learned to extract? Can it generalize for unseen tasks?
+
+For this, we trained the network on all five tasks, and at each point we evaluated how well it would predict the classes **[9, 0]**, which it would see only at the last task:
+
+**Task 1, [1, 2]**
+
+Evaluating on [0, 9]:
+
+Linear probe overall acc: 0.9774
+
+Class 9 accuracy on linear probing: 0.9848
+
+Class 0 accuracy on linear probing: 0.9703
+
+![latent](./images_mnist/linear_probing_bn_unseen_task1.png)
+
+**Task 2, [3, 4]**
+
+Linear probe overall acc: 0.9950
+
+Class 9 accuracy on linear probing: 0.9949
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_unseen_task2.png)
+
+**Task 3, [5, 6]**
+
+Linear probe overall acc: 0.9900
+
+Class 9 accuracy on linear probing: 0.9898
+
+Class 0 accuracy on linear probing: 0.9901
+
+![latent](./images_mnist/linear_probing_bn_unseen_task3.png)
+
+**Task 4, [7, 8]**
+
+Linear probe overall acc: 0.9950
+
+Class 9 accuracy on linear probing: 0.9949
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_unseen_task4.png)
+
+**Task 5, [9, 0]**
+
+Linear probe overall acc: 0.9975
+
+Class 9 accuracy on linear probing: 1.0000
+
+Class 0 accuracy on linear probing: 0.9950
+
+![latent](./images_mnist/linear_probing_bn_seen_task5.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|-------- |------- |------- |------- |------- |
+| Classifier | 0.9774 | 0.9950 | 0.9900 | 0.9950 | 0.9975 |
+| Class 0    | 0.9703 | 0.9950 | 0.9901 | 0.9950 | 0.9950 |
+| Class 9    | 0.9848 | 0.9949 | 0.9898 | 0.9949 | 1.0000 |
+
+![latent](./images_mnist/linear_probing_bn_unseen_progress.png)
+
+
+We can see that from the first task the network had pretty much learned the good features to separate digits in general (using 0 and 9 as a proxy). It means that for the next tasks, what was left was to try to make the current classes more far apart - as we can observe was the case for the fifth task, where the digits [9, 0] were finally seen on training - and change the weight in the classification layer, so that the new classes are predicted.
+
+* To make sure this was not because of some charactersitics of 1's and 2's that make them specially good prototypes, the same experiment was done again starting training with [3, 8] and [1, 4], and the same results were obtained.
+
+##### Performance on all classes
+
+How does the performance of the network evolves for the classification of all ten digits, as it trains:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.8470 | 0.8820 | 0.8835 | 0.8935 | 0.8905 |
+| Class 0    | 0.9343 | 0.9293 | 0.8788 | 0.9091 | 0.9596 |
+| Class 1    | 0.9688 | 0.9554 | 0.9598 | 0.9688 | 0.9688 |
+| Class 2    | 0.8912 | 0.8653 | 0.9067 | 0.9067 | 0.8808 |
+| Class 3    | 0.8235 | 0.8284 | 0.8922 | 0.8873 | 0.9020 |
+| Class 4    | 0.7869 | 0.9235 | 0.8743 | 0.8579 | 0.8470 |
+| Class 5    | 0.8011 | 0.7790 | 0.7624 | 0.8122 | 0.7901 |
+| Class 6    | 0.8750 | 0.9323 | 0.9583 | 0.9219 | 0.9375 |
+| Class 7    | 0.8276 | 0.9015 | 0.8818 | 0.9261 | 0.9163 |
+| Class 8    | 0.7158 | 0.8142 | 0.8470 | 0.8907 | 0.8470 |
+| Class 9    | 0.8201 | 0.8745 | 0.8577 | 0.8452 | 0.8410 |
+
+It seems that the features that are important to separate digits in the latent space were for a large part learned during the first task. From task 1 to task 5, around 5 p.p. were gained in performance, showing that there was some refiniment in the representation: probably taking the current digits more far apart. And this change seems no to distress much the representation of the other digits.
+
+**Interpretation**: This result alters my interpretation of previous results. I was thinking that the network was learning to extract features for each class of digit as it was training on them (first only 1's and 2's, then 3's and 4's, and so on), and then as it was learning new classes, somehow it was preserving knowledge of previously learned classes.
+
+But this does not seem the case anymore: The current result suggests that, the network right from the start is learning to extract very generic features that work for the current task, but also work reasonably well for all other feature tasks. Therefore, the conservation of the latent space as the network trains in more tasks is not a preservation of class specific knowledge, but the preservation and improvement of the features already learned by the network, that it has no motivation to forget, once they are the very things allowing it to learn fast how to do the current task, so it only refines and tweaks it for its current goals.
+
+**This may well be a characteristic of this benchmark**, where the same features are useful for all classes. In a sequences of tasks more unrelated there may not exist a set of generic features for them all, and in this case it is possible to have an overwritting of old features (think for instance remembering pairs of words A-B and A-C: there is no sharing of knowledge between the tasks). This would be a more *deep* sort of forgetting.
+
+### Can we tap into the hidden knowledge
+
+If we think that the forgetting is happening more strongly in the prediction layer, we may start to think why that is the case. We use the cross-entropy loss function, that tries to push down the probabilities for all classes but the correct one.
+
+*Gradients for the cross-entropy loss*
+
+```
+# for the logit of the correct class
+g = - (1 - p_hat)
+
+# for the logits of the other class
+g = p_hat
+```
+
+This has an exacerbated effect in sequential learning because previous tasks are not seen anymore, and the cross-entropy loss ends shutting off those logits completely - effectively unactivating them.
+
+Would there be a *softer* alternative?
+
+`Mermillod et al., 2013` investigated an complementary phenomenon to catastrophic forgetting: the entrenchment effect (age-limited learning affect) - knowledge acquired early in life are better remembered than items acquired later in life. This phenomenon can be reproduced in neural networks using sigmoid activations - during earlies learning the learn well, but then their activations go closer to the saturation points and it learns less. This is an example of how the loss of plasticity should vary as a function of the transfer function and the error signal computed (ex. cross-entropy vs. mean squared error).
+
+#### Targetting only the correct class
+
+We formulate a `log-sigmoid loss`, which has the same formulation as the cross-entropy, but instead of receiving the probability of the correct class from a `softmax` function, it receives from a `sigmoid`, in this way removing the dependence on all the logits - being dependent only on itself.
+
+```
+loss = -torch.log(F.sigmoid(logits[range(n), yb])).sum()/n
+```
+
+*Gradients for the log-sigmoid loss*:
+
+The model will try to make the correct probability larger, without changing the probabilities for the other classes.
+
+```
+# for the logit of the correct class
+g = - (1/p_hat) * p_hat * (1 - p_hat)
+
+# for the logits of the other class
+g = 0
+```
+
+##### Experiment 1
+
+**Task 1, [1, 2]**
+
+Epoch 1, train loss 0.006407, train acc 0.990672, val loss 0.055343, val acc 0.989938
+
+![sigmoid](./images_mnist/mlp_sequential_task1_weights_sigmoid.png)
+
+**Task 2, [3, 4]**
+
+Epoch 1, train loss 0.001526, train acc 0.988992, val loss 1.071949, val acc 0.485616
+
+![sigmoid](./images_mnist/mlp_sequential_task2_probs_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task2_weights_sigmoid.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task2_grads_sigmoid.png)
+
+**Important**: This is not the *effective update* to the weights, but the *raw gradients*.
+
+**Task 3, [5, 6]**
+
+Epoch 8, train loss 0.000160, train acc 0.980189, val loss 2.440988, val acc 0.322272
+
+![sigmoid](./images_mnist/mlp_sequential_task3_weights_sigmoid.png)
+
+**Task 4, [7, 8]**
+
+Epoch 7, train loss 0.000124, train acc 0.980153, val loss 2.503215, val acc 0.327504
+
+Sparcity analysis - population sparcity: 0.4394
+
+![sigmoid](./images_mnist/mlp_sequential_task4_weights_sigmoid.png)
+
+
+**Task 5, [9, 0]**
+
+Epoch 11, train loss 0.000036, train acc 0.981474, val loss 3.333156, val acc 0.260000
+
+
+![sigmoid](./images_mnist/mlp_sequential_task5_probs_sigmoid.png)
+
+Regarding the latent space: it is as good as it were before. The network seems no to be trying too much to separate the classes, but rather using the current representations and changing its classification weights to predict the correct class.
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9631 | 0.9347 | 0.9032 | 0.8825 |
+| Class 1    | 0.9907 | 0.9752 | 0.9757 | 0.9646 | 0.9509 |
+| Class 2    | 1.0000 | 0.9484 | 0.9124 | 0.8916 | 0.8912 |
+| Class 3    |        | 0.9427 | 0.9020 | 0.8426 | 0.8333 |
+| Class 4    |        | 0.9855 | 0.9519 | 0.9352 | 0.8689 |
+| Class 5    |        |        | 0.8856 | 0.7898 | 0.7956 |
+| Class 6    |        |        | 0.9802 | 0.9676 | 0.9531 |
+| Class 7    |        |        |        | 0.9531 | 0.8916 |
+| Class 8    |        |        |        | 0.8647 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8494 |
+| Class 0    |        |        |        |        | 0.9495 |
+
+#### Experiment 2 
+
+Adding regularization on the classification layer - *especifically to the row corresponding to the weights of the classes being trained*:
+
+```
+l2_norm = 0.0
+for name, param in model.named_parameters():
+    if name == "fc3.weight":
+        l2_norm += param[task_classes, :].pow(2).sum()
+    elif name == "fc3.bias":
+        l2_norm += param[task_classes].pow(2).sum()
+
+loss = base_loss + lambda_l2 * l1_norm
+```
+
+This mechanism worked, as it can be seen in the values of the norm of the rows of the classification layer at the end of the training, and the value of the bias. It can be seen also in the figure of the weights during training, where it is less obvious now the order of the training just by looking at the weights:
+
+```
+Checking norm of the class. layer weights
+tensor([0.7591, 0.9982, 0.9560, 1.0066, 1.0327, 0.9257, 0.9601, 0.9410, 0.9158,
+        0.7643])
+
+Classification bias vector:
+tensor([ 0.0988,  0.1442,  0.0487,  0.0912, -0.0191,  0.0474,  0.0397,  0.1057,
+         0.1050,  0.1019], requires_grad=
+```
+
+**Task 1, [1, 2]**
+
+1, train loss 0.007180, train acc 0.991991, val loss 0.049660, val acc 0.991375
+
+![sigmoid](./images_mnist/mlp_sequential_task1_weights_sigmoid_l2.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task1_grads_sigmoid_l2.png)
+
+**Task 2, [3, 4]**
+
+Epoch 1, train loss 0.003378, train acc 0.992595, val loss 1.189711, val acc 0.494468
+
+![sigmoid](./images_mnist/mlp_sequential_task2_forgetting_curve_sigmoid_l2.png)
+
+**Task 3, [5, 6]**
+
+Epoch 19, train loss 0.001550, train acc 0.976798, val loss 2.096942, val acc 0.394503
+
+![sigmoid](./images_mnist/mlp_sequential_task3_forgetting_curve_sigmoid_l2.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task3_weights_sigmoid_l2.png)
+
+**Task 4, [7, 8]**
+
+Epoch 1, train loss 0.001641, train acc 0.983825, val loss 2.020045, val acc 0.357982
+
+![sigmoid](./images_mnist/mlp_sequential_task4_weights_sigmoid_l2.png)
+
+task 5, [9, 0]
+
+19, train loss 0.001012, train acc 0.882567, val loss 2.232976, val acc 0.408200
+
+![sigmoid](./images_mnist/mlp_sequential_task5_forgetting_curve_sigmoid_l2.png)
+
+![sigmoid](./images_mnist/mlp_sequential_task5_probs_sigmoid_l2.png)
+
+*Looking at one example:*
+
+Correct class: 0
+
+| Prob. 0 | Prob. 1 | Prob. 2 | Prob. 3 | Prob. 4 | Prob. 5 |Prob. 6 |Prob. 7 | Prob. 8 | Prob. 9 |  
+|------------|------- |------- |------- |------- |------- |------- |------- |------- |------- |
+| 0.9997 | 0.9632 | 0.9947 | 0.9974 | 0.9889 | 0.9961 | 0.9987| 0.9965| 0.9922 | 0.9036 |
+
+The current loss sees only the probability for the current class - so makes it as high as possible. But it has no agency over the other probabilities, therefore they can also be arbitrarily large, and the neural net will make no effort to change them. 
+
+This may be the cause of the slow learning and forgetting: for several examples the network may have difficulties making the correct class have probabilities higher than the logits for previous classes.
+
+Looking at the latent representations, it continues the same as before. It suggests that the model is not changing much the latent representation, but focusing its changes on the classification head:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9619 | 0.9380 | 0.9051 | 0.8815 |
+| Class 1    | 0.9907 | 0.9752 | 0.9806 | 0.9558 | 0.9598 |
+| Class 2    | 0.9951 | 0.9343 | 0.9175 | 0.8768 | 0.9171 |
+| Class 3    |        | 0.9479 | 0.8775 | 0.8122 | 0.8333 |
+| Class 4    |        | 0.9903 | 0.9679 | 0.9444 | 0.8251 |
+| Class 5    |        |        | 0.9204 | 0.8466 | 0.8398 |
+| Class 6    |        |        | 0.9653 | 0.9622 | 0.9375 |
+| Class 7    |        |        |        | 0.9531 | 0.9163 |
+| Class 8    |        |        |        | 0.8792 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8075 |
+| Class 0    |        |        |        |        | 0.9444 |
+
+We would like the neural net to decrease the logits of the previous classes, but not shutting them off completely on the classification layer (like cross-entropy loss does), but modifying the latent space as to separate the different classes better there.
+
+**Experiment 3**
+
+Can we make the gradients flow through the logits of the incorrect classes, but *make* this gradients change the latent space and not the weights of the classification layer?
+
+* We keep the sigmoid loss on the correct class
+* We add sigmoid losses on the incorrect class, to make the reduce the logits values - but we propagate this gradients only to the latent layers, and not to the classification layer (which does not change).
+
+```
+            logits, (h1, h2) = model(xb)
+
+            base_loss = -torch.log(F.sigmoid(logits[range(n), yb])).sum()/n
+            
+            # loss for the incorrect classes
+            # do not backprop through the classification layer, only latent layers
+            # 1) create fake final layer, whose weights and bias are detached
+            fake_logits = F.linear(
+                    h2, 
+                    model.fc3.weight.detach(),
+                    model.fc3.bias.detach())
+            fake_probs = F.sigmoid(fake_logits)
+
+            # 2) mask to select only the incorrect classes
+            mask = torch.ones_like(fake_probs, dtype=torch.bool)
+            mask[range(n), yb] = False
+            
+            # 3) calculate the loss for the incorrect classes
+            repel_loss = -torch.log(1 - fake_probs[mask]).sum()/n
+
+            l1_norm = 0.0
+            for name, param in model.named_parameters():
+                if name == "fc3.weight":
+                    l1_norm += param[task_classes, :].pow(2).sum()
+                elif name == "fc3.bias":
+                    l1_norm += param[task_classes].pow(2).sum()
+
+            loss = base_loss + lambda_repel * repel_loss + lambda_l2 * l2_norm
+
+            loss.backward()
+```
+
+**Task 1, [1, 2]**
+
+Epoch 0, train loss 0.624714, train acc 0.980967, val loss 0.104157, val acc 0.990896
+
+**Task 2, [3, 4]**
+
+Epoch 1, train loss 0.685754, train acc 0.994996, val loss 1.596057, val acc 0.478485
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_sigmoid_repel.png)
+
+**Task 3, [5, 6]**
+
+Epoch 1, train loss 0.855084, train acc 0.986227, val loss 2.142583, val acc 0.308195
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_sigmoid_repel.png)
+
+**Task 4, [7, 8]**
+
+Epoch 1, train loss 0.894710, train acc 0.992260, val loss 2.303631, val acc 0.245441
+
+**Task 5, [9, 0]**
+
+Epoch 1, train loss 0.991418, train acc 0.980259, val loss 2.350173, val acc 0.197300
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_sigmoid_repel.png)
+
+*Looking at one example:*
+
+Correct class: 9
+
+| Prob. 0 | Prob. 1 | Prob. 2 | Prob. 3 | Prob. 4 | Prob. 5 |Prob. 6 |Prob. 7 | Prob. 8 | Prob. 9 |  
+|------------|------- |------- |------- |------- |------- |------- |------- |------- |------- |
+| 0.6825 | 0.5535 | 0.5289 | 0.6587 | 0.6445 | 0.5925 | 0.6655| 0.6871| 0.7249 | 0.9208 |
+
+How come it forgot everything but it keeps such probabilities for previous classes?
+We can see that forcing the gradients back to the latent layers made the network lose a lot of its generic feature extraction capabilities:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9631 | 0.8702 | 0.7216 | 0.4940 |
+| Class 1    | 0.9907 | 0.9802 | 0.9417 | 0.8761 | 0.8304 |
+| Class 2    | 1.0000 | 0.9343 | 0.7474 | 0.5419 | 0.4145 |
+| Class 3    |        | 0.9427 | 0.8431 | 0.6751 | 0.1127 |
+| Class 4    |        | 0.9952 | 0.9144 | 0.8472 | 0.2459 |
+| Class 5    |        |        | 0.8109 | 0.3750 | 0.2818 |
+| Class 6    |        |        | 0.9604 | 0.7622 | 0.4688 |
+| Class 7    |        |        |        | 0.8958 | 0.5764 |
+| Class 8    |        |        |        | 0.7391 | 0.2678 |
+| Class 9    |        |        |        |        | 0.7113 |
+| Class 0    |        |        |        |        | 0.8939 |
+
+**And here there is something interesting**:
+
+Comparing the results of the vanilla network trained with cross-entropy loss:
+
+* Task 1, [1, 2]: Train acc 0.994629, val loss 0.016472, val acc 0.996646
+
+* Task 2, [3, 4]: Train acc 0.996397, val loss 2.768203, val acc 0.484878
+
+* Task 3, [5, 6]: Train acc 0.989618, val loss 4.058978, val acc 0.315401
+
+* Task 4, [7, 8]: Train acc 0.993947, val loss 4.382470, val acc 0.253060
+
+* Task 5, [9, 0]: Train acc 0.994331, val loss 4.808394, val acc 0.198300
+
+And the results of the network with sigmoid loss, forcing the gradients to the latent layer:
+
+* Task 1, [1, 2]: Train acc 0.980967, val loss 0.104157, val acc 0.990896
+
+* Task 2, [3, 4]: Train acc 0.994996, val loss 1.596057, val acc 0.478485
+
+* Task 3, [5, 6]: Train acc 0.986227, val loss 2.142583, val acc 0.308195
+
+* Task 4, [7, 8]: Train acc 0.992260, val loss 2.303631, val acc 0.245441
+
+* Task 5, [9, 0]: Train acc 0.980259, val loss 2.350173, val acc 0.197300
+
+On the surface this two training examples seem very similar - except for the lower validation loss for the second one. One may be tempted to say that the same forgetting is happening in both of them.
+
+But if we look at the latent space probing accuracy:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|--------- |--------- |--------- |--------- |--------- |
+| Classifier | 0.9976 | 0.9582 | 0.9288 | 0.9220 | 0.8925 |
+
+For the second one: 
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9631 | 0.8702 | 0.7216 | 0.4940 |
+
+We can see that the forgetting has a very different character for the two cases: it **seems** to be more deep on the shallow case - where the forgetting happend in the latent representation itself. On the former, the forgetting seems to be more shallow, being more concentrated on the classification layer.
+
+#### Evaluating the causes of different kinds of forgetting
+
+It seems reasonable that these two different kinds of forgetting came to be due to where they are happening in the network:
+
+* Shallow forgetting: prediction layer.
+* Deep forgetting: latent layers.
+
+To evaluate if this is the case, we measure the difference in the norm of the weight matrices for the three layers of the neural network.
+
+*Obs: The norm of a matrix grows with the square root of the number of elements in it. So to make this measurement comparable between layers, we normalize by the square root of the number of elements.*
+
+##### Vanilla neural network with cross-entropy loss
+
+**Task 1, [1, 2]**
+
+Epoch 1, train loss 0.026846, train acc 0.994629, val loss 0.016472, val acc 0.996646
+
+**Task 2, [3, 4]**
+
+Epoch 1, train loss 0.019200, train acc 0.996397, val loss 2.768203, val acc 0.484878
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn.png)
+
+**Task 3, [5, 6]**
+
+Epoch 1, train loss 0.041286, train acc 0.989618, val loss 4.058978, val acc 0.315401
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn.png)
+
+**Task 4, [7, 8]**
+
+1, train loss 0.028197, train acc 0.993947, val loss 4.382470, val acc 0.253060
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn.png)
+
+**task 5, [9, 0]**
+
+1, train loss 0.026106, train acc 0.994331, val loss 4.808394, val acc 0.198300
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn.png)
+
+**Interesting**: If we look again at the performance of the linear problem in the representation space of the network for all the classes (classes that it has trained on and also that it hasn't trained on), we have:
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.8470 | 0.8820 | 0.8835 | 0.8935 | 0.8905 |
+
+We see that most of the representation power of the network was learned during the first task, and the second big chunk of knowledge was learned on the second task. For the rest little was added. And looking at the the changes in the neural network matrices, we can see that *on Task 2 is the only one that at some point more updates are being done on a hidden layer than on the classification layer*.
+
+##### Sigmoid loss and gradient forced through the latent layers
+
+
+**Task 1, [1, 2]**
+
+Epoch 0, train loss 0.624714, train acc 0.980967, val loss 0.104157, val acc 0.990896
+
+**Task 2, [3, 4]**
+
+Epoch 1, train loss 0.685754, train acc 0.994996, val loss 1.596057, val acc 0.478485
+
+![weight eval](./images_mnist/mlp_sequential_task2_delta_weights_norm_bn_sigmoid_repel_2.png)
+
+**Task 3, [5, 6]**
+
+Epoch 1, train loss 0.855084, train acc 0.986227, val loss 2.142583, val acc 0.308195
+
+![weight eval](./images_mnist/mlp_sequential_task3_delta_weights_norm_bn_sigmoid_repel_2.png)
+
+**Task 4, [7, 8]**
+
+Epoch 1, train loss 0.894710, train acc 0.992260, val loss 2.303631, val acc 0.245441
+
+![weight eval](./images_mnist/mlp_sequential_task4_delta_weights_norm_bn_sigmoid_repel_2.png)
+
+**Task 5, [9, 0]**
+
+Epoch 1, train loss 0.991418, train acc 0.980259, val loss 2.350173, val acc 0.197300
+
+![weight eval](./images_mnist/mlp_sequential_task5_delta_weights_norm_bn_sigmoid_repel_2.png)
+
+We can see that there is a different behavior to the updates happening in the different layers to the network, particularly during Tasks 1 and 2, where updates to the hidden layers are happening at the same or at a larger pace than on the classification layer.
+
+So in this training regime, part of the forgetting happens due to changes in the latent representations, being not so much localized in the classification head.
+
+### Measuring how deep is forgetting
+
+It is reasonable to assume that the more superficial the forgetting is, or the more discriminative remains the representation space for the task you are doing, the easier it will be to recover from the forgetting by means of additional training.
+
+Therefore, we can build the following reasoning:
+
+* Being true that the neural network trained with cross-entropy loss has a more shallow sort of forgetting, localized in the classification layer, and a more discriminative latent space, relative to the neural network trained with sigmoid and forcing gradients to the latent layers.
+
+* It may also be true that the former should more readily relearn the tasks it had forgotten.
+
+The same reasoning can hold for different sequential learning tasks:
+
+* Training on Split-MNIST the network learns very generic features that are useful to discriminate all classes, therefore relearning a past task should be easier than when training on sequential tasks that have a larger degree of independence (i.e., do not have such generic feature extractors available).
+
+To measure how much easier it is to relearn a previously learned task, compared with the learning of the task for the first time, we use the *savings* metric `Ebbinghaus, 1885; Hetherington & Seidenberg, 1989; Ashley & Sutton, 2021`.
+
+* Definition by `Ebbinghaus, 1885`: (...) the amount work saved in the relearning of any series [task] as compared with the work necessary for memorizing a similar but entirely new series [task].
+
+Therefore, if we are correct, the *savings* metric should serve as a proxy for how deep the forgetting is the network:
+
+* Larger savings: shallower forgetting;
+* Small savings: deeper forgetting.
+
+We use a version of this comparing how fast it was to relearn the task compared how fast it was to learn it the first time around:
+
+```
+savings = (work_during_learning - work_during_relearning) / work_during_learning 
+```
+
+Using the protocol:
+
+1. Train on Task 1;
+2. Train on Task 2;
+3. Train on Task 1.
+
+*Is this the best way? Is not better to compare how fast it was to learn a new task, starting from the same point in weight space? (more aligned with Ebbinghaus)*
+
+##### Here things start to get confusing
+
+Using the neural network trained with cross-entropy loss, which we expect shallow forgetting and larger savings compared with the network trained with sigmoid loss and gradients through the latent layers.
+
+```
+# Parameters
+Weight decay: 0.00
+lambda L2: 0.0
+lambda repel: 0.0
+learning rate: 1e-3
+optimizer: AdamW
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Performing 25 trials:
+
+Number of updates learning for the first time:
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 44, 31, 37, 34, 24, 40]
+
+Number of updates relearning:
+[62, 76, 60, 59, 56, 58, 79, 73, 45, 52, 65, 63, 52, 65, 68, 66, 69, 59, 60, 55, 50, 64, 56, 51, 58]
+
+Savings: -0.797872
+
+Updates when learning: 33.840000, std: 4.592864
+Updates when relearning: 60.840000, std 8.073066
+```
+
+There are two recent papers that study the influence the effect of the **optimizer** in sequential learning and catastrophic forgetting:
+
+`Mirzadeh et al., 2020`: argues for the effectiveness of SGD in continual learning scenario compared to adaptive optimizers, such as Adam. "(...) they are outperformed by SGD at later stages in trainign due to *generalization issues*".
+
+`Ashley & Sutton, 2021`: Empirical comparison between optimizers. Found that when comparing for *retention* (contrary of forgetting) RMSProp outperformed the other three. When comparing *relearning* (savings), SGD was the best. Adam was particularly poor on all cases.
+
+To check: swapping AdamW by SGD, and ***finding the right learning rate***:
+
+```
+# Parameters
+Weight decay: 0.00
+lambda L2: 0.0
+lambda repel: 0.0
+learning rate: 0.1
+optimizer: SGD
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Performing 25 trials:
+
+Number of updates learning for the first time:
+[21, 18, 14, 26, 37, 17, 12, 21, 17, 21, 21, 15, 21, 21, 27, 21, 20, 21, 21, 21, 18, 23, 21, 22, 18]
+
+Number of updates relearning:
+[8, 9, 3, 13, 7, 8, 7, 5, 13, 12, 14, 8, 10, 7, 13, 11, 9, 13, 11, 7, 4, 5, 5, 5, 6]
+
+Savings: 0.586408
+
+Updates when learning: 20.600000, std: 4.664762
+Updates when relearning: 8.520000, std 3.188981
+```
+
+
+
+
+
 
 
