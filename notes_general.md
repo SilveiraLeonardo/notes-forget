@@ -1210,9 +1210,9 @@ Using the protocol:
 
 *Is this the best way? Is not better to compare how fast it was to learn a new task, starting from the same point in weight space? (more aligned with Ebbinghaus)*
 
-##### Here things start to get confusing
+##### The question of the optimizer
 
-Using the neural network trained with cross-entropy loss, which we expect shallow forgetting and larger savings compared with the network trained with sigmoid loss and gradients through the latent layers.
+Testint the neural network trained with cross-entropy loss: expected shallow forgetting and larger savings relative to the network trained with sigmoid loss and gradients through the latent layers.
 
 ```
 # Parameters
@@ -1240,11 +1240,11 @@ Updates when relearning: 60.840000, std 8.073066
 
 There are two recent papers that study the influence the effect of the **optimizer** in sequential learning and catastrophic forgetting:
 
-`Mirzadeh et al., 2020`: argues for the effectiveness of SGD in continual learning scenario compared to adaptive optimizers, such as Adam. "(...) they are outperformed by SGD at later stages in trainign due to *generalization issues*".
+`Mirzadeh et al., 2020`: argues for the effectiveness of SGD in continual learning scenario compared to adaptive optimizers, such as Adam. "(...) they are outperformed by SGD at later stages in training due to *generalization issues*".
 
 `Ashley & Sutton, 2021`: Empirical comparison between optimizers. Found that when comparing for *retention* (contrary of forgetting) RMSProp outperformed the other three. When comparing *relearning* (savings), SGD was the best. Adam was particularly poor on all cases.
 
-To check: swapping AdamW by SGD, and ***finding the right learning rate***:
+To check: swapping Adam by SGD, and ***finding the right learning rate***:
 
 ```
 # Parameters
@@ -1270,9 +1270,232 @@ Updates when learning: 20.600000, std: 4.664762
 Updates when relearning: 8.520000, std 3.188981
 ```
 
+###### Why is this the case:
+
+Looking at their algorithms:
+
+```
+# SGD
+g = ∇L(θ) 
+θ <- θ - lr * g
+```
+
+```
+# AdamW
+g = ∇L(θ) 
+
+m <- β1 * m + (1 - β1) * g
+s <- β2 * s + (1 - β2) * g * g
+
+# bias correction for the beginning of training
+m_hat <- m / (1 - β1^t)
+s_hat <- s / (1 - β2^t)
+
+# update the weights
+θ <- θ - lr * m_hat / (sqrt(s_hat) + eps)
+
+# apply weight penalty
+θ <- θ - lr * μ * θ
+
+# update the counter
+t <- t + 1
+```
+
+The way the training procedure was currently set up, the optimizer was initialized once, before training, and would carry its state for all tasks:
+
+```
+optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+
+for task_id, task_classes in enumerate(tasks, 1):
+
+    ...
+
+    for epoch in range(epochs):
+    ...
+
+```
+
+This can be set up differently, with the optimizer being initialized for every new task:
 
 
+```
+for task_id, task_classes in enumerate(tasks, 1):
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+    ...
+
+    for epoch in range(epochs):
+    ...
+
+```
+
+Resetting the optimizer at every new epoch gives the following result for Adam:
 
 
+```
+# Parameters
+Weight decay: 0.00
+lambda L2: 0.0
+lambda repel: 0.0
+learning rate: 1e-3
+optimizer: AdamW (reset at every task)
 
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Performing 25 trials:
+
+Number of updates learning for the first time:
+[31, 37, 30, 36, 26, 38, 26, 34, 37, 35, 35, 31, 38, 31, 33, 38, 29, 36, 35, 44, 31, 37, 34, 24, 40]
+
+Number of updates relearning:
+[38, 17, 27, 32, 41, 41, 34, 8, 40, 40, 32, 32, 9, 45, 27, 26, 33, 30, 15, 32, 32, 28, 26, 28, 31]
+
+Savings: 0.120567
+
+Updates when learning: 33.840000, std: 4.592864
+Updates when relearning: 29.760000, std 9.279138
+
+Recalling results initializing it only once:
+
+Savings: -0.797872
+Updates when learning: 33.840000, std: 4.592864
+Updates when relearning: 60.840000, std 8.073066
+```
+
+To investigate why there is this difference, we look at two more optimization algorithms:
+
+```
+# SGD with Momentum 
+g = ∇L(θ) 
+
+m <- β * m - lr * θ
+
+# update the weights
+θ <- θ + m
+```
+
+```
+# RMSProp
+g = ∇L(θ) 
+
+s <- β * s + (1 - β) * g * g
+
+# update the weights
+θ <- θ - lr * g / (sqrt(s_hat + eps))
+```
+
+SGD with momentum in this setting is tricky and easy to have non-convergence problems. The follow experiment is with the largest learning rate that it arrived at the end of training uneventful.
+
+```
+# SGD with momentum, initialized once
+Weight decay: 0.0
+Momentum: 0.9
+Learning rate: 0.01
+
+Number of updates learning for the first time:
+[33, 43, 44, 45, 41, 39, 36, 35, 35, 44, 41, 44, 43, 42, 37, 41, 41, 50, 41, 47, 36, 46, 39, 34, 38]
+
+Number of updates relearning:
+[46, 46, 39, 46, 47, 42, 51, 48, 40, 45, 44, 41, 44, 54, 43, 49, 42, 47, 35, 43, 56, 50, 39, 41, 38]
+
+Savings: -0.099507, 
+
+Updates when learning: 40.600000, std: 4.28018
+Updates when relearning: 44.640000, std 4.906159
+```
+
+```
+# SGD with momentum, reset at every task
+Weight decay: 0.0
+Momentum: 0.9
+Learning rate: 0.01
+
+Number of updates learning for the first time:
+[33, 43, 44, 45, 41, 39, 36, 35, 35, 44, 41, 44, 43, 42, 37, 41, 41, 50, 41, 47, 36, 46, 39, 34, 38]
+
+Number of updates relearning:
+[47, 41, 47, 45, 46, 43, 51, 47, 41, 47, 38, 43, 41, 47, 38, 49, 44, 44, 38, 43, 48, 46, 39, 45, 41]
+
+Savings: -0.082759, 
+
+Updates when learning: 40.600000, std: 4.28018
+Updates when relearning: 43.960000, std 3.560674
+```
+
+Testing with RMSProp:
+
+```
+# RMSProp, initialized once
+Weight decay: 0.0
+Learning rate: 1e-3
+
+Number of updates learning for the first time:
+[25, 24, 11, 35, 17, 17, 24, 23, 21, 21, 21, 29, 30, 18, 19, 32, 18, 33, 19, 23, 10, 33, 29, 15, 19]
+
+Number of updates relearning:
+[10, 16, 8, 14, 5, 10, 11, 14, 11, 8, 10, 5, 6, 8, 17, 14, 11, 8, 11, 9, 8, 5, 11, 12, 13]
+
+Savings: 0.549470, 
+
+Updates when learning:: 22.640000, std: 6.656606
+Updates when relearning: 10.200000, std 3.237283
+```
+
+```
+# RMSProp, reset at every task
+Weight decay: 0.0
+Learning rate: 1e-3
+
+Number of updates learning for the first time:
+[25, 24, 11, 35, 17, 17, 24, 23, 21, 21, 21, 29, 30, 18, 19, 32, 18, 33, 19, 23, 10, 33, 29, 15, 19]
+
+Number of updates relearning:
+[6, 6, 3, 5, 5, 5, 3, 14, 5, 10, 12, 6, 4, 3, 7, 6, 9, 3, 5, 5, 8, 9, 6, 9, 5]
+
+Savings: 0.719081,
+
+Updates when learning: 22.640000, std: 6.656606
+Updates when relearning: 6.360000, std 2.769549
+```
+
+Bringing SGD back for comparison:
+
+```
+# Parameters
+Weight decay: 0.00
+lambda L2: 0.0
+lambda repel: 0.0
+learning rate: 0.1
+optimizer: SGD
+
+Training on: [[1, 2], [3, 4], [1, 2]]
+
+Performing 25 trials:
+
+Number of updates learning for the first time:
+[21, 18, 14, 26, 37, 17, 12, 21, 17, 21, 21, 15, 21, 21, 27, 21, 20, 21, 21, 21, 18, 23, 21, 22, 18]
+
+Number of updates relearning:
+[8, 9, 3, 13, 7, 8, 7, 5, 13, 12, 14, 8, 10, 7, 13, 11, 9, 13, 11, 7, 4, 5, 5, 5, 6]
+
+Savings: 0.586408
+
+Updates when learning: 20.600000, std: 4.664762
+Updates when relearning: 8.520000, std 3.188981
+```
+
+These initial results suggest that the optimizer has a important role when measuring the *savings* on a previously learning task. 
+
+So far it seems that:
+
+* Resetting the optimizer at each task appears to be beneficial,
+* The use of **momentum** seems to be particularly bad for this metric.
+
+But this matter needs a lot more investigation.
+
+**Importantly**, the metric ***savings*** appears not to be a inherent metric of the model (how much it still knows, how deep is forgetting, how stable is its knowledge), but vulnerable to the tooling used with the model.
+
+### Coming
+
+* Continue investigation into the optimizer's influence in sequential learning and forgetting.
 
