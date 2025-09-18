@@ -1403,6 +1403,97 @@ Sparcity analysis - population sparcity: 0.4777
 | Class 9    |        |        |        |        | 0.8703 |
 | Class 0    |        |        |        |        | 0.9545 |
 
+#### Binary cross-entropy + repel loss
+
+```
+            logits, (h1, h2) = model(xb)
+            
+            # apply binary cross-entropy loss
+            task_logits = logits[:, task_classes]
+            tc = torch.tensor(task_classes) # tensor([1, 2])
+            yb_expand = yb.unsqueeze(1) # (batch, 1)
+            targets = (yb_expand == tc).float() # (batch, 2)
+            base_loss = F.binary_cross_entropy_with_logits(task_logits, targets)
+            
+            # loss for the incorrect classes: attracts it to 0.1
+            # do not backprop through the classification layer, only latent layers
+            # 1) create fake final layer, whose weights and bias are detached
+            fake_logits = F.linear(
+                    h2, 
+                    model.fc3.weight.detach(),
+                    model.fc3.bias.detach())
+            fake_probs = F.sigmoid(fake_logits)
+            # 2) mask to select only the incorrect classes
+            mask = torch.ones_like(fake_probs, dtype=torch.bool)
+            mask[range(n), yb] = False
+            # 3) calculate the loss for the incorrect classes
+            #repel_loss = (fake_probs[mask] - 0.1).pow(2).sum() / n
+            repel_loss = -torch.log((1 - fake_probs[mask]).clamp(min=1e-6)).sum()/n
+
+            # compute the l1 norm for the activations
+            #l1_norm = (h1.abs().mean() + h2.abs().mean())
+            l1_norm = 0.0
+            for name, param in model.named_parameters():
+                if name == "fc3.weight":
+                    l1_norm += param[task_classes, :].pow(2).sum()
+                elif name == "fc3.bias":
+                    l1_norm += param[task_classes].pow(2).sum()
+
+            if counter % 100 == 0 and counter != 0:
+                print(base_loss)
+                print(repel_loss)
+                print(l1_norm)
+
+            loss = base_loss + lambda_repel * repel_loss + lambda_l1 * l1_norm
+```
+
+
+lambda_l1 = 0.001
+
+print(f"lambda L1: {lambda_l1}")
+
+lambda_repel = 0.001
+
+print(f"lambda repel: {lambda_repel}")
+
+Task 5, [9, 0]
+
+lambda l1: 0.001
+
+example
+
+tensor(0)
+
+tensor([9.9932e-01, 4.5660e-01, 3.9632e-01, 2.4827e-01, 8.7718e-01, 4.4422e-02,
+        9.1367e-01, 1.2432e-01, 8.9207e-01, 6.9047e-04],
+       grad_fn=<SigmoidBackward0>)
+
+1, train loss 0.021530, train acc 0.947661, val loss 2.440863, val acc 0.408900
+
+example
+
+tensor(0)
+
+tensor([0.9480, 0.4144, 0.5023, 0.4627, 0.7121, 0.3262, 0.6547, 0.0220, 0.9764,
+        0.0567], grad_fn=<SigmoidBackward0>)
+
+Epoch 3, train loss 0.015301, train acc 0.985017, val loss 2.712776, val acc 0.352400
+
+Linear probe overall acc: 0.9095
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9668 | 0.9389 | 0.9251 | 0.9095 |
+| Class 1    | 0.9953 | 0.9901 | 0.9709 | 0.9735 | 0.9688 |
+| Class 2    | 1.0000 | 0.9390 | 0.9278 | 0.8571 | 0.8860 |
+| Class 3    |        | 0.9531 | 0.8971 | 0.9239 | 0.8725 |
+| Class 4    |        | 0.9855 | 0.9626 | 0.9676 | 0.9126 |
+| Class 5    |        |        | 0.9055 | 0.8068 | 0.7845 |
+| Class 6    |        |        | 0.9703 | 0.9676 | 0.9583 |
+| Class 7    |        |        |        | 0.9531 | 0.9458 |
+| Class 8    |        |        |        | 0.9324 | 0.9016 |
+| Class 9    |        |        |        |        | 0.9121 |
+| Class 0    |        |        |        |        | 0.9343 |
 
 ### Training using MSE
 
