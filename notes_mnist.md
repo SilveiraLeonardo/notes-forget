@@ -6,18 +6,18 @@ Training **concurrently** a small MLP network:
 
 ```
 class MLP(nn.Module):
-    def __init__(self, input_dim=784, n_classes=10):
-        super().__init__()
+def __init__(self, input_dim=784, n_classes=10):
+    super().__init__()
 
-        self.fc1 = nn.Linear(input_dim, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, n_classes)
+    self.fc1 = nn.Linear(input_dim, 120)
+    self.fc2 = nn.Linear(120, 84)
+    self.fc3 = nn.Linear(84, n_classes)
 
-    def forward(self, x):
+def forward(self, x):
 
-        x = F.relu(self.fc1(x))
-        z = F.relu(self.fc2(x))
-        logits = self.fc3(z)
+    x = F.relu(self.fc1(x))
+    z = F.relu(self.fc2(x))
+    logits = self.fc3(z)
         return logits, z
 ```
 
@@ -2979,6 +2979,760 @@ tensor([ 0.9196, -0.0823, -0.3366, -0.2981, -0.1764, -0.2080, -0.2490, -0.1221,
 | Class 0    |        |        |        |        | 0.9495 |
 
 *Updating SGD with momentum at every iteration gives a very similar result as not updating it.*
+
+### Changing the setup
+
+Changing the setup to see how close the final solution is to the place you want to be, the joing solution.
+
+So we train on a number of tasks: [1, 2], [2, 3], ...
+
+After this we train on the joint solution: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+And we check how long did it take us to get there: which optimizer let us closer to there?
+
+#### SGD:
+
+learning rate: 0.1
+
+momentum: 0.0
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [7, 8], [9, 0], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+Task 0, [1, 2]
+
+Accuracy larger than 0.95, breaking from training with 1 updates...
+
+Epoch 0, val loss 1.884970, val acc 0.961667
+
+Task 1, [3, 4]
+
+Accuracy larger than 0.95, breaking from training with 2 updates...
+
+Epoch 0, val loss 1.252110, val acc 0.951515
+
+Task 2, [5, 6]
+
+Accuracy larger than 0.95, breaking from training with 11 updates...
+
+Epoch 0, val loss 0.234893, val acc 0.957368
+
+Task 3, [7, 8]
+
+Accuracy larger than 0.95, breaking from training with 5 updates...
+
+Epoch 0, val loss 0.174090, val acc 0.963217
+
+Task 4, [9, 0]
+
+Accuracy larger than 0.95, breaking from training with 5 updates...
+
+Epoch 0, val loss 0.153933, val acc 0.966901
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+Accuracy larger than 0.95, breaking from training with 472 updates...
+
+Epoch 0, val loss 0.162608, val acc 0.950300
+
+{0: 1, 1: 2, 2: 11, 3: 5, 4: 5, 5: 472}
+
+Running test: 1
+
+{0: 5, 1: 4, 2: 10, 3: 4, 4: 3, 5: 493}
+
+Running test: 2
+
+{0: 2, 1: 4, 2: 8, 3: 8, 4: 4, 5: 436}
+
+Running test: 3
+
+{0: 1, 1: 10, 2: 11, 3: 9, 4: 4, 5: 464}
+
+Running test: 4
+
+{0: 1, 1: 2, 2: 10, 3: 10, 4: 4, 5: 425}
+
+Running test: 5
+
+{0: 2, 1: 3, 2: 6, 3: 4, 4: 4, 5: 473}
+
+**Average result: 460.5**
+
+#### SGD with Momentum (initializing once)
+
+Momentum: 0.9
+
+Learning rate: 0.01
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [7, 8], [9, 0], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+Task 0, [1, 2]
+
+Accuracy larger than 0.95, breaking from training with 9 updates...
+
+Epoch 0, val loss 0.775151, val acc 0.950647
+
+Task 1, [3, 4]
+
+Accuracy larger than 0.95, breaking from training with 11 updates...
+
+Epoch 0, val loss 0.291203, val acc 0.951010
+
+Task 2, [5, 6]
+
+Accuracy larger than 0.95, breaking from training with 24 updates...
+
+Epoch 0, val loss 0.129304, val acc 0.952632
+
+Task 3, [7, 8]
+
+Accuracy larger than 0.95, breaking from training with 24 updates...
+
+Epoch 0, val loss 0.121726, val acc 0.961256
+
+Task 4, [9, 0]
+
+Accuracy larger than 0.95, breaking from training with 15 updates...
+
+Epoch 0, val loss 0.238178, val acc 0.965396
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+Accuracy larger than 0.95, breaking from training with 718 updates...
+
+Epoch 0, val loss 0.159698, val acc 0.950400
+
+{0: 9, 1: 11, 2: 24, 3: 24, 4: 15, 5: 718}
+
+Running test: 1
+
+{0: 10, 1: 11, 2: 22, 3: 25, 4: 17, 5: 647}
+
+Running test: 2
+
+{0: 5, 1: 8, 2: 15, 3: 18, 4: 13, 5: 558}
+
+Running test: 3
+
+{0: 5, 1: 10, 2: 18, 3: 17, 4: 15, 5: 679}
+
+Running test: 4
+
+{0: 13, 1: 14, 2: 27, 3: 23, 4: 19, 5: 661}
+
+**Average result: 652.6**
+
+#### SGD with Momentum (resetting every task)
+
+Momentum: 0.9
+
+Learning rate: 0.01
+
+Running test: 0
+
+{0: 9, 1: 12, 2: 22, 3: 21, 4: 14, 5: 652}
+
+Running test: 1
+
+{0: 10, 1: 7, 2: 16, 3: 14, 4: 15, 5: 573}
+
+Running test: 2
+
+{0: 5, 1: 6, 2: 14, 3: 12, 4: 11, 5: 553}
+
+Running test: 3
+
+{0: 5, 1: 9, 2: 24, 3: 11, 4: 9, 5: 506}
+
+Running test: 4
+
+{0: 13, 1: 14, 2: 23, 3: 20, 4: 15, 5: 653}
+
+List of updates for final task:
+
+[652, 573, 553, 506, 653]
+
+**mean: 587.400000**
+
+#### Adam (initializing once)
+
+Running test: 0
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 2, 1: 6, 2: 19, 3: 27, 4: 24, 5: 584}
+
+Running test: 1
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 3, 1: 11, 2: 20, 3: 26, 4: 15, 5: 526}
+
+Running test: 2
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 3, 1: 12, 2: 27, 3: 29, 4: 30, 5: 558}
+
+Running test: 3
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 2, 1: 7, 2: 17, 3: 22, 4: 25, 5: 499}
+
+Running test: 4
+
+Task 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 11, 1: 17, 2: 25, 3: 24, 4: 22, 5: 556}
+
+List of updates for final task:
+
+[584, 526, 558, 499, 556]
+
+**mean: 544.600000**
+
+#### Adam (resetting every task)
+
+Running test: 0
+
+{0: 2, 1: 3, 2: 5, 3: 6, 4: 5, 5: 450}
+
+Running test: 1
+
+{0: 3, 1: 4, 2: 6, 3: 9, 4: 8, 5: 462}
+
+Running test: 2
+
+{0: 3, 1: 5, 2: 12, 3: 13, 4: 9, 5: 440}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 8, 3: 6, 4: 8, 5: 429}
+
+Running test: 4
+
+{0: 11, 1: 12, 2: 9, 3: 8, 4: 14, 5: 455}
+
+List of updates for final task:
+
+[450, 462, 440, 429, 455]
+
+**mean: 447.200000**
+
+### RMSProp (initializing once)
+
+Running test: 0
+
+{0: 1, 1: 5, 2: 5, 3: 5, 4: 5, 5: 472}
+
+Running test: 1
+
+{0: 8, 1: 8, 2: 9, 3: 9, 4: 5, 5: 474}
+
+Running test: 2
+
+{0: 2, 1: 6, 2: 10, 3: 6, 4: 4, 5: 403}
+
+Running test: 3
+
+{0: 7, 1: 7, 2: 11, 3: 7, 4: 5, 5: 397}
+
+Running test: 4
+
+{0: 2, 1: 4, 2: 4, 3: 5, 4: 7, 5: 360}
+
+List of updates for final task:
+
+[472, 474, 403, 397, 360]
+
+**mean: 421.200000**
+
+#### RMSProp (resetting every task)
+
+Running test: 0
+
+{0: 1, 1: 2, 2: 6, 3: 3, 4: 3, 5: 316}
+
+Running test: 1
+
+{0: 8, 1: 3, 2: 6, 3: 3, 4: 3, 5: 333}
+
+Running test: 2
+
+{0: 2, 1: 6, 2: 7, 3: 6, 4: 2, 5: 333}
+
+Running test: 3
+
+{0: 7, 1: 6, 2: 7, 3: 4, 4: 3, 5: 331}
+
+Running test: 4
+
+{0: 2, 1: 3, 2: 7, 3: 7, 4: 3, 5: 295}
+
+List of updates for final task:
+
+[316, 333, 333, 331, 295]
+
+**mean: 321.600000**
+
+#### Adadelta (initializing once)
+
+Running test: 0
+
+{0: 1, 1: 2, 2: 3, 3: 8, 4: 3, 5: 334}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 4, 4: 4, 5: 302}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 11, 4: 4, 5: 307}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 9, 4: 3, 5: 341}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 8, 3: 5, 4: 4, 5: 305}
+
+List of updates for final task:
+
+[334, 302, 307, 341, 305]
+
+**mean: 317.800000**
+
+#### Adadelta (with resets)
+
+Running test: 0
+
+{0: 1, 1: 2, 2: 3, 3: 8, 4: 3, 5: 346}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 8, 4: 4, 5: 278}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 9, 4: 3, 5: 316}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 3, 4: 3, 5: 345}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 5, 3: 9, 4: 4, 5: 293}
+
+List of updates for final task:
+
+[346, 278, 316, 345, 293]
+
+**mean: 315.600000**
+
+### Using 4 previous tasks
+
+#### Adadelta (no resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 2, 2: 3, 3: 8, 4: 348}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 4, 4: 329}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 11, 4: 348}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 9, 4: 332}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 8, 3: 5, 4: 369}
+
+List of updates for final task:
+
+[348, 329, 348, 332, 369]
+
+mean: 345.200000, std: 14.274453
+
+
+
+#### Adadelta (with resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+Task 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 1, 1: 2, 2: 3, 3: 8, 4: 291}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 8, 4: 342}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 9, 4: 300}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 3, 4: 318}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 5, 3: 9, 4: 287}
+
+List of updates for final task:
+
+[291, 342, 300, 318, 287]
+
+**mean: 307.600000**
+
+### Using 3 previous tasks
+
+#### Adadelta (no resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 2, 2: 3, 3: 331}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 348}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 307}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 341}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 8, 3: 351}
+
+List of updates for final task:
+
+[331, 348, 307, 341, 351]
+
+**mean: 335.600000, std: 15.869468**
+
+#### Adadelta (with resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [5, 6], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 2, 2: 3, 3: 331}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 8, 3: 313}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 4, 3: 311}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 3, 3: 318}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 5, 3: 270}
+
+List of updates for final task:
+
+[331, 313, 311, 318, 270]
+
+mean: 308.600000, std: 20.519259
+
+### Using 2 previous tasks
+
+#### Adadelta (no resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 2, 2: 335}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 306}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 318}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 318}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 306}
+
+List of updates for final task:
+
+[335, 306, 318, 318, 306]
+
+mean: 316.600000, std: 10.650822
+
+#### Adadelta (with resets)
+
+Running test: 0
+
+Training on: [[1, 2], [3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 2, 2: 336}
+
+Running test: 1
+
+{0: 2, 1: 2, 2: 306}
+
+Running test: 2
+
+{0: 2, 1: 3, 2: 318}
+
+Running test: 3
+
+{0: 2, 1: 3, 2: 349}
+
+Running test: 4
+
+{0: 8, 1: 7, 2: 312}
+
+List of updates for final task:
+
+[336, 306, 318, 349, 312]
+
+**mean: 324.200000, std: 15.954937**
+
+### Using 1 previous tasks
+
+#### Adadelta (no resets)
+
+Running test: 0
+
+{0: 1, 1: 346}
+
+Running test: 1
+
+{0: 2, 1: 353}
+
+Running test: 2
+
+{0: 2, 1: 303}
+
+Running test: 3
+
+{0: 2, 1: 307}
+
+Running test: 4
+
+{0: 8, 1: 336}
+
+List of updates for final task:
+
+[346, 353, 303, 307, 336]
+
+mean: 329.000000, std: 20.366639
+
+#### Adadelta (with resets)
+
+Running test: 0
+
+Training on: [[1, 2], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
+
+{0: 1, 1: 352}
+
+Running test: 1
+
+{0: 2, 1: 303}
+
+Running test: 3
+
+{0: 2, 1: 307}
+
+Running test: 4
+
+{0: 8, 1: 328}
+
+List of updates for final task:
+
+[352, 337, 303, 307, 328]
+
+**mean: 325.400000, std: 18.380424**
+
+### No pretraining
+
+#### SGD
+
+Running test: 0
+
+Training on: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+Task 0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 564}
+
+Running test: 1
+
+{0: 527}
+
+Running test: 2
+
+{0: 539}
+
+Running test: 3
+
+{0: 581}
+
+Running test: 4
+
+{0: 541}
+
+List of updates for final task:
+
+[564, 527, 539, 581, 541]
+
+**mean: 550.400000, std: 19.427815**
+
+#### SGD with momentum
+
+Running test: 0
+
+Training on: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 650}
+
+Running test: 1
+
+{0: 562}
+
+Running test: 2
+
+{0: 655}
+
+Running test: 3
+
+{0: 623}
+
+Running test: 4
+
+{0: 612}
+
+List of updates for final task:
+
+[650, 562, 655, 623, 612]
+
+**mean: 620.400000, std: 33.350262**
+
+#### Adam
+
+Running test: 0
+
+Task 0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 573}
+
+Running test: 1
+
+{0: 512}
+
+Running test: 2
+
+{0: 538}
+
+Running test: 3
+
+{0: 573}
+
+Running test: 4
+
+{0: 574}
+
+List of updates for final task:
+
+[573, 512, 538, 573, 574]
+
+**mean: 554.000000, std: 25.067908**
+
+#### RMSProp
+
+Running test: 0
+
+{0: 443}
+
+Running test: 1
+
+{0: 364}
+
+Running test: 2
+
+{0: 458}
+
+Running test: 3
+
+{0: 444}
+
+Running test: 4
+
+{0: 395}
+
+List of updates for final task:
+
+[443, 364, 458, 444, 395]
+
+**mean: 420.800000, std: 35.515630**
+
+#### Adadelta
+
+Running test: 0
+
+Training on: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+{0: 333}
+
+Running test: 1
+
+{0: 296}
+
+Running test: 2
+
+{0: 350}
+
+Running test: 3
+
+{0: 344}
+
+Running test: 4
+
+{0: 323}
+
+List of updates for final task:
+
+[333, 296, 350, 344, 323]
+
+**mean: 329.200000, std: 19.009471**
 
 ## Orthogonal Gradient Descent
 
