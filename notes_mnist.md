@@ -2980,6 +2980,34 @@ tensor([ 0.9196, -0.0823, -0.3366, -0.2981, -0.1764, -0.2080, -0.2490, -0.1221,
 
 *Updating SGD with momentum at every iteration gives a very similar result as not updating it.*
 
+#### Evolution of first and second moment
+
+Taking a look first at Adam and RMSProp, at the evolution of the weight changes, and then the first and second moments. These are plots when model is training on task 2, the the shapes are the same for the other tasks as well.
+
+**Adam**
+
+Changes in weights:
+
+![weight eval](./images_mnist/opt_adam_task2_grads_norm_reset_mine.png)
+
+Evolution of the first moment:
+
+![weight eval](./images_mnist/opt_adam_task2_first_moment_reset_mine.png)
+
+Evolution of the first moment:
+
+![weight eval](./images_mnist/opt_adam_task2_second_moment_reset_mine.png)
+
+**RMSProp**
+
+Changes in weights:
+
+![weight eval](./images_mnist/opt_rmsprop_task2_grads_norm_reset_mine.png)
+
+Evolution of the first moment:
+
+![weight eval](./images_mnist/opt_rmsprop_task2_second_moment_reset_mine.png)
+
 ### Changing the setup
 
 Changing the setup to see how close the final solution is to the place you want to be, the joing solution.
@@ -3224,7 +3252,7 @@ List of updates for final task:
 
 **mean: 447.200000**
 
-### RMSProp (initializing once)
+#### RMSProp (initializing once)
 
 Running test: 0
 
@@ -3336,7 +3364,57 @@ List of updates for final task:
 
 **mean: 315.600000**
 
+#### Lookahead + RMSProp (reset at every task)
+
+lr = 1e-3
+
+List of updates for final task:
+
+[515, 545, 556, 510, 546]
+
+**mean: 534.400000, std: 18.358649**
+
+#### Lookahead + RMSProp (reset at every task)
+
+lr = 1e-2
+
+List of updates for final task:
+
+[515, 490, 461, 530, 540]
+
+mean: 507.200000, std: 28.589509
+
+(trying  a large learning rate of 0.1, it got very slow)
+
+#### Lookahead + RMSProp (reset at every task)
+
+lr = 0.1
+
+List of updates for final task:
+
+[660, 660, 696, 760, 702]
+
+mean: 695.600000, std: 36.669333
+
+(trying  a larger learning rates did not converge)
+
 ### Using 4 previous tasks
+
+#### SGD
+
+List of updates for final task:
+
+[469, 463, 466, 488, 403]
+
+mean: 457.800000, std: 28.756912
+
+#### SGD with momentum (with resets)
+
+List of updates for final task:
+
+[581, 671, 549, 533, 689]
+
+mean: 604.600000, std: 63.729428
 
 #### Adadelta (no resets)
 
@@ -3402,7 +3480,32 @@ List of updates for final task:
 
 **mean: 307.600000**
 
+#### RMSProp (with resets)
+
+List of updates for final task:
+
+[345, 325, 292, 330, 315]
+
+mean: 321.400000, std: 17.602273
+
+#### Adam (with resets)
+
+List of updates for final task:
+
+[448, 470, 488, 436, 347]
+
+mean: 437.800000, std: 48.803279
+
 ### Using 3 previous tasks
+
+#### SGD
+
+List of updates for final task:
+
+[438, 468, 454, 490, 493]
+
+mean: 468.600000, std: 20.991427
+
 
 #### Adadelta (no resets)
 
@@ -3463,6 +3566,22 @@ List of updates for final task:
 [331, 313, 311, 318, 270]
 
 mean: 308.600000, std: 20.519259
+
+#### RMSProp (with resets)
+
+List of updates for final task:
+
+[348, 340, 285, 348, 312]
+
+mean: 326.600000, std: 24.654411
+
+#### Adam (with resets)
+
+List of updates for final task:
+
+[470, 492, 452, 391, 420]
+
+mean: 445.000000, std: 35.844107
 
 ### Using 2 previous tasks
 
@@ -3526,6 +3645,39 @@ List of updates for final task:
 
 **mean: 324.200000, std: 15.954937**
 
+#### SGD
+
+List of updates for final task:
+
+[493, 516, 465, 470, 453]
+
+mean: 479.400000, std: 22.437469
+
+
+#### RMSProp (with resets)
+
+List of updates for final task:
+
+[340, 339, 364, 329, 363]
+
+mean: 347.000000, std: 14.014278
+
+#### Adam (with resets)
+
+List of updates for final task:
+
+[520, 507, 535, 560, 479]
+
+mean: 520.200000, std: 27.110146
+
+#### SGD with momentum (with resets)
+
+List of updates for final task:
+
+[647, 581, 546, 733, 590]
+
+mean: 619.400000, std: 65.411314
+
 ### Using 1 previous tasks
 
 #### Adadelta (no resets)
@@ -3581,6 +3733,39 @@ List of updates for final task:
 [352, 337, 303, 307, 328]
 
 **mean: 325.400000, std: 18.380424**
+
+#### RMSProp (with resets)
+
+List of updates for final task:
+
+[393, 396, 391, 367, 359]
+
+mean: 381.200000, std: 15.157836
+
+#### Adam (with resets)
+
+List of updates for final task:
+
+[527, 517, 468, 553, 475]
+
+mean: 508.000000, std: 32.112303
+
+#### SGD
+
+List of updates for final task:
+
+[509, 557, 527, 519, 521]
+
+mean: 526.600000, std: 16.267760
+
+
+#### SGD with momentum (with resets)
+
+List of updates for final task:
+
+[618, 608, 564, 547, 641]
+
+mean: 595.600000, std: 34.863161
 
 ### No pretraining
 
