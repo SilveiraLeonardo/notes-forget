@@ -2994,7 +2994,7 @@ Evolution of the first moment:
 
 ![weight eval](./images_mnist/opt_adam_task2_first_moment_reset_mine.png)
 
-Evolution of the first moment:
+Evolution of the second moment:
 
 ![weight eval](./images_mnist/opt_adam_task2_second_moment_reset_mine.png)
 
@@ -3506,6 +3506,13 @@ List of updates for final task:
 
 mean: 468.600000, std: 20.991427
 
+#### SGD with momentum
+
+List of updates for final task:
+
+[647, 581, 546, 733, 590]
+
+mean: 619.400000, std: 65.411314
 
 #### Adadelta (no resets)
 
@@ -3674,9 +3681,9 @@ mean: 520.200000, std: 27.110146
 
 List of updates for final task:
 
-[647, 581, 546, 733, 590]
+[622, 522, 566, 548, 674]
 
-mean: 619.400000, std: 65.411314
+mean: 586.400000, std: 54.734267
 
 ### Using 1 previous tasks
 
