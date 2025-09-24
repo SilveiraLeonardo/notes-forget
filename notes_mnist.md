@@ -1,4 +1,4 @@
-## MNIST MLP Training
+e# MNIST MLP Training
 
 ### Concurrent Training
 
@@ -3007,6 +3007,40 @@ Changes in weights:
 Evolution of the first moment:
 
 ![weight eval](./images_mnist/opt_rmsprop_task2_second_moment_reset_mine.png)
+
+**Adadelta** (resetting at each task)
+
+This are the graphs resetting the optimizer. But even if you do not do it, the result is pretty much the same, because the state of the numerator and denominator start from zero.
+
+Plots for task 2 (the rest was on the same line):
+
+Plot of the changes in the weights:
+
+![weight eval](./images_mnist/opt_adadelta_task2_grads_norm_reset.png)
+
+Evolution of the numerator:
+
+![weight eval](./images_mnist/opt_adadelta_task2_numerator_norm_reset.png)
+
+Evolution of the denominator (second moment):
+
+![weight eval](./images_mnist/opt_adadelta_task2_denominator_norm_reset.png)
+
+At the end of training: 
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 1.0000 | 0.9767 | 0.9456 | 0.9220 | 0.9095 |
+| Class 1    | 1.0000 | 0.9950 | 0.9854 | 0.9690 | 0.9643 |
+| Class 2    | 1.0000 | 0.9531 | 0.9330 | 0.8867 | 0.9119 |
+| Class 3    |        | 0.9740 | 0.9265 | 0.9239 | 0.8676 |
+| Class 4    |        | 0.9855 | 0.9626 | 0.9444 | 0.8689 |
+| Class 5    |        |        | 0.8756 | 0.8011 | 0.8508 |
+| Class 6    |        |        | 0.9901 | 0.9568 | 0.9531 |
+| Class 7    |        |        |        | 0.9688 | 0.9507 |
+| Class 8    |        |        |        | 0.9082 | 0.8743 |
+| Class 9    |        |        |        |        | 0.8912 |
+| Class 0    |        |        |        |        | 0.9495 |
 
 ### Changing the setup
 
