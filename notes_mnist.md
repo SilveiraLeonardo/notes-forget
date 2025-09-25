@@ -3042,6 +3042,67 @@ At the end of training:
 | Class 9    |        |        |        |        | 0.8912 |
 | Class 0    |        |        |        |        | 0.9495 |
 
+Looking at the whole graph of the weight updates, numerator and denominator for Adadelta, we can see the bumps as new classes are addade. This are the graphs without resetting for each task, but they are very similar (though not identical) if we reset each time:
+
+![weight eval](./images_mnist/opt_adadelta_weight_changes.png)
+
+Numerator:
+
+![weight eval](./images_mnist/opt_adadelta_numerator.png)
+
+Denominator:
+
+![weight eval](./images_mnist/opt_adadelta_denominator.png)
+
+Comparing with Adam (without resetting):
+
+We can see that the numerator in Adadelta has much closer values for the three layers (in adadelta the numerator is the exponential average of the updates, in Adam the exponential average of the gradient). This must be well compensated by the denominator of Adam, that also has a huge difference between the layers - this means a greater gradient gap between layers when optimizing with Adam.
+
+![weight eval](./images_mnist/opt_adam_weight_changes.png)
+
+Numerator:
+
+![weight eval](./images_mnist/opt_adam_numerator.png)
+
+Denominator:
+
+![weight eval](./images_mnist/opt_adam_denominator.png)
+
+Adam (with resetting):
+
+Adam with resetting has this weird discontinuous behavior because of the correction the first and second moments undergo when they are initialized. The moments goes considerably high, and takes a while to come down, and therefore adam has some persistent update in the parameters, even though the magnitude is small.
+
+![weight eval](./images_mnist/opt_adam_weight_changes_reset.png)
+
+Numerator:
+
+![weight eval](./images_mnist/opt_adam_numerator_reset.png)
+
+Denominator:
+
+![weight eval](./images_mnist/opt_adam_denominator_reset.png)
+
+Doing the same for RMSProp (without resetting). Note that the numerator for RMSProp is only the learning rate.
+
+The denominator of RMSProp has somewhat the same behavior as that of Adam, but with larger variations. And it is interesting to see that RMSProp leads to larger weight updates than the other two:
+
+![weight eval](./images_mnist/opt_rmsprop_weight_changes.png)
+
+Denominator:
+
+![weight eval](./images_mnist/opt_rmsprop_denominator.png)
+
+
+RMSProp (with resetting):
+
+The biggest difference with resetting is that it can lead to larger updates in the beginning of each task (as far as I can see).
+
+![weight eval](./images_mnist/opt_rmsprop_weight_changes_reset.png)
+
+Denominator:
+
+![weight eval](./images_mnist/opt_rmsprop_denominator_reset.png)
+
 ### Changing the setup
 
 Changing the setup to see how close the final solution is to the place you want to be, the joing solution.
