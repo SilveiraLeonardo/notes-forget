@@ -53,7 +53,7 @@ tasks = [
 
 Everytime the model trains on a task, it converges to the solution to that task, and may forget about the task it saw before. But intuitively we believe that, as the model trains on more of this tasks, it may be easier to get to the joint solution for all the classes.
 
-So we measure, after the sequential learning, how fast the model is able to get to the joint solution, training for all taks concurrently.
+So we measure, after the sequential learning, how fast the model is able to get to the joint solution, training for all tasks concurrently.
 
 ```
 base_task = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]]
@@ -66,7 +66,7 @@ This can be interpreted as:
 
 For all optimizers (except Adadelta), the result is quite clear: resetting the model at each task is advantageous for in terms of speed of convergence.
 
-Adadelta needs more investigation.
+Adadelta has the same results because its state, when initialized, is set to zero, which is the same state it starts when training on a task after having converged from the previous task: therefore, resetting or not resetting is equivalent.
 
 ### Why the state is not helping?
 

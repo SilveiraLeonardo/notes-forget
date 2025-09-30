@@ -4637,4 +4637,278 @@ for every task:
        ogd.basis.append(running_g / ng)
 ```
 
+## Rehearsal
 
+### 10%
+
+Vanilla training up to 98% on each task, using BN, AdamW, cross-entropy loss.
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+
+1, train loss 0.035788, train acc 0.994864, val loss 0.021825, val acc 0.996646
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+tensor([0.8297, 0.8926, 0.8161, 0.7455, 0.8453, 0.7881, 0.8007, 0.7334, 0.8108,
+        0.7381])
+
+Sparcity analysis - population sparcity: 0.5063
+
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0978, -0.0381,  0.0276, -0.0823, -0.0809, -0.1418, -0.0254, -0.0124,
+        -0.1368, -0.1470], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.055796, train acc 0.989084, val loss 0.184815, val acc 0.945168
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0582, 1.0696, 0.9942, 0.8274, 0.8958, 0.9851, 1.0327, 0.9298, 1.0217,
+        0.9388])
+
+Sparcity analysis - population sparcity: 0.5045
+
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1299, -0.0978, -0.0258,  0.0151,  0.0134, -0.1741, -0.0573, -0.0432,
+        -0.1686, -0.1778], requires_grad=True)
+
+
+Linear probe overall acc: 0.9828
+
+task 3, [5, 6]
+
+2, train loss 0.066764, train acc 0.984118, val loss 0.252716, val acc 0.924753
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2921, 1.2821, 1.2358, 1.0712, 1.1292, 1.0108, 0.9604, 1.1396, 1.2456,
+        1.1603])
+
+Sparcity analysis - population sparcity: 0.5272
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1613, -0.1228, -0.0479, -0.0604, -0.0562, -0.0449,  0.0783, -0.0729,
+        -0.2001, -0.2073], requires_grad=True)
+
+
+Linear probe overall acc: 0.9665
+
+task 4, [7, 8]
+
+2, train loss 0.066729, train acc 0.983404, val loss 0.404594, val acc 0.873970
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.4428, 1.4655, 1.3980, 1.2575, 1.3022, 1.2785, 1.2750, 1.0685, 1.0335,
+        1.3121])
+
+Sparcity analysis - population sparcity: 0.5257
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1794, -0.1405, -0.0625, -0.0764, -0.0739, -0.1180,  0.0030,  0.0615,
+        -0.0601, -0.2258], requires_grad=True)
+
+
+Linear probe overall acc: 0.9569
+task 5, [9, 0]
+
+3, train loss 0.061754, train acc 0.984358, val loss 0.422785, val acc 0.868100
+
+Checking norm of the class. layer weights
+tensor([1.2314, 1.6561, 1.6180, 1.4724, 1.4710, 1.4816, 1.4686, 1.4224, 1.3897,
+        1.1158])
+
+Sparcity analysis - population sparcity: 0.5272
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([ 0.0026, -0.1620, -0.0815, -0.0968, -0.0878, -0.1415, -0.0194, -0.0227,
+        -0.1436, -0.0745], requires_grad=True)
+
+
+Linear probe overall acc: 0.9540
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9828 | 0.9665 | 0.9569 | 0.9540 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9867 | 0.9688 |
+| Class 2    | 1.0000 | 0.9671 | 0.9485 | 0.9310 | 0.9637 |
+| Class 3    |        | 0.9896 | 0.9461 | 0.9442 | 0.9461 |
+| Class 4    |        | 0.9903 | 0.9679 | 0.9722 | 0.9344 |
+| Class 5    |        |        | 0.9652 | 0.9318 | 0.9061 |
+| Class 6    |        |        | 0.9950 | 0.9622 | 0.9792 |
+| Class 7    |        |        |        | 0.9688 | 0.9606 |
+| Class 8    |        |        |        | 0.9517 | 0.9454 |
+| Class 9    |        |        |        |        | 0.9582 |
+| Class 0    |        |        |        |        | 0.9697 |
+
+### 20%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.032932, train acc 0.995609, val loss 0.025779, val acc 0.996646
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7994, 0.8845, 0.8918, 0.8148, 0.7963, 0.8512, 0.8249, 0.7874, 0.7440,
+        0.7643])
+
+Sparcity analysis - population sparcity: 0.5135
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1121,  0.0331,  0.0681, -0.1332, -0.1613, -0.0881, -0.0019, -0.0806,
+        -0.0827, -0.0784], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.053515, train acc 0.987576, val loss 0.138480, val acc 0.961888
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0465, 1.0585, 1.0146, 0.8852, 0.9347, 1.0826, 1.0625, 1.0063, 0.9734,
+        1.0002])
+
+Sparcity analysis - population sparcity: 0.4958
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1449, -0.0229,  0.0005, -0.0297, -0.0729, -0.1230, -0.0384, -0.1143,
+        -0.1164, -0.1105], requires_grad=True)
+
+
+Linear probe overall acc: 0.9828
+
+task 3, [5, 6]
+
+2, train loss 0.065121, train acc 0.983508, val loss 0.201737, val acc 0.939501
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.3170, 1.2879, 1.2478, 1.1079, 1.1550, 1.0377, 1.0364, 1.2509, 1.2191,
+        1.2525])
+
+Sparcity analysis - population sparcity: 0.5236
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1820, -0.0489, -0.0259, -0.1002, -0.1489,  0.0175,  0.0926, -0.1498,
+        -0.1507, -0.1447], requires_grad=True)
+
+
+Linear probe overall acc: 0.9765
+
+task 4, [7, 8]
+
+2, train loss 0.065310, train acc 0.985120, val loss 0.242852, val acc 0.928554
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.5033, 1.4804, 1.4511, 1.3065, 1.3604, 1.3137, 1.3331, 1.1088, 1.0408,
+        1.4351])
+
+Sparcity analysis - population sparcity: 0.5205
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-2.0677e-01, -7.1834e-02, -4.9529e-02, -1.2094e-01, -1.6972e-01,
+        -5.8790e-02,  1.5482e-02, -1.8628e-04,  2.6482e-07, -1.6836e-01],
+       requires_grad=True)
+
+
+Linear probe overall acc: 0.9563
+
+task 5, [9, 0]
+
+2, train loss 0.081478, train acc 0.980688, val loss 0.297897, val acc 0.910800
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.1905, 1.6895, 1.6660, 1.5074, 1.5398, 1.5282, 1.5298, 1.4815, 1.4112,
+        1.1355])
+
+Sparcity analysis - population sparcity: 0.5223
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0258, -0.0961, -0.0748, -0.1383, -0.1896, -0.0813, -0.0113, -0.0799,
+        -0.0900, -0.0044], requires_grad=True)
+
+Linear probe overall acc: 0.9520
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9828 | 0.9765 | 0.9563 | 0.9520 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9779 | 0.9688 |
+| Class 2    | 1.0000 | 0.9671 | 0.9742 | 0.9163 | 0.9326 |
+| Class 3    |        | 0.9844 | 0.9608 | 0.9239 | 0.9412 |
+| Class 4    |        | 0.9952 | 0.9679 | 0.9583 | 0.9180 |
+| Class 5    |        |        | 0.9851 | 0.9545 | 0.9282 |
+| Class 6    |        |        | 0.9950 | 0.9730 | 0.9792 |
+| Class 7    |        |        |        | 0.9792 | 0.9754 |
+| Class 8    |        |        |        | 0.9662 | 0.9508 |
+| Class 9    |        |        |        |        | 0.9540 |
+| Class 0    |        |        |        |        | 0.9646 |

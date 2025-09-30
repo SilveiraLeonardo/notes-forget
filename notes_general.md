@@ -75,10 +75,10 @@ When we train the network for both problems at the same time, both solutions are
 weights towards their direction, and as a consequence we move to a place that satisfies both
 constraints.
 
-Is sequential learning, however, our weights are pulled by just one solution at a time: 
+In sequential learning, however, our weights are pulled by just one solution at a time: 
 We first move directly to the solution space of the first problem, and when we start training 
 on the second problem our weights are pulled directly toward that direction, with nothing holding 
-us back to the solution space of problem 1. We may as well finish training farther from solution 1 
+us back to the solution space of problem 1. We may as well finish the training farther away from solution 1 
 than we started.
 
 Therefore, we can say that once training for solution 1 stops and for solution 2 starts, 
@@ -115,7 +115,6 @@ generalizability can only be achieved with distributed representations.
 
 #### Catastrophic forgetting and sparse representations
 
-main point is that 
 This apparent inability of neural networks to learn sequentially when using distributed 
 representation, and the presence of the hippocampus as a component of the human memory 
 system that uses sparse representations gave inspiration to the Complementary Learning Systems 
@@ -160,6 +159,10 @@ not too change too much. This models usually use destillation.
 
 4. Template based models: Multi-stage multi-component methods, where first the task is inferred from the new sample,
 and than the task is solved by a specialized model for that task.
+
+    * Generative classifier: Trained one VAE for each class. Classified based on which generative model that sample was more likely to having being come from.
+
+    * iCaRL: uses a neural net for feature extraction, and then performs classification based on nearest-class-mean rule in that feature space. To protect the feature extractor, it replays stored data as well as new input from the current class.
 
 ![methods class incremental](./images_general/methods-class-incremental.png)
 
@@ -507,14 +510,13 @@ To measure the strength of a representation, or *how good a representation is*, 
 
 The highlight here is that the decay is not as bad as expected, and overall the representations learned as a whole are mostly conserved: the classifier overall accuracy is 72% by the end of the fifth task. This is significantly worse than the 97% one can get from training the neural network concurrently, but it is much better than the sequential learning result apparently makes it to be (with its around 19% accuracy).
 
-Particularly, some of the representations are kepts quite strongly, such as for the number 1, that is trained in the first task, and by the fifth task the linear probe still can classify it 89% correctly.
+Particularly, some of the representations are kept quite strongly, such as for the number 1, that is trained in the first task, and by the fifth task the linear probe still can classify it 89% correctly.
 
-And another striking fact is that this is the result for the network trained with no remediation for the *growing sparsity problem* - so this results are for representations with 90% sparsity by the end of the fifth task. In this case, it is well for us to suspect that we might achieve still better results with we do not have to live with this problem.
+And another striking fact is that this is the result for the network trained with no remediation for the *growing sparsity problem* - so this results are for representations with 90% sparsity by the end of the fifth task. In this case, it is well for us to suspect that we might achieve still better results without the sparcity.
 
 **Sequential training without growing sparsity**
 
 We perform the same test, now employing batch normalization to arrest the growing sparsity.
-
 
 | Accuracy    | Task 1 |
 |------------|--------- |
@@ -613,7 +615,7 @@ What this suggests for us is that most of the forgetting is taking place on the 
 
 Integrating the gradients for the network trained with batch normalization, taking as example Task 4:
 
-It is clear to see the the output layer is updated considerably more stronly than the other alyers (at least by one order of magnitude). Particularly, its updates are to make the two current classes being trained have larger probabilities, and the previous classes to have lower probabilities.
+It is clear to see the the output layer is updated considerably more strongly than the other layers (at least by one order of magnitude). Particularly, its updates are to make the two current classes being trained have larger probabilities, and the previous classes to have lower probabilities.
 
 *The x coordinate represents the input features for the weight matrix, and the y coordinate the output feature*.
 
@@ -757,11 +759,11 @@ How does the performance of the network evolves for the classification of all te
 | Class 8    | 0.7158 | 0.8142 | 0.8470 | 0.8907 | 0.8470 |
 | Class 9    | 0.8201 | 0.8745 | 0.8577 | 0.8452 | 0.8410 |
 
-It seems that the features that are important to separate digits in the latent space were for a large part learned during the first task. From task 1 to task 5, around 5 p.p. were gained in performance, showing that there was some refiniment in the representation: probably taking the current digits more far apart. And this change seems no to distress much the representation of the other digits.
+It seems that the features that are important to separate digits in the latent space were for a large part learned during the first task. From task 1 to task 5, around 5 p.p. were gained in performance, showing that there was some refiniment in the representation: probably taking the current digits more far apart. And this change seems not to distress much the representation of the other digits.
 
-**Interpretation**: This result alters my interpretation of previous results. I was thinking that the network was learning to extract features for each class of digit as it was training on them (first only 1's and 2's, then 3's and 4's, and so on), and then as it was learning new classes, somehow it was preserving knowledge of previously learned classes.
+**Interpretation**: This alters my interpretation of previous results. I was thinking that the network was learning to extract features for each class of digit as it was training on them (first only 1's and 2's, then 3's and 4's, and so on), and then as it was learning new classes, somehow it was preserving knowledge of previously learned classes.
 
-But this does not seem the case anymore: The current result suggests that, the network right from the start is learning to extract very generic features that work for the current task, but also work reasonably well for all other feature tasks. Therefore, the conservation of the latent space as the network trains in more tasks is not a preservation of class specific knowledge, but the preservation and improvement of the features already learned by the network, that it has no motivation to forget, once they are the very things allowing it to learn fast how to do the current task, so it only refines and tweaks it for its current goals.
+But this does not seem the case anymore: The current result suggests that, the network right from the start is learning to extract very generic features that work for the current task, but also work reasonably well for all other future tasks. Therefore, the conservation of the latent space as the network trains in more tasks is not a preservation of class specific knowledge, but the preservation and improvement of the features already learned by the network, that it has no motivation to forget, once they are the very things allowing it to learn fast how to do the current task, so it only refines and tweaks it for its current goals.
 
 **This may well be a characteristic of this benchmark**, where the same features are useful for all classes. In a sequences of tasks more unrelated there may not exist a set of generic features for them all, and in this case it is possible to have an overwritting of old features (think for instance remembering pairs of words A-B and A-C: there is no sharing of knowledge between the tasks). This would be a more *deep* sort of forgetting.
 
@@ -783,7 +785,7 @@ This has an exacerbated effect in sequential learning because previous tasks are
 
 Would there be a *softer* alternative?
 
-`Mermillod et al., 2013` investigated an complementary phenomenon to catastrophic forgetting: the entrenchment effect (age-limited learning affect) - knowledge acquired early in life are better remembered than items acquired later in life. This phenomenon can be reproduced in neural networks using sigmoid activations - during earlies learning the learn well, but then their activations go closer to the saturation points and it learns less. This is an example of how the loss of plasticity should vary as a function of the transfer function and the error signal computed (ex. cross-entropy vs. mean squared error).
+`Mermillod et al., 2013` investigated an complementary phenomenon to catastrophic forgetting: the entrenchment effect (age-limited learning affect) - knowledge acquired early in life are better remembered than items acquired later in life. This phenomenon can be reproduced in neural networks using sigmoid activations - during early training they learn well, but then their activations go closer to the saturation points and they start learning less. This is an example of how the loss of plasticity should vary as a function of the transfer function and the error signal computed (ex. cross-entropy vs. mean squared error).
 
 #### Targetting only the correct class
 
@@ -1212,7 +1214,7 @@ Using the protocol:
 
 ##### The question of the optimizer
 
-Testint the neural network trained with cross-entropy loss: expected shallow forgetting and larger savings relative to the network trained with sigmoid loss and gradients through the latent layers.
+Testing the neural network trained with cross-entropy loss: expected shallow forgetting and larger savings relative to the network trained with sigmoid loss and gradients through the latent layers.
 
 ```
 # Parameters
