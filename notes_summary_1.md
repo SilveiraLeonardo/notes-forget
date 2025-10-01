@@ -61,7 +61,7 @@ We see that the latent features have preserved about `0.8925 / 0.9646 = 0.9231` 
 
 Very.
 
-Training sequentially and evaluating the classification accuracy of the linear probe on all the classes, shows that after training on only Task 1 (2 classes), it is able to classify all ten classes with 9.8470 accuracy.
+Training sequentially and evaluating the classification accuracy of the linear probe on all the classes, shows that after training on only Task 1 (2 classes), it is able to classify all ten classes with 0.8470 accuracy.
 
 | Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
 |------------|------- |------- |------- |------- |------- |
@@ -89,6 +89,7 @@ Epoch 19, train loss 0.001012, train acc 0.882567, val loss 2.232976, **val acc 
 
 ![sigmoid](./images_mnist/mlp_sequential_task5_forgetting_curve_sigmoid_l2.png)
 
+![SOTA class incremental](./images_general/sota-1.png)
 
 But if we look at one example, we see that the system is very fragile. Passing the logits through sigmoids, we see that the logits are high and result in probabilities close to one for all of them:
 
@@ -100,7 +101,7 @@ Correct class: 0
 
 The current loss sees only the probability for the current class - so makes it as high as possible. But it has no agency over the other probabilities, therefore they can also be arbitrarily large, and the neural net will make no effort to change them. 
 
-Looking at the latent representations, it continues the same as before. It suggests that the model is not changing much the latent representation, but focusing its changes on the classification head:
+Looking at the accuracy of the linear probe on the latent representations, it continues the same as before. It suggests that the model is not changing much the latent representation, but focusing its changes on the classification head:
 
 | Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
 |------------|------- |------- |------- |------- |------- |
@@ -140,7 +141,7 @@ But it is not so straighforward as it first seems:
 | Learning rate | 0.1 | 0.01 | 0.01 | 0.001 | 0.001 | 0.001 | 0.001 |
 | Savings    | 0.59 | -0.11 | -0.09 | -0.74 | 0.13 | 0.57 | 0.70 |
 
-The savings depends on the *path* you take and at the *speed* you progress. So it is not a actually a measure of the knowledge of the model - and cannot be used to describe the forgetting alone.
+The savings depends on the *path* you take and at the *speed* you progress. So it is not a actually a measure of the knowledge of the model - *and cannot be used to describe the forgetting alone*.
 
 #### Investigating role of the optimizer
 
@@ -208,7 +209,7 @@ What really happens is that we train on the first task until convergence, and th
 
 #### Conclusion for now
 
-Intuitively having a history (state) in the opimizer seems like a useful thing when learning sequentially. But for the current optimizers, resetting for every task seems to work best. 
+Intuitively having a history (state) in the optimizer seems like a useful thing when learning sequentially. But for the current optimizers, resetting for every task seems to work best - so we do not take any advantage of it. 
 
 * Something here may be part of a solution to the problem.
 * But leaving this for now to learn what other people have done - if I get an idea will come back!
@@ -260,7 +261,7 @@ After training on the first 10 classes, the model can predict all the 100 classe
 
 #### Coming up 
 
-* Investigate approaches to solve the problem: start with the simplest one, rehearsal and rehearsal-replay.
+* Investigate proposed approaches to solve the problem.
 * Some tools in the bag: 
     * Visualizing the loss landscape.
     * Visualizing the decision boundary of the model.
