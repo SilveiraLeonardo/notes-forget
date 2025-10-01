@@ -4639,6 +4639,689 @@ for every task:
 
 ## Rehearsal
 
+### 1%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.032545, train acc 0.994869, val loss 0.020847, val acc 0.995688
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7731, 0.8693, 0.8586, 0.7902, 0.8006, 0.8060, 0.7937, 0.7793, 0.7537,
+        0.7140])
+
+Sparcity analysis - population sparcity: 0.5133
+
+Classification bias vector:
+
+tensor([ 0.0258,  0.0172, -0.0017, -0.1152, -0.0332, -0.1359, -0.0988, -0.1459,
+        -0.1624, -0.0470], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.040827, train acc 0.991776, val loss 1.092570, val acc 0.485862
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.9884, 1.0343, 0.9709, 0.8754, 0.9171, 1.0070, 1.0058, 0.9908, 0.9533,
+        0.9114])
+
+Sparcity analysis - population sparcity: 0.4860
+
+Classification bias vector:
+
+tensor([-0.0044, -0.0416, -0.0677, -0.0185,  0.0582, -0.1679, -0.1310, -0.1752,
+        -0.1925, -0.0748], requires_grad=True)
+
+
+Linear probe overall acc: 0.9791
+
+task 3, [5, 6]
+
+1, train loss 0.075970, train acc 0.980176, val loss 2.089462, val acc 0.342383
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.1982, 1.1817, 1.1322, 1.0046, 1.0695, 0.9325, 0.9053, 1.2003, 1.1545,
+        1.1135])
+
+Sparcity analysis - population sparcity: 0.5126
+
+Classification bias vector:
+
+tensor([-0.0334, -0.0604, -0.0904, -0.0976, -0.0214, -0.0339,  0.0013, -0.2039,
+        -0.2216, -0.1024], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_1p.png)
+
+Linear probe overall acc: 0.9472
+
+task 4, [7, 8]
+
+1, train loss 0.063371, train acc 0.986540, val loss 2.411193, val acc 0.253810
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.3459, 1.3019, 1.2510, 1.1160, 1.1915, 1.1090, 1.0818, 0.9735, 0.9255,
+        1.2624])
+
+Sparcity analysis - population sparcity: 0.5027
+
+Classification bias vector:
+
+tensor([-0.0534, -0.0757, -0.1062, -0.1151, -0.0372, -0.1194, -0.0804, -0.0416,
+        -0.0779, -0.1232], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_1p.png)
+
+Linear probe overall acc: 0.9320
+
+task 5, [9, 0]
+
+1, train loss 0.071016, train acc 0.985767, val loss 3.004889, val acc 0.198000
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.9668, 1.4211, 1.3643, 1.2403, 1.3075, 1.2257, 1.2023, 1.1521, 1.1202,
+        0.9992])
+
+Sparcity analysis - population sparcity: 0.5201
+
+Classification bias vector:
+
+tensor([ 0.1258, -0.0899, -0.1229, -0.1290, -0.0512, -0.1368, -0.1003, -0.1331,
+        -0.1694,  0.0447], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_1p.png)
+
+Linear probe overall acc: 0.9100
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9791 | 0.9472 | 0.9320 | 0.9100 |
+| Class 1    | 0.9953 | 0.9901 | 0.9854 | 0.9823 | 0.9598 |
+| Class 2    | 1.0000 | 0.9531 | 0.9278 | 0.8818 | 0.9119 |
+| Class 3    |        | 0.9792 | 0.9167 | 0.8985 | 0.9069 |
+| Class 4    |        | 0.9952 | 0.9572 | 0.9630 | 0.8907 |
+| Class 5    |        |        | 0.9104 | 0.8636 | 0.8122 |
+| Class 6    |        |        | 0.9851 | 0.9676 | 0.9375 |
+| Class 7    |        |        |        | 0.9635 | 0.9163 |
+| Class 8    |        |        |        | 0.9227 | 0.8798 |
+| Class 9    |        |        |        |        | 0.9038 |
+| Class 0    |        |        |        |        | 0.9646 |
+
+### 2%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.035274, train acc 0.994366, val loss 0.024770, val acc 0.994250
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.6835, 0.9699, 0.8810, 0.7416, 0.7685, 0.7052, 0.7807, 0.7749, 0.7743,
+        0.8159])
+
+Sparcity analysis - population sparcity: 0.5117
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0475,  0.1461,  0.1379, -0.1548, -0.0347, -0.1425, -0.0389,  0.0483,
+        -0.1526, -0.1175], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.043665, train acc 0.990876, val loss 0.500175, val acc 0.802557
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.8935, 1.1395, 0.9693, 0.8331, 0.8833, 0.9155, 1.0064, 0.9981, 0.9796,
+        1.0727])
+
+Sparcity analysis - population sparcity: 0.4926
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0784,  0.0832,  0.0692, -0.0587,  0.0612, -0.1740, -0.0702,  0.0163,
+        -0.1837, -0.1488], requires_grad=True)
+
+
+Linear probe overall acc: 0.9717
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_2p.png)
+
+task 3, [5, 6]
+
+2, train loss 0.056171, train acc 0.984837, val loss 1.053867, val acc 0.593431
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.1235, 1.3270, 1.1365, 0.9890, 1.1070, 0.9428, 0.9985, 1.2411, 1.2077,
+        1.3395])
+
+Sparcity analysis - population sparcity: 0.5240
+
+tensor([-0.1128,  0.0624,  0.0453, -0.1342, -0.0133, -0.0485,  0.0643, -0.0202,
+        -0.2178, -0.1838], requires_grad=True)
+
+
+Linear probe overall acc: 0.9573
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_2p.png)
+
+task 4, [7, 8]
+
+2, train loss 0.060347, train acc 0.982586, val loss 1.431611, val acc 0.424557
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2852, 1.4776, 1.2616, 1.1231, 1.2614, 1.1318, 1.1806, 0.9885, 1.0250,
+        1.5177])
+
+Sparcity analysis - population sparcity: 0.5180
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.1353,  0.0474,  0.0252, -0.1520, -0.0310, -0.1374, -0.0196,  0.1352,
+        -0.0678, -0.2052], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_2p.png)
+
+Linear probe overall acc: 0.9451
+
+task 5, [9, 0]
+
+2, train loss 0.070927, train acc 0.982136, val loss 1.961472, val acc 0.325400
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0885, 1.6809, 1.4090, 1.2853, 1.4143, 1.2885, 1.3293, 1.3011, 1.2993,
+        1.0234])
+
+Sparcity analysis - population sparcity: 0.5316
+
+Classification bias vector:
+
+tensor([ 0.0266,  0.0199,  0.0041, -0.1684, -0.0544, -0.1615, -0.0402,  0.0413,
+        -0.1656, -0.0013], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_2p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_2p.png)
+
+Linear probe overall acc: 0.9275
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9717 | 0.9573 | 0.9451 | 0.9275 |
+| Class 0    |        |        |        |        | 0.9495 |
+| Class 1    | 0.9953 | 0.9851 | 0.9660 | 0.9823 | 0.9688 |
+| Class 2    | 1.0000 | 0.9484 | 0.9433 | 0.9261 | 0.9171 |
+| Class 3    |        | 0.9688 | 0.9216 | 0.9137 | 0.8971 |
+| Class 4    |        | 0.9855 | 0.9626 | 0.9583 | 0.9016 |
+| Class 5    |        |        | 0.9552 | 0.8807 | 0.8619 |
+| Class 6    |        |        | 0.9950 | 0.9784 | 0.9740 |
+| Class 7    |        |        |        | 0.9740 | 0.9458 |
+| Class 8    |        |        |        | 0.9372 | 0.9290 |
+| Class 9    |        |        |        |        | 0.9205 |
+
+### 3%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.033887, train acc 0.995519, val loss 0.021459, val acc 0.995688
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7358, 0.8951, 0.8774, 0.8805, 0.8386, 0.7677, 0.8702, 0.7610, 0.8138,
+        0.7998])
+
+Sparcity analysis - population sparcity: 0.5137
+
+Classification bias vector:
+
+tensor([ 0.0185,  0.1522,  0.1293,  0.0078, -0.1457, -0.0844,  0.0042, -0.1397,
+        -0.0011,  0.0089], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.050290, train acc 0.988925, val loss 0.375992, val acc 0.882223
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.9138, 1.0858, 1.0201, 0.9291, 0.9090, 0.9541, 1.0863, 0.9659, 1.0271,
+        1.0147])
+
+Sparcity analysis - population sparcity: 0.5033
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0100,  0.0907,  0.0698,  0.0979, -0.0504, -0.1124, -0.0247, -0.1680,
+        -0.0311, -0.0204], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_3p.png)
+
+Linear probe overall acc: 0.9791
+
+task 3, [5, 6]
+
+
+2, train loss 0.064396, train acc 0.983752, val loss 0.751999, val acc 0.714262
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.1240, 1.2986, 1.2298, 1.1099, 1.0730, 0.9434, 1.0166, 1.1983, 1.2601,
+        1.2531])
+
+Sparcity analysis - population sparcity: 0.5341
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0410,  0.0703,  0.0485,  0.0244, -0.1220,  0.0036,  0.1119, -0.1987,
+        -0.0620, -0.0520], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_3p.png)
+
+Linear probe overall acc: 0.9615
+
+task 4, [7, 8]
+
+2, train loss 0.062827, train acc 0.981696, val loss 1.041621, val acc 0.596428
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.3030, 1.4690, 1.4081, 1.2669, 1.2443, 1.1810, 1.3224, 0.9476, 0.9308,
+        1.4475])
+
+Sparcity analysis - population sparcity: 0.5279
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0676,  0.0528,  0.0300,  0.0082, -0.1385, -0.0835,  0.0326, -0.0536,
+         0.0910, -0.0789], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_3p.png)
+
+Linear probe overall acc: 0.9507
+
+task 5, [9, 0]
+
+2, train loss 0.073972, train acc 0.981229, val loss 1.407761, val acc 0.506100
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0339, 1.6357, 1.5595, 1.4248, 1.3575, 1.3174, 1.4629, 1.1979, 1.2845,
+        0.9847])
+
+Sparcity analysis - population sparcity: 0.5250
+
+Classification bias vector:
+
+
+tensor([ 0.0809,  0.0380,  0.0141, -0.0084, -0.1558, -0.1008,  0.0146, -0.1411,
+        -0.0030,  0.1053], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_3p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_3p.png)
+
+Linear probe overall acc: 0.9345
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9791 | 0.9615 | 0.9507 | 0.9345 |
+| Class 0    |        |        |        |        | 0.9747 |
+| Class 1    | 0.9953 | 0.9950 | 0.9709 | 0.9823 | 0.9643 |
+| Class 2    | 1.0000 | 0.9484 | 0.9330 | 0.9261 | 0.9067 |
+| Class 3    |        | 0.9844 | 0.9412 | 0.9137 | 0.9216 |
+| Class 4    |        | 0.9903 | 0.9679 | 0.9769 | 0.9016 |
+| Class 5    |        |        | 0.9652 | 0.8864 | 0.8895 |
+| Class 6    |        |        | 0.9901 | 0.9730 | 0.9792 |
+| Class 7    |        |        |        | 0.9688 | 0.9507 |
+| Class 8    |        |        |        | 0.9662 | 0.9180 |
+| Class 9    |        |        |        |        | 0.9289 |
+
+### 4%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.035965, train acc 0.994837, val loss 0.022555, val acc 0.996646
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7650, 0.9128, 0.8745, 0.8126, 0.8169, 0.7371, 0.8101, 0.7948, 0.7157,
+        0.8390])
+
+Sparcity analysis - population sparcity: 0.5181
+
+Classification bias vector:
+
+tensor([ 0.0437, -0.0093,  0.0445, -0.1612,  0.0108,  0.0421,  0.0258,  0.0485,
+        -0.0673,  0.0109], requires_grad=True)
+
+
+Linear probe overall acc: 0.9952
+
+task 2, [3, 4]
+
+1, train loss 0.050500, train acc 0.989512, val loss 0.344223, val acc 0.894763
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0082, 1.1238, 0.9990, 0.8461, 0.9313, 0.9564, 1.0690, 1.0341, 0.9405,
+        1.0961])
+
+Sparcity analysis - population sparcity: 0.5089
+
+Classification bias vector:
+
+tensor([ 0.0110, -0.0665, -0.0233, -0.0590,  0.1024,  0.0094, -0.0067,  0.0132,
+        -0.1008, -0.0205], requires_grad=True)
+
+Linear probe overall acc: 0.9754
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_4p.png)
+
+task 3, [5, 6]
+
+2, train loss 0.059095, train acc 0.985335, val loss 0.491661, val acc 0.854366
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2365, 1.3191, 1.1717, 1.0483, 1.1476, 0.9023, 0.9513, 1.2576, 1.1574,
+        1.3380])
+
+Sparcity analysis - population sparcity: 0.5356
+
+Classification bias vector:
+
+
+tensor([-0.0201, -0.0832, -0.0490, -0.1297,  0.0298,  0.1240,  0.1324, -0.0199,
+        -0.1333, -0.0510], requires_grad=True)
+
+
+Linear probe overall acc: 0.9665
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_4p.png)
+
+task 4, [7, 8]
+
+2, train loss 0.057762, train acc 0.984543, val loss 0.686352, val acc 0.780290
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.4044, 1.4776, 1.3112, 1.2173, 1.3113, 1.1812, 1.2661, 1.0109, 0.9503,
+        1.5148])
+
+Sparcity analysis - population sparcity: 0.5307
+
+Classification bias vector:
+
+tensor([-0.0421, -0.0969, -0.0661, -0.1488,  0.0107,  0.0395,  0.0549,  0.1306,
+         0.0068, -0.0727], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_4p.png)
+
+
+
+Linear probe overall acc: 0.9488
+
+task 5, [9, 0]
+
+2, train loss 0.072176, train acc 0.980047, val loss 1.049496, val acc 0.603400
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0316, 1.6627, 1.4861, 1.4052, 1.4340, 1.3266, 1.4383, 1.3534, 1.2728,
+        1.0789])
+
+Sparcity analysis - population sparcity: 0.5501
+
+Classification bias vector:
+
+tensor([ 0.1289, -0.1150, -0.0888, -0.1659, -0.0023,  0.0199,  0.0333,  0.0441,
+        -0.0879,  0.0989], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_4p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_4p.png)
+
+Linear probe overall acc: 0.9300
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9754 | 0.9665 | 0.9488 | 0.9300 |
+| Class 0    |        |        |        |        | 0.9646 |
+| Class 1    | 0.9953 | 0.9802 | 0.9806 | 0.9779 | 0.9688 |
+| Class 2    | 0.9951 | 0.9577 | 0.9742 | 0.9310 | 0.9119 |
+| Class 3    |        | 0.9740 | 0.9265 | 0.9086 | 0.9069 |
+| Class 4    |        | 0.9903 | 0.9679 | 0.9583 | 0.9180 |
+| Class 5    |        |        | 0.9602 | 0.8977 | 0.8840 |
+| Class 6    |        |        | 0.9901 | 0.9676 | 0.9531 |
+| Class 7    |        |        |        | 0.9792 | 0.9409 |
+| Class 8    |        |        |        | 0.9614 | 0.9071 |
+| Class 9    |        |        |        |        | 0.9331 |
+
+### 5%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.031321, train acc 0.994887, val loss 0.021701, val acc 0.996167
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7682, 0.9271, 0.8819, 0.7103, 0.7714, 0.7705, 0.7745, 0.7721, 0.7692,
+        0.6741])
+
+Sparcity analysis - population sparcity: 0.5136
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0121,  0.0351,  0.1067, -0.1078, -0.0885,  0.0058, -0.1485, -0.0078,
+        -0.0651, -0.0393], requires_grad=True)
+
+Linear probe overall acc: 0.9952
+
+task 2, [3, 4]
+
+1, train loss 0.050317, train acc 0.988945, val loss 0.283751, val acc 0.906319
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.0374, 1.0794, 1.0002, 0.8804, 0.8649, 1.0124, 1.0295, 1.0120, 1.0111,
+        0.8975])
+
+Sparcity analysis - population sparcity: 0.4991
+
+Classification bias vector:
+
+tensor([-0.0492, -0.0281,  0.0405, -0.0216,  0.0159, -0.0295, -0.1822, -0.0443,
+        -0.1002, -0.0762], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_5p.png)
+
+
+Linear probe overall acc: 0.9828
+
+task 3, [5, 6]
+
+2, train loss 0.067538, train acc 0.981642, val loss 0.424707, val acc 0.869616
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2907, 1.2849, 1.2185, 1.0548, 1.1065, 0.9573, 0.9967, 1.2560, 1.2567,
+        1.1351])
+
+Sparcity analysis - population sparcity: 0.5240
+
+Classification bias vector:
+
+tensor([-0.0801, -0.0516,  0.0161, -0.0999, -0.0526,  0.0969, -0.0476, -0.0777,
+        -0.1320, -0.1109], requires_grad=True)
+
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_5p.png)
+
+Linear probe overall acc: 0.9657
+
+task 4, [7, 8]
+
+2, train loss 0.062381, train acc 0.983557, val loss 0.625434, val acc 0.795154
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.4804, 1.4415, 1.3612, 1.2136, 1.2794, 1.1730, 1.2259, 1.0526, 0.9953,
+        1.3050])
+
+Sparcity analysis - population sparcity: 0.5334
+
+Classification bias vector:
+
+tensor([-0.1059, -0.0671, -0.0027, -0.1187, -0.0673,  0.0144, -0.1277,  0.0783,
+         0.0105, -0.1367], requires_grad=True)
+
+
+
+Linear probe overall acc: 0.9494
+
+task 5, [9, 0]
+
+2, train loss 0.070342, train acc 0.981683, val loss 0.767493, val acc 0.732400
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2315, 1.6102, 1.5568, 1.3863, 1.4324, 1.3335, 1.3853, 1.4074, 1.3698,
+        0.9826])
+
+Sparcity analysis - population sparcity: 0.5380
+
+Classification bias vector:
+
+tensor([ 0.0817, -0.0886, -0.0266, -0.1412, -0.0830, -0.0110, -0.1486, -0.0055,
+        -0.0787,  0.0155], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_5p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_5p.png)
+
+Linear probe overall acc: 0.9380
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9828 | 0.9657 | 0.9494 | 0.9380 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9823 | 0.9688 |
+| Class 2    | 0.9951 | 0.9718 | 0.9536 | 0.9261 | 0.9171 |
+| Class 3    |        | 0.9792 | 0.9461 | 0.9340 | 0.8922 |
+| Class 4    |        | 0.9952 | 0.9786 | 0.9583 | 0.9235 |
+| Class 5    |        |        | 0.9453 | 0.9148 | 0.8785 |
+| Class 6    |        |        | 0.9950 | 0.9622 | 0.9792 |
+| Class 7    |        |        |        | 0.9688 | 0.9606 |
+| Class 8    |        |        |        | 0.9420 | 0.9290 |
+| Class 9    |        |        |        |        | 0.9414 |
+| Class 0    |        |        |        |        | 0.9798 |
+
 ### 10%
 
 Vanilla training up to 98% on each task, using BN, AdamW, cross-entropy loss.
@@ -4651,130 +5334,140 @@ lambda repel: 0.0
 
 task 1, [1, 2]
 
-
-1, train loss 0.035788, train acc 0.994864, val loss 0.021825, val acc 0.996646
+1, train loss 0.030235, train acc 0.994950, val loss 0.021208, val acc 0.996646
 
 Accuracy larger than 0.98, breaking from training...
 
 Checking norm of the class. layer weights
-tensor([0.8297, 0.8926, 0.8161, 0.7455, 0.8453, 0.7881, 0.8007, 0.7334, 0.8108,
-        0.7381])
 
-Sparcity analysis - population sparcity: 0.5063
+tensor([0.7502, 0.8854, 0.8965, 0.8020, 0.7937, 0.8108, 0.7884, 0.7272, 0.7430,
+        0.6934])
 
+Sparcity analysis - population sparcity: 0.5097
 
 Classification bias vector:
 
-Parameter containing:
-
-tensor([-0.0978, -0.0381,  0.0276, -0.0823, -0.0809, -0.1418, -0.0254, -0.0124,
-        -0.1368, -0.1470], requires_grad=True)
-
+tensor([-0.1217,  0.0398,  0.0143,  0.0424,  0.0138, -0.0477, -0.1167, -0.1238,
+        -0.0539,  0.0548], requires_grad=True)
 
 Linear probe overall acc: 0.9976
 
 task 2, [3, 4]
 
-1, train loss 0.055796, train acc 0.989084, val loss 0.184815, val acc 0.945168
+1, train loss 0.053380, train acc 0.988356, val loss 0.184475, val acc 0.945906
 
 Accuracy larger than 0.98, breaking from training...
 
 Checking norm of the class. layer weights
 
-tensor([1.0582, 1.0696, 0.9942, 0.8274, 0.8958, 0.9851, 1.0327, 0.9298, 1.0217,
-        0.9388])
+tensor([0.9880, 1.0589, 1.0531, 0.8837, 0.8875, 1.0710, 1.0447, 0.9813, 0.9939,
+        0.9252])
 
-Sparcity analysis - population sparcity: 0.5045
-
+Sparcity analysis - population sparcity: 0.4937
 
 Classification bias vector:
 
-Parameter containing:
-
-tensor([-0.1299, -0.0978, -0.0258,  0.0151,  0.0134, -0.1741, -0.0573, -0.0432,
-        -0.1686, -0.1778], requires_grad=True)
+tensor([-0.1561, -0.0234, -0.0475,  0.1344,  0.1114, -0.0850, -0.1532, -0.1587,
+        -0.0905,  0.0195], requires_grad=True)
 
 
-Linear probe overall acc: 0.9828
+Linear probe overall acc: 0.9767
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_10p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_10p_extended.png)
 
 task 3, [5, 6]
 
-2, train loss 0.066764, train acc 0.984118, val loss 0.252716, val acc 0.924753
+2, train loss 0.066859, train acc 0.984022, val loss 0.280552, val acc 0.915368
 
 Accuracy larger than 0.98, breaking from training...
 
 Checking norm of the class. layer weights
 
-tensor([1.2921, 1.2821, 1.2358, 1.0712, 1.1292, 1.0108, 0.9604, 1.1396, 1.2456,
-        1.1603])
+tensor([1.2532, 1.2891, 1.2950, 1.1257, 1.1771, 0.9847, 1.0165, 1.2528, 1.2644,
+        1.1779])
 
-Sparcity analysis - population sparcity: 0.5272
+Sparcity analysis - population sparcity: 0.5259
 
 Classification bias vector:
 
-Parameter containing:
-
-tensor([-0.1613, -0.1228, -0.0479, -0.0604, -0.0562, -0.0449,  0.0783, -0.0729,
-        -0.2001, -0.2073], requires_grad=True)
+tensor([-0.1936, -0.0493, -0.0749,  0.0583,  0.0377,  0.0523, -0.0206, -0.1946,
+        -0.1293, -0.0159], requires_grad=True)
 
 
-Linear probe overall acc: 0.9665
+Linear probe overall acc: 0.9724
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_10p.png)
 
 task 4, [7, 8]
 
-2, train loss 0.066729, train acc 0.983404, val loss 0.404594, val acc 0.873970
+2, train loss 0.068062, train acc 0.985028, val loss 0.417902, val acc 0.875468
 
 Accuracy larger than 0.98, breaking from training...
 
 Checking norm of the class. layer weights
 
-tensor([1.4428, 1.4655, 1.3980, 1.2575, 1.3022, 1.2785, 1.2750, 1.0685, 1.0335,
-        1.3121])
+tensor([1.4497, 1.5076, 1.5005, 1.3347, 1.3870, 1.3195, 1.3150, 1.0024, 1.0014,
+        1.3723])
 
-Sparcity analysis - population sparcity: 0.5257
+Sparcity analysis - population sparcity: 0.5176
 
 Classification bias vector:
 
-Parameter containing:
-
-tensor([-0.1794, -0.1405, -0.0625, -0.0764, -0.0739, -0.1180,  0.0030,  0.0615,
-        -0.0601, -0.2258], requires_grad=True)
+tensor([-0.2188, -0.0709, -0.0967,  0.0371,  0.0163, -0.0281, -0.1037, -0.0396,
+         0.0247, -0.0410], requires_grad=True)
 
 
-Linear probe overall acc: 0.9569
+Linear probe overall acc: 0.9594
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_10p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_10p_extended.png)
+
 task 5, [9, 0]
 
-3, train loss 0.061754, train acc 0.984358, val loss 0.422785, val acc 0.868100
+2, train loss 0.076921, train acc 0.981321, val loss 0.452993, val acc 0.849400
+
+Accuracy larger than 0.98, breaking from training...
 
 Checking norm of the class. layer weights
-tensor([1.2314, 1.6561, 1.6180, 1.4724, 1.4710, 1.4816, 1.4686, 1.4224, 1.3897,
-        1.1158])
+tensor([1.1562, 1.6764, 1.6740, 1.5199, 1.5331, 1.4828, 1.4790, 1.3312, 1.3777,
+        1.1271])
 
-Sparcity analysis - population sparcity: 0.5272
+Sparcity analysis - population sparcity: 0.5198
 
 Classification bias vector:
 
-Parameter containing:
-
-tensor([ 0.0026, -0.1620, -0.0815, -0.0968, -0.0878, -0.1415, -0.0194, -0.0227,
-        -0.1436, -0.0745], requires_grad=True)
+tensor([-0.0470, -0.0906, -0.1140,  0.0147,  0.0049, -0.0458, -0.1210, -0.1232,
+        -0.0585,  0.1157], requires_grad=True)
 
 
-Linear probe overall acc: 0.9540
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_10p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_10p_extended.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_weights_rehearse_20p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_10p.png)
+
+
+Linear probe overall acc: 0.9455
 
 | Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
 |------------|------- |------- |------- |------- |------- |
-| Classifier | 0.9976 | 0.9828 | 0.9665 | 0.9569 | 0.9540 |
-| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9867 | 0.9688 |
-| Class 2    | 1.0000 | 0.9671 | 0.9485 | 0.9310 | 0.9637 |
-| Class 3    |        | 0.9896 | 0.9461 | 0.9442 | 0.9461 |
-| Class 4    |        | 0.9903 | 0.9679 | 0.9722 | 0.9344 |
-| Class 5    |        |        | 0.9652 | 0.9318 | 0.9061 |
-| Class 6    |        |        | 0.9950 | 0.9622 | 0.9792 |
-| Class 7    |        |        |        | 0.9688 | 0.9606 |
-| Class 8    |        |        |        | 0.9517 | 0.9454 |
-| Class 9    |        |        |        |        | 0.9582 |
-| Class 0    |        |        |        |        | 0.9697 |
+| Classifier | 0.9976 | 0.9767 | 0.9724 | 0.9594 | 0.9455 |
+| Class 0    |        |        |        |        | 0.9646 |
+| Class 1    | 0.9953 | 0.9802 | 0.9709 | 0.9779 | 0.9688 |
+| Class 2    | 1.0000 | 0.9624 | 0.9639 | 0.9212 | 0.9275 |
+| Class 3    |        | 0.9792 | 0.9559 | 0.9492 | 0.9216 |
+| Class 4    |        | 0.9855 | 0.9733 | 0.9676 | 0.9290 |
+| Class 5    |        |        | 0.9751 | 0.9318 | 0.9282 |
+| Class 6    |        |        | 0.9950 | 0.9838 | 0.9531 |
+| Class 7    |        |        |        | 0.9740 | 0.9803 |
+| Class 8    |        |        |        | 0.9662 | 0.9235 |
+| Class 9    |        |        |        |        | 0.9498 |
+
 
 ### 20%
 
@@ -4830,6 +5523,8 @@ tensor([-0.1449, -0.0229,  0.0005, -0.0297, -0.0729, -0.1230, -0.0384, -0.1143,
 
 Linear probe overall acc: 0.9828
 
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_20p.png)
+
 task 3, [5, 6]
 
 2, train loss 0.065121, train acc 0.983508, val loss 0.201737, val acc 0.939501
@@ -4852,6 +5547,8 @@ tensor([-0.1820, -0.0489, -0.0259, -0.1002, -0.1489,  0.0175,  0.0926, -0.1498,
 
 
 Linear probe overall acc: 0.9765
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_20p.png)
 
 task 4, [7, 8]
 
@@ -4877,6 +5574,8 @@ tensor([-2.0677e-01, -7.1834e-02, -4.9529e-02, -1.2094e-01, -1.6972e-01,
 
 Linear probe overall acc: 0.9563
 
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_20p.png)
+
 task 5, [9, 0]
 
 2, train loss 0.081478, train acc 0.980688, val loss 0.297897, val acc 0.910800
@@ -4897,6 +5596,8 @@ Parameter containing:
 tensor([-0.0258, -0.0961, -0.0748, -0.1383, -0.1896, -0.0813, -0.0113, -0.0799,
         -0.0900, -0.0044], requires_grad=True)
 
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_20p.png)
+
 Linear probe overall acc: 0.9520
 
 | Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
@@ -4912,3 +5613,145 @@ Linear probe overall acc: 0.9520
 | Class 8    |        |        |        | 0.9662 | 0.9508 |
 | Class 9    |        |        |        |        | 0.9540 |
 | Class 0    |        |        |        |        | 0.9646 |
+
+## 30%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.027479, train acc 0.996232, val loss 0.021073, val acc 0.995688
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.7667, 0.9539, 0.8978, 0.7987, 0.7285, 0.8014, 0.7020, 0.7464, 0.8079,
+        0.7612])
+
+Sparcity analysis - population sparcity: 0.5134
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([ 0.0369,  0.0504, -0.0420,  0.0424, -0.0862,  0.0037, -0.0166, -0.0523,
+         0.0089, -0.1027], requires_grad=True)
+
+Linear probe overall acc: 0.9952
+
+task 2, [3, 4]
+
+1, train loss 0.054482, train acc 0.986916, val loss 0.112327, val acc 0.967790
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([0.9958, 1.1603, 0.9737, 0.9512, 0.9157, 1.0292, 0.9106, 0.9686, 1.0534,
+        1.0159])
+
+Sparcity analysis - population sparcity: 0.5103
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([ 0.0014, -0.0047, -0.1072,  0.1387,  0.0034, -0.0330, -0.0517, -0.0880,
+        -0.0255, -0.1378], requires_grad=True)
+
+Linear probe overall acc: 0.9840
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_30p.png)
+
+task 3, [5, 6]
+
+2, train loss 0.063388, train acc 0.983807, val loss 0.154177, val acc 0.953913
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.2364, 1.4059, 1.2057, 1.1692, 1.1281, 1.0935, 0.9914, 1.2074, 1.3101,
+        1.2794])
+
+Sparcity analysis - population sparcity: 0.5211
+
+Classification bias vector:
+
+tensor([-0.0338, -0.0321, -0.1287,  0.0709, -0.0654,  0.1004,  0.0636, -0.1227,
+        -0.0614, -0.1745], requires_grad=True)
+
+Linear probe overall acc: 0.9724
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_30p.png)
+
+task 4, [7, 8]
+
+2, train loss 0.074673, train acc 0.983215, val loss 0.206507, val acc 0.938921
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.4471, 1.6499, 1.3991, 1.3914, 1.3676, 1.3987, 1.2619, 1.0987, 1.0831,
+        1.5010])
+
+Sparcity analysis - population sparcity: 0.5230
+
+Classification bias vector:
+
+Parameter containing:
+
+tensor([-0.0639, -0.0587, -0.1512,  0.0458, -0.0897,  0.0251, -0.0227,  0.0259,
+         0.1014, -0.2056], requires_grad=True)
+
+
+Linear probe overall acc: 0.9619
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_30p.png)
+
+task 5, [9, 0]
+
+3, train loss 0.065725, train acc 0.983344, val loss 0.231665, val acc 0.930300
+
+Accuracy larger than 0.98, breaking from training...
+
+Checking norm of the class. layer weights
+
+tensor([1.3054, 1.9098, 1.6669, 1.6400, 1.6142, 1.6457, 1.4991, 1.5224, 1.4720,
+        1.2511])
+
+Sparcity analysis - population sparcity: 0.5259
+
+Classification bias vector:
+
+tensor([ 0.0998, -0.0863, -0.1781,  0.0203, -0.1111, -0.0015, -0.0541, -0.0509,
+         0.0147, -0.0131], requires_grad=True)
+
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_30p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_weights_rehearse_30p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_30p.png)
+
+Linear probe overall acc: 0.9605
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9840 | 0.9724 | 0.9619 | 0.9605 |
+| Class 0    |        |        |        |        | 0.9747 |
+| Class 1    | 0.9953 | 0.9901 | 0.9757 | 0.9867 | 0.9732 |
+| Class 2    | 0.9951 | 0.9671 | 0.9742 | 0.9261 | 0.9326 |
+| Class 3    |        | 0.9844 | 0.9461 | 0.9695 | 0.9608 |
+| Class 4    |        | 0.9952 | 0.9733 | 0.9583 | 0.9563 |
+| Class 5    |        |        | 0.9751 | 0.9318 | 0.9337 |
+| Class 6    |        |        | 0.9901 | 0.9784 | 0.9896 |
+| Class 7    |        |        |        | 0.9635 | 0.9655 |
+| Class 8    |        |        |        | 0.9758 | 0.9454 |
+| Class 9    |        |        |        |        | 0.9665 |
