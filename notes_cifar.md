@@ -1251,4 +1251,165 @@ CIFAR:
 [1.0, 0.8386904761904761, 0.7927380952380952, 0.68775, 0.6867738095238094]
 
 
+#### Characterizing forgetting
+
+Measuring forgetting using linear probes in three different points of the network
+
+#### Training sequentially
+
+*Task 1*
+
+On all previous tasks, loss 0.5641232709884644, acc 0.884
+
+Using linear probing...
+
+Linear probe overall acc: 0.8450
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.8200
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.7350
+
+*Task 2*
+
+On all previous tasks, loss 6.32254468536377, acc 0.4505
+
+Using linear probing...
+
+Linear probe overall acc: 0.7475
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.7425
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.6150
+
+*Task 3*
+
+On all previous tasks, loss 8.574389629364013, acc 0.2823333333333333
+
+Linear probe overall acc: 0.6483
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.6433
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.5400
+
+*Task 4*
+
+On all previous tasks, loss 9.067393478393555, acc 0.2415
+
+Linear probe overall acc: 0.5750
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.5800
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.4913
+
+*Task 5*
+
+On all previous tasks, loss 9.193943992614747, acc 0.1836
+
+Using linear probing...
+
+Linear probe overall acc: 0.5410
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.5920
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.4540
+
+*Task 6*
+
+On all previous tasks, loss 9.752244288126628, acc 0.12333333333333334
+
+Linear probe overall acc: 0.4842
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.5083
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.4225
+
+*Task 7*
+
+On all previous tasks, loss 9.892450680324009, acc 0.12371428571428572
+
+Using linear probing...
+
+Linear probe overall acc: 0.4521
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.4914
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.3814
+
+*Task 8*
+
+On all previous tasks, loss 9.942965202331543, acc 0.11725
+
+Using linear probing...
+
+Linear probe overall acc: 0.4406
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.4669
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.3600
+
+*Task 9*
+
+On all previous tasks, loss 10.834222646077475, acc 0.09222222222222222
+
+Using linear probing...
+
+Linear probe overall acc: 0.3872
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.4133
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.3156
+
+*Task 10*
+
+On all previous tasks, loss 11.0209458984375, acc 0.0848
+
+Using linear probing...
+
+Linear probe overall acc: 0.3790
+
+Using linear probing h2...
+
+Linear probe overall acc: 0.418
+
+Using linear probing h1...
+
+Linear probe overall acc: 0.34000
+
+#### Training concurrently
 

@@ -5755,3 +5755,627 @@ Linear probe overall acc: 0.9605
 | Class 7    |        |        |        | 0.9635 | 0.9655 |
 | Class 8    |        |        |        | 0.9758 | 0.9454 |
 | Class 9    |        |        |        |        | 0.9665 |
+
+### 40%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.028978, train acc 0.996030, val loss 0.020414, val acc 0.996646
+
+Checking norm of the class. layer weights
+
+tensor([0.7473, 0.8640, 0.8794, 0.7700, 0.7917, 0.7305, 0.6989, 0.7226, 0.7839,
+        0.7699])
+
+Sparcity analysis - population sparcity: 0.5181
+
+Classification bias vector:
+
+tensor([-0.1369,  0.0074,  0.0596, -0.0254,  0.0450,  0.0366, -0.1114, -0.1290,
+        -0.0456, -0.1060], requires_grad=True)
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.055445, train acc 0.987065, val loss 0.096964, val acc 0.972707
+
+Checking norm of the class. layer weights
+
+tensor([0.9822, 1.0824, 1.0149, 0.8693, 0.9735, 0.9457, 0.8924, 0.9571, 1.0378,
+        1.0068])
+
+Sparcity analysis - population sparcity: 0.5203
+
+Classification bias vector:
+
+tensor([-0.1745, -0.0432,  0.0023,  0.0723,  0.1326,  0.0016, -0.1460, -0.1658,
+        -0.0830, -0.1450], requires_grad=True)
+
+
+Linear probe overall acc: 0.9828
+
+task 3, [5, 6]
+
+2, train loss 0.066781, train acc 0.983458, val loss 0.156836, val acc 0.953746
+
+Checking norm of the class. layer weights
+
+tensor([1.2212, 1.3498, 1.2782, 1.1331, 1.2069, 1.0677, 1.0175, 1.1837, 1.2813,
+        1.2368])
+
+Sparcity analysis - population sparcity: 0.5349
+
+Classification bias vector:
+
+tensor([-0.2118, -0.0681, -0.0195,  0.0126,  0.0644,  0.1328, -0.0375, -0.1971,
+        -0.1165, -0.1778], requires_grad=True)
+
+
+Linear probe overall acc: 0.9749
+
+task 4, [7, 8]
+
+2, train loss 0.072679, train acc 0.981866, val loss 0.170776, val acc 0.950912
+
+Checking norm of the class. layer weights
+
+tensor([1.4305, 1.6272, 1.5204, 1.3739, 1.4466, 1.3714, 1.2486, 1.0600, 1.0577,
+        1.4440])
+
+Sparcity analysis - population sparcity: 0.5305
+
+Classification bias vector:
+
+tensor([-0.2439, -0.0977, -0.0382, -0.0122,  0.0373,  0.0523, -0.1117, -0.0547,
+         0.0485, -0.2088], requires_grad=True)
+
+Linear probe overall acc: 0.9625
+
+task 5, [9, 0]
+
+2, train loss 0.080294, train acc 0.980489, val loss 0.216132, val acc 0.938100
+
+Checking norm of the class. layer weights
+
+tensor([1.2106, 1.8392, 1.7480, 1.6320, 1.6715, 1.5963, 1.4570, 1.4477, 1.4427,
+        1.1607])
+
+Sparcity analysis - population sparcity: 0.5206
+
+Classification bias vector:
+
+tensor([-0.0792, -0.1190, -0.0585, -0.0365,  0.0189,  0.0310, -0.1409, -0.1270,
+        -0.0297, -0.0396], requires_grad=True)
+
+Linear probe overall acc: 0.9615
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9828 | 0.9749 | 0.9625 | 0.9615 |
+| Class 0    |        |        |        |        | 0.9697 |
+| Class 1    | 0.9953 | 0.9851 | 0.9806 | 0.9867 | 0.9732 |
+| Class 2    | 1.0000 | 0.9718 | 0.9691 | 0.9458 | 0.9534 |
+| Class 3    |        | 0.9896 | 0.9657 | 0.9492 | 0.9755 |
+| Class 4    |        | 0.9855 | 0.9679 | 0.9676 | 0.9508 |
+| Class 5    |        |        | 0.9652 | 0.9318 | 0.9282 |
+| Class 6    |        |        | 1.0000 | 0.9784 | 0.9635 |
+| Class 7    |        |        |        | 0.9688 | 0.9655 |
+| Class 8    |        |        |        | 0.9662 | 0.9563 |
+| Class 9    |        |        |        |        | 0.9707 |
+
+### 50%
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+lambda L1: 0.0
+
+lambda repel: 0.0
+
+task 1, [1, 2]
+
+
+1, train loss 0.026790, train acc 0.996352, val loss 0.021333, val acc 0.995688
+
+
+Checking norm of the class. layer weights
+
+tensor([0.7168, 0.9123, 0.8452, 0.7773, 0.7999, 0.8523, 0.7782, 0.7961, 0.8099,
+        0.7702])
+
+Sparcity analysis - population sparcity: 0.5089
+
+Classification bias vector:
+
+tensor([-0.0391,  0.1160,  0.1448, -0.0074, -0.1250, -0.1019, -0.1085, -0.0078,
+        -0.1340, -0.0662], requires_grad=True)
+
+
+Linear probe overall acc: 0.9976
+
+task 2, [3, 4]
+
+1, train loss 0.058868, train acc 0.986891, val loss 0.098433, val acc 0.973937
+
+Checking norm of the class. layer weights
+
+tensor([0.9254, 1.1991, 0.9634, 0.8959, 0.9264, 1.1072, 0.9896, 0.9957, 1.0309,
+        1.0076])
+
+Sparcity analysis - population sparcity: 0.5204
+
+Classification bias vector:
+
+tensor([-0.0768,  0.0684,  0.0833,  0.0947, -0.0421, -0.1423, -0.1461, -0.0454,
+        -0.1702, -0.1029], requires_grad=True)
+
+Linear probe overall acc: 0.9803
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_50p.png)
+
+task 3, [5, 6]
+
+2, train loss 0.062908, train acc 0.984002, val loss 0.138871, val acc 0.959276
+
+Checking norm of the class. layer weights
+
+tensor([1.1721, 1.5090, 1.2448, 1.1801, 1.1209, 1.0530, 1.0496, 1.2359, 1.2913,
+        1.2687])
+
+Sparcity analysis - population sparcity: 0.5241
+
+Classification bias vector:
+
+tensor([-0.1211,  0.0372,  0.0608,  0.0347, -0.1110,  0.0103, -0.0387, -0.0865,
+        -0.2140, -0.1446], requires_grad=True)
+
+
+Linear probe overall acc: 0.9724
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_50p.png)
+
+task 4, [7, 8]
+
+2, train loss 0.064429, train acc 0.984134, val loss 0.167207, val acc 0.949913
+
+Checking norm of the class. layer weights
+
+tensor([1.3533, 1.7829, 1.4912, 1.3903, 1.3689, 1.3596, 1.3210, 1.2034, 1.1176,
+        1.4627])
+
+Sparcity analysis - population sparcity: 0.5367
+
+Classification bias vector:
+
+tensor([-0.1492,  0.0116,  0.0375,  0.0133, -0.1372, -0.0571, -0.1109,  0.0518,
+        -0.0587, -0.1730], requires_grad=True)
+
+
+Linear probe overall acc: 0.9650
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_50p.png)
+
+task 5, [9, 0]
+
+3, train loss 0.062135, train acc 0.984556, val loss 0.176856, val acc 0.949300
+
+Checking norm of the class. layer weights
+
+tensor([1.2815, 2.0375, 1.7441, 1.6684, 1.6559, 1.6105, 1.5784, 1.5829, 1.5223,
+        1.3262])
+
+Sparcity analysis - population sparcity: 0.5288
+
+Classification bias vector:
+
+tensor([ 0.0046, -0.0157,  0.0158, -0.0074, -0.1579, -0.0832, -0.1398, -0.0221,
+        -0.1323,  0.0059], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_50p.png)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_latent_rehearse_50p.png)
+
+Linear probe overall acc: 0.9670
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9803 | 0.9724 | 0.9650 | 0.9670 |
+| Class 0    |        |        |        |        | 0.9646 |
+| Class 1    | 0.9953 | 0.9901 | 0.9806 | 0.9867 | 0.9777 |
+| Class 2    | 1.0000 | 0.9624 | 0.9639 | 0.9507 | 0.9482 |
+| Class 3    |        | 0.9844 | 0.9510 | 0.9594 | 0.9657 |
+| Class 4    |        | 0.9855 | 0.9786 | 0.9769 | 0.9563 |
+| Class 5    |        |        | 0.9652 | 0.9205 | 0.9503 |
+| Class 6    |        |        | 0.9950 | 0.9730 | 0.9792 |
+| Class 7    |        |        |        | 0.9792 | 0.9901 |
+| Class 8    |        |        |        | 0.9662 | 0.9617 |
+| Class 9    |        |        |        |        | 0.9707 |
+
+### Results
+
+![rehearsal](./images_general/rehearsal_mnist.png)
+
+## Measuring how deep is the forgetting
+
+![depth of forgetting](./images_general/forgetting_depth_1.png)
+
+**Training sequentially**
+
+*Representation for the second layer*
+
+Linear probe overall acc: 0.8905
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9693 | 0.9229 | 0.9145 | 0.8905 |
+| Class 0    |        |        |        |        | 0.9697 |
+| Class 1    | 0.9953 | 0.9851 | 0.9757 | 0.9690 | 0.9554 |
+| Class 2    | 1.0000 | 0.9531 | 0.8814 | 0.8867 | 0.8808 |
+| Class 3    |        | 0.9479 | 0.8873 | 0.8731 | 0.8529 |
+| Class 4    |        | 0.9903 | 0.9626 | 0.9583 | 0.8689 |
+| Class 5    |        |        | 0.8557 | 0.7955 | 0.8011 |
+| Class 6    |        |        | 0.9752 | 0.9730 | 0.9583 |
+| Class 7    |        |        |        | 0.9635 | 0.9212 |
+| Class 8    |        |        |        | 0.8792 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8536 |
+
+*Representation for the first layer*
+
+Linear probe overall acc: 0.9205
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9730 | 0.9590 | 0.9482 | 0.9205 |
+| Class 0    |        |        |        |        | 0.9545 |
+| Class 1    | 0.9953 | 0.9901 | 0.9903 | 0.9823 | 0.9688 |
+| Class 2    | 1.0000 | 0.9531 | 0.9485 | 0.9310 | 0.9275 |
+| Class 3    |        | 0.9583 | 0.9069 | 0.9289 | 0.9020 |
+| Class 4    |        | 0.9903 | 0.9626 | 0.9722 | 0.8962 |
+| Class 5    |        |        | 0.9602 | 0.9091 | 0.8895 |
+| Class 6    |        |        | 0.9851 | 0.9730 | 0.9688 |
+| Class 7    |        |        |        | 0.9479 | 0.9163 |
+| Class 8    |        |        |        | 0.9324 | 0.8634 |
+| Class 9    |        |        |        |        | 0.9079 |
+
+
+**Training concurrently**
+
+Epoch 4, train loss: 0.0963, val loss: 0.0066, train acc: 0.9813, val acc: 0.9777
+
+*Representation for the second layer*
+
+Linear probe overall acc: 0.9800
+
+Class 0 accuracy on linear probing: 0.9848
+
+Class 1 accuracy on linear probing: 1.0000
+
+Class 2 accuracy on linear probing: 0.9896
+
+Class 3 accuracy on linear probing: 0.9804
+
+Class 4 accuracy on linear probing: 0.9508
+
+Class 5 accuracy on linear probing: 0.9779
+
+Class 6 accuracy on linear probing: 0.9948
+
+Class 7 accuracy on linear probing: 0.9754
+
+Class 8 accuracy on linear probing: 0.9727
+
+Class 9 accuracy on linear probing: 0.9707
+
+*Representation for the first layer*
+
+Linear probe overall acc: 0.9800
+
+Class 0 accuracy on linear probing: 0.9848
+
+Class 1 accuracy on linear probing: 0.9911
+
+Class 2 accuracy on linear probing: 0.9948
+
+Class 3 accuracy on linear probing: 0.9853
+
+Class 4 accuracy on linear probing: 0.9508
+
+Class 5 accuracy on linear probing: 0.9669
+
+Class 6 accuracy on linear probing: 0.9948
+
+Class 7 accuracy on linear probing: 0.9803
+
+Class 8 accuracy on linear probing: 0.9727
+
+Class 9 accuracy on linear probing: 0.9749
+
+### EWC
+
+#### Experiment 1
+
+**lambda ewc: 100**
+
+task 1, [1, 2]
+
+0, train loss 0.263372, ewc train loss: 0.000000, train acc 0.972204, val loss 0.045748, val acc 0.992813
+
+1, train loss 0.030510, ewc train loss: 0.000000, train acc 0.995383, val loss 0.020359, val acc 0.996167
+
+task 2, [3, 4]
+
+0, train loss 0.650034, ewc train loss: 0.000012, train acc 0.839788, val loss 2.107273, val acc 0.484387
+
+1, train loss 0.028247, ewc train loss: 0.000012, train acc 0.995597, val loss 2.610292, val acc 0.485370
+
+task 3, [5, 6]
+
+0, train loss 1.032969, ewc train loss: 0.000014, train acc 0.785147, val loss 2.888141, val acc 0.314731
+
+1, train loss 0.053433, ewc train loss: 0.000015, train acc 0.989618, val loss 3.534970, val acc 0.315737
+
+task 4, [7, 8]
+
+0, train loss 0.927085, ewc train loss: 0.000057, train acc 0.799940, val loss 3.538885, val acc 0.252311
+
+1, train loss 0.041965, ewc train loss: 0.000058, train acc 0.993153, val loss 4.061694, val acc 0.252561
+
+
+task 5, [9, 0]
+
+0, train loss 1.328228, ewc train loss: 0.000099, train acc 0.753493, val loss 3.675617, val acc 0.197500
+
+1, train loss 0.051669, ewc train loss: 0.000101, train acc 0.993825, val loss 4.314540, val acc 0.198200
+
+Linear probe overall acc: 0.8970
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9668 | 0.9288 | 0.9164 | 0.8970 |
+| Class 0    |        |        |        |        | 0.9394 |
+| Class 1    | 0.9953 | 0.9950 | 0.9757 | 0.9823 | 0.9643 |
+| Class 2    | 1.0000 | 0.9390 | 0.8969 | 0.8818 | 0.9275 |
+| Class 3    |        | 0.9427 | 0.8971 | 0.8782 | 0.8725 |
+| Class 4    |        | 0.9903 | 0.9519 | 0.9630 | 0.8907 |
+| Class 5    |        |        | 0.8706 | 0.8068 | 0.8122 |
+| Class 6    |        |        | 0.9802 | 0.9622 | 0.9792 |
+| Class 7    |        |        |        | 0.9688 | 0.8966 |
+| Class 8    |        |        |        | 0.8696 | 0.8415 |
+| Class 9    |        |        |        |        | 0.8410 |
+
+
+Linear probe overall acc: 0.9305
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9791 | 0.9615 | 0.9413 | 0.9305 |
+| Class 0    |        |        |        |        | 0.9495 |
+| Class 1    | 0.9953 | 0.9950 | 0.9903 | 0.9912 | 0.9598 |
+| Class 2    | 1.0000 | 0.9624 | 0.9639 | 0.9261 | 0.9482 |
+| Class 3    |        | 0.9688 | 0.9216 | 0.9086 | 0.9069 |
+| Class 4    |        | 0.9903 | 0.9786 | 0.9583 | 0.9071 |
+| Class 5    |        |        | 0.9254 | 0.8920 | 0.9116 |
+| Class 6    |        |        | 0.9901 | 0.9568 | 0.9740 |
+| Class 7    |        |        |        | 0.9740 | 0.9310 |
+| Class 8    |        |        |        | 0.9130 | 0.9180 |
+| Class 9    |        |        |        |        | 0.8996 |
+
+
+#### Experiment 2
+
+**lambda ewc: 1000**
+
+task 5, [9, 0]
+
+0, train loss 1.277213, ewc train loss: 0.000795, train acc 0.768982, val loss 3.423864, val acc 0.197700
+
+1, train loss 0.135944, ewc train loss: 0.000709, train acc 0.993116, val loss 4.099246, val acc 0.198100
+
+
+Linear probe overall acc: 0.8855
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9730 | 0.9464 | 0.9288 | 0.8855 |
+| Class 0    |        |        |        |        | 0.9444 |
+| Class 1    | 0.9953 | 0.9802 | 0.9854 | 0.9823 | 0.9598 |
+| Class 2    | 0.9951 | 0.9531 | 0.9227 | 0.9064 | 0.8912 |
+| Class 3    |        | 0.9635 | 0.9069 | 0.8731 | 0.8627 |
+| Class 4    |        | 0.9952 | 0.9679 | 0.9769 | 0.8798 |
+| Class 5    |        |        | 0.9104 | 0.8011 | 0.7845 |
+| Class 6    |        |        | 0.9851 | 0.9784 | 0.9688 |
+| Class 7    |        |        |        | 0.9688 | 0.8867 |
+| Class 8    |        |        |        | 0.9227 | 0.7923 |
+| Class 9    |        |        |        |        | 0.8661 |
+
+Linear probe overall acc: 0.9285
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9791 | 0.9531 | 0.9401 | 0.9285 |
+| Class 0    |        |        |        |        | 0.9747 |
+| Class 1    | 0.9953 | 0.9851 | 0.9903 | 0.9867 | 0.9688 |
+| Class 2    | 1.0000 | 0.9671 | 0.9433 | 0.9310 | 0.9171 |
+| Class 3    |        | 0.9740 | 0.9069 | 0.9188 | 0.9069 |
+| Class 4    |        | 0.9903 | 0.9733 | 0.9630 | 0.9290 |
+| Class 5    |        |        | 0.9204 | 0.8580 | 0.8785 |
+| Class 6    |        |        | 0.9851 | 0.9676 | 0.9740 |
+| Class 7    |        |        |        | 0.9583 | 0.9212 |
+| Class 8    |        |        |        | 0.9227 | 0.8852 |
+| Class 9    |        |        |        |        | 0.9205 |
+
+#### Experiment 3
+
+**lambda_ewc = 10000**
+
+task 5, [9, 0]
+
+0, train loss 1.584461, ewc train loss: 0.002035, train acc 0.779308, val loss 2.732780, val acc 0.213800
+
+1, train loss 0.260887, ewc train loss: 0.001345, train acc 0.994736, val loss 3.208678, val acc 0.201800
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9693 | 0.9523 | 0.9295 | 0.9045 |
+| Class 0    |        |        |        |        | 0.9444 |
+| Class 1    | 0.9953 | 0.9851 | 0.9951 | 0.9735 | 0.9688 |
+| Class 2    | 1.0000 | 0.9437 | 0.9485 | 0.9113 | 0.9016 |
+| Class 3    |        | 0.9531 | 0.9118 | 0.9188 | 0.8775 |
+| Class 4    |        | 0.9952 | 0.9733 | 0.9815 | 0.8852 |
+| Class 5    |        |        | 0.9055 | 0.8011 | 0.8453 |
+| Class 6    |        |        | 0.9802 | 0.9784 | 0.9635 |
+| Class 7    |        |        |        | 0.9427 | 0.9113 |
+| Class 8    |        |        |        | 0.9082 | 0.8634 |
+| Class 9    |        |        |        |        | 0.8745 |
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9330
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9779 | 0.9631 | 0.9419 | 0.9330 |
+| Class 0    |        |        |        |        | 0.9444 |
+| Class 1    | 0.9953 | 0.9950 | 0.9951 | 0.9912 | 0.9777 |
+| Class 2    | 1.0000 | 0.9624 | 0.9588 | 0.8916 | 0.9482 |
+| Class 3    |        | 0.9583 | 0.9265 | 0.9137 | 0.9069 |
+| Class 4    |        | 0.9952 | 0.9733 | 0.9722 | 0.9344 |
+| Class 5    |        |        | 0.9453 | 0.8920 | 0.8674 |
+| Class 6    |        |        | 0.9802 | 0.9784 | 0.9740 |
+| Class 7    |        |        |        | 0.9635 | 0.9360 |
+| Class 8    |        |        |        | 0.9227 | 0.9071 |
+| Class 9    |        |        |        |        | 0.9247 |
+
+#### Experiment 4
+
+lambda ewc: 100000
+
+task 1, [1, 2]
+0, train loss 0.304186, ewc train loss: 0.000000, train acc 0.967587, val loss 0.043807, val acc 0.994250
+1, train loss 0.031915, ewc train loss: 0.000000, train acc 0.994818, val loss 0.020551, val acc 0.997125
+
+task 2, [3, 4]
+0, train loss 0.931434, ewc train loss: 0.001210, train acc 0.840889, val loss 1.059028, val acc 0.525203
+1, train loss 0.161202, ewc train loss: 0.000820, train acc 0.995797, val loss 1.374290, val acc 0.511925
+
+task 3, [5, 6]
+0, train loss 1.378552, ewc train loss: 0.001142, train acc 0.795847, val loss 1.506428, val acc 0.421820
+1, train loss 0.363825, ewc train loss: 0.001005, train acc 0.984638, val loss 1.950803, val acc 0.361656
+
+task 4, [7, 8]
+0, train loss 1.875676, ewc train loss: 0.003927, train acc 0.745956, val loss 2.266120, val acc 0.364477
+1, train loss 0.628024, ewc train loss: 0.003612, train acc 0.985015, val loss 3.050178, val acc 0.275418
+
+task 5, [9, 0]
+0, train loss 2.840576, ewc train loss: 0.005325, train acc 0.594351, val loss 3.436232, val acc 0.263400
+1, train loss 0.783099, ewc train loss: 0.004855, train acc 0.985118, val loss 4.203403, val acc 0.212100
+
+Linear probe overall acc: 0.8980
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9754 | 0.9489 | 0.9245 | 0.8980 |
+| Class 0    |        |        |        |        | 0.9242 |
+| Class 1    | 0.9953 | 0.9851 | 0.9854 | 0.9823 | 0.9688 |
+| Class 2    | 1.0000 | 0.9624 | 0.9330 | 0.9113 | 0.8860 |
+| Class 3    |        | 0.9583 | 0.9069 | 0.9036 | 0.8676 |
+| Class 4    |        | 0.9952 | 0.9786 | 0.9491 | 0.8907 |
+| Class 5    |        |        | 0.9104 | 0.8409 | 0.8619 |
+| Class 6    |        |        | 0.9802 | 0.9676 | 0.9531 |
+| Class 7    |        |        |        | 0.9479 | 0.9064 |
+| Class 8    |        |        |        | 0.8792 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8787 |
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9105
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9730 | 0.9581 | 0.9320 | 0.9105 |
+| Class 0    |        |        |        |        | 0.9192 |
+| Class 1    | 0.9953 | 0.9950 | 0.9854 | 0.9779 | 0.9643 |
+| Class 2    | 1.0000 | 0.9624 | 0.9433 | 0.9113 | 0.9067 |
+| Class 3    |        | 0.9375 | 0.9461 | 0.8934 | 0.8873 |
+| Class 4    |        | 0.9952 | 0.9840 | 0.9491 | 0.9126 |
+| Class 5    |        |        | 0.9104 | 0.8580 | 0.8785 |
+| Class 6    |        |        | 0.9802 | 0.9784 | 0.9427 |
+| Class 7    |        |        |        | 0.9583 | 0.9212 |
+| Class 8    |        |        |        | 0.9179 | 0.8689 |
+| Class 9    |        |        |        |        | 0.8954 |
+
+#### Experiment 5
+
+lambda ewc: 200000.0
+task 1, [1, 2]
+0, train loss 0.267286, ewc train loss: 0.000000, train acc 0.970508, val loss 0.043390, val acc 0.995208
+1, train loss 0.029223, ewc train loss: 0.000000, train acc 0.995666, val loss 0.017655, val acc 0.996167
+
+task 2, [3, 4]
+0, train loss 1.032050, ewc train loss: 0.001338, train acc 0.836085, val loss 1.021260, val acc 0.525695
+1, train loss 0.182780, ewc train loss: 0.000938, train acc 0.994596, val loss 1.424449, val acc 0.485862
+
+task 3, [5, 6]
+0, train loss 1.714882, ewc train loss: 0.001465, train acc 0.737896, val loss 1.496931, val acc 0.435059
+1, train loss 0.450081, ewc train loss: 0.001207, train acc 0.984638, val loss 1.971320, val acc 0.393498
+
+task 4, [7, 8]
+0, train loss 2.274402, ewc train loss: 0.005227, train acc 0.672522, val loss 2.749855, val acc 0.327754
+1, train loss 0.863538, ewc train loss: 0.005212, train acc 0.973802, val loss 3.306531, val acc 0.303522
+2, train loss 0.820001, ewc train loss: 0.005031, train acc 0.978764, val loss 3.434536, val acc 0.290532
+3, train loss 0.801656, ewc train loss: 0.005060, train acc 0.980649, val loss 3.580254, val acc 0.287909
+| Class 9    |        |        |        |        |
+
+task 5, [9, 0]
+0, train loss 3.585022, ewc train loss: 0.007517, train acc 0.519336, val loss 4.173564, val acc 0.209100
+1, train loss 1.093742, ewc train loss: 0.007264, train acc 0.980664, val loss 4.769477, val acc 0.197000
+
+Linear probe overall acc: 0.8955
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9767 | 0.9330 | 0.9195 | 0.8955 |
+| Class 0    |        |        |        |        | 0.9293 |
+| Class 1    | 0.9953 | 1.0000 | 0.9903 | 0.9823 | 0.9777 |
+| Class 2    | 1.0000 | 0.9671 | 0.8918 | 0.9261 | 0.9067 |
+| Class 3    |        | 0.9531 | 0.9069 | 0.8782 | 0.8431 |
+| Class 4    |        | 0.9855 | 0.9519 | 0.9537 | 0.9071 |
+| Class 5    |        |        | 0.8955 | 0.7955 | 0.8287 |
+| Class 6    |        |        | 0.9604 | 0.9730 | 0.9427 |
+| Class 7    |        |        |        | 0.9427 | 0.9015 |
+| Class 8    |        |        |        | 0.8841 | 0.8306 |
+| Class 9    |        |        |        |        | 0.8745 |
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9200
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9730 | 0.9598 | 0.9451 | 0.9200 |
+| Class 0    |        |        |        |        | 0.9495 |
+| Class 1    | 0.9953 | 0.9950 | 0.9903 | 0.9867 | 0.9777 |
+| Class 2    | 1.0000 | 0.9577 | 0.9536 | 0.9409 | 0.8964 |
+| Class 3    |        | 0.9583 | 0.9118 | 0.9340 | 0.9069 |
+| Class 4    |        | 0.9807 | 0.9786 | 0.9583 | 0.9563 |
+| Class 5    |        |        | 0.9453 | 0.9034 | 0.8619 |
+| Class 6    |        |        | 0.9802 | 0.9730 | 0.9688 |
+| Class 7    |        |        |        | 0.9635 | 0.9458 |
+| Class 8    |        |        |        | 0.8937 | 0.8689 |
+| Class 9    |        |        |        |        | 0.8661 |
+
+
+
+
+
+
+
+
+
+
