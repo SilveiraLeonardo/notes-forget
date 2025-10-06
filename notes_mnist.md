@@ -1,4 +1,4 @@
-e# MNIST MLP Training
+# MNIST MLP Training
 
 ### Concurrent Training
 
@@ -6097,6 +6097,8 @@ Class 8 accuracy on linear probing: 0.9727
 Class 9 accuracy on linear probing: 0.9749
 
 ### EWC
+
+![ewc](./images_mnist/ewc_forgetting_mnist.png)
 
 #### Experiment 1
 
