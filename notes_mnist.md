@@ -5997,6 +5997,161 @@ Linear probe overall acc: 0.9670
 | Class 8    |        |        |        | 0.9662 | 0.9617 |
 | Class 9    |        |        |        |        | 0.9707 |
 
+#### Decreasing rehearsal
+
+Starting with rehearsal of 100%, and decreasing it with training, to see if it gets rid off the "forgetting" and "relearning" of old data behavior:
+
+```
+ramp_down_rehearsal = True
+rehearsal_multiplier = 0.998
+rehearsal_minimum = 0.20
+rehearsal_initial = 1.0
+
+rehearsal_percentage = 1.0
+
+for task_id, task_classes in enumerate(tasks, 1):
+
+    print(f"task {task_id}, {task_classes}")
+    
+    seen += task_classes
+
+    if ramp_down_rehearsal:
+        # re-initialize the rehearsal percentage
+        rehearsal_percentage = rehearsal_initial
+    
+    if rehearsal_percentage > 0. and previous is not None:
+        #rehearsal_loader = make_task_loader(test_ds, seen, int(batch_size * rehearsal_percentage), shuffle=True)
+        rehearsal_loader = make_task_loader(train_ds, [x for x in seen if x not in task_classes], int(batch_size * rehearsal_percentage), shuffle=True)
+
+    for epoch in range(epochs):
+   
+        tot_loss, tot_correct, tot_samples = 0.0, 0, 0
+
+        if rehearsal_percentage > 0. and previous is not None:
+            # make an infinite iterator over rehearsal data
+            rehearsal_iter = itertools.cycle(rehearsal_loader)
+
+        for counter, (xb, yb, _) in enumerate(train_loader):
+
+            model.train()
+            # pull one rehearsal batch
+
+            rehearsal_percentage *= rehearsal_multiplier
+
+            if rehearsal_percentage > 0. and previous is not None:
+                x_reh, y_reh, _ = next(rehearsal_iter)
+
+                if ramp_down_rehearsal == False:
+                    xb = torch.cat([xb, x_reh])
+                    yb = torch.cat([yb, y_reh])
+                else:
+                    # the total batch size will be the batch size of rehearsal
+                    if rehearsal_percentage < rehearsal_minimum:
+                        rehearsal_percentage = rehearsal_minimum
+
+                    rehearsal_batch = int(x_reh.size(0) * rehearsal_percentage)
+                    current_task_batch = int(x_reh.size(0) * (1 - rehearsal_percentage))
+
+                    xb = torch.cat([xb[:current_task_batch], x_reh[:rehearsal_batch]])
+                    yb = torch.cat([yb[:current_task_batch], y_reh[:rehearsal_batch]])
+
+                # reshuffle
+                perm = torch.randperm(xb.size(0))
+                xb, yb = xb[perm], yb[perm]
+
+```
+
+![rehearsal](./images_general/rehearsal_behavior_0_998.png)
+
+Weight decay: 0.01, lr: 0.001, momentum: 0.0
+
+task 1, [1, 2]
+
+1, train loss 0.029112, train acc 0.995760, val loss 0.020127, val acc 0.996646
+
+
+task 2, [3, 4]
+
+1, train loss 0.060301, train acc 0.983939, val loss 0.072939, val acc 0.977379
+
+![rehearsal](./images_mnist/mlp_sequential_task2_forgetting_rehearse_20p_decremental_0_998.png)
+
+task 3, [5, 6]
+
+3, train loss 0.059051, train acc 0.982749, val loss 0.059547, val acc 0.979889
+
+
+![rehearsal](./images_mnist/mlp_sequential_task3_forgetting_rehearse_20p_decremental_0_998.png)
+
+task 4, [7, 8]
+
+4, train loss 0.053601, train acc 0.983598, val loss 0.087405, val acc 0.971771
+
+
+![rehearsal](./images_mnist/mlp_sequential_task4_forgetting_rehearse_20p_decremental_0_998.png)
+
+task 5, [9, 0]
+
+0, train loss 0.190855, train acc 0.948475, val loss 0.139647, val acc 0.958500
+
+1, train loss 0.107209, train acc 0.968983, val loss 0.109213, val acc 0.967000
+
+2, train loss 0.087835, train acc 0.973166, val loss 0.103404, val acc 0.968600
+
+3, train loss 0.075681, train acc 0.978676, val loss 0.112186, val acc 0.964700
+
+4, train loss 0.061095, train acc 0.980920, val loss 0.103769, val acc 0.967500
+
+Checking norm of the class. layer weights
+
+tensor([1.4408, 1.8173, 1.6151, 1.7506, 1.8743, 1.7031, 1.7848, 1.5784, 1.6594,
+        1.4898])
+
+Sparcity analysis - population sparcity: 0.5031
+
+Classification bias vector:
+
+tensor([ 0.0522, -0.0508, -0.0145, -0.0429,  0.0316,  0.0708, -0.0386,  0.0059,
+         0.0476,  0.1280], requires_grad=True)
+
+![rehearsal](./images_mnist/mlp_sequential_task5_forgetting_rehearse_20p_decremental_0_998.png)
+
+Representation for the second layer
+
+Linear probe overall acc: 0.9780
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9865 | 0.9799 | 0.9757 | 0.9780 |
+| Class 0    |        |        |        |        | 0.9747 |
+| Class 1    | 0.9953 | 1.0000 | 0.9854 | 0.9956 | 1.0000 |
+| Class 2    | 1.0000 | 0.9765 | 0.9845 | 0.9557 | 0.9741 |
+| Class 3    |        | 0.9740 | 0.9657 | 0.9746 | 0.9706 |
+| Class 4    |        | 0.9952 | 0.9893 | 0.9676 | 0.9727 |
+| Class 5    |        |        | 0.9602 | 0.9489 | 0.9834 |
+| Class 6    |        |        | 0.9950 | 0.9892 | 0.9844 |
+| Class 7    |        |        |        | 0.9844 | 0.9704 |
+| Class 8    |        |        |        | 0.9855 | 0.9727 |
+| Class 9    |        |        |        |        | 0.9749 |
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9770
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9877 | 0.9807 | 0.9738 | 0.9770 |
+| Class 0    |        |        |        |        | 0.9697 |
+| Class 1    | 0.9953 | 0.9950 | 0.9854 | 0.9912 | 0.9821 |
+| Class 2    | 1.0000 | 0.9812 | 0.9845 | 0.9606 | 0.9793 |
+| Class 3    |        | 0.9792 | 0.9657 | 0.9695 | 0.9902 |
+| Class 4    |        | 0.9952 | 0.9840 | 0.9815 | 0.9727 |
+| Class 5    |        |        | 0.9701 | 0.9545 | 0.9558 |
+| Class 6    |        |        | 0.9950 | 0.9838 | 0.9896 |
+| Class 7    |        |        |        | 0.9688 | 0.9655 |
+| Class 8    |        |        |        | 0.9758 | 0.9781 |
+| Class 9    |        |        |        |        | 0.9833 |
+
 ### Results
 
 ![rehearsal](./images_general/rehearsal_mnist.png)
@@ -6513,7 +6668,48 @@ Linear probe overall acc: 0.9075
 
 
 
+### Pattern matching
 
+10 patterns used:
+
+![pattern](./images_general/patterns_complex.png)
+
+Intra pattern variability
+
+![pattern](./images_general/patterns_complex_inter_variability.png)
+
+#### Concurrent
+
+Training 10 patterns together with the 10 mnist digits. They are able to be learned well (both digits and patterns) and the corresponding patterns and digits are mapped together in the latent space:
+
+![pattern](./images_mnist/concurrent_latent_patterns.png)
+
+
+Epoch 1, train loss: 0.2302, val loss: 0.2023, train acc: 0.9442, val acc: 0.9708
+
+Pattern: loss 0.2198, acc 0.9452
+
+Epoch 2, train loss: 0.5914, val loss: 0.1294, train acc: 0.9808, val acc: 0.9774
+
+Pattern: loss 0.0648, acc 0.9798
+
+Epoch 3, train loss: 0.0364, val loss: 0.0200, train acc: 0.9864, val acc: 0.9760
+
+Pattern: loss 0.0375, acc 0.9888
+
+Epoch 4, train loss: 0.0259, val loss: 0.0108, train acc: 0.9897, val acc: 0.9778
+
+Pattern: loss 0.0241, acc 0.9929
+
+Sparcity analysis - population sparcity: 0.5220
+
+Representation for the second layer
+
+Linear probe overall acc: 0.9815
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9830
 
 
 
