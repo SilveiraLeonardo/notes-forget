@@ -65,8 +65,7 @@ These early studies identified two causes for this phenomenon:
 
 ### Gradient descent optimization
 
-`Michael McCloskey & Neal J . Cohen, 1989` illustrated the problem of the gradient descent
-learning algorithm in terms of the search in the weight space of a solution region for the 
+`Michael McCloskey & Neal J . Cohen, 1989` illustrated the problem in terms of the search in the weight space of a solution region for the 
 problem at hand, that we understand as a region of low loss. If we have two tasks two learn,
 we want the network to find a solution regions that is good for both. In the weight space, 
 that means the intersection of the solution regions for the two problems.

@@ -114,7 +114,7 @@ For *Task 4, [7, 8]* you need a rank-2 matrix.
 #### Two things seem to be necessary
 
 1. Keep the logits alive for classes trained previously
-2. Separate in the latent space classes not seeing together
+2. Separate in the latent space classes not seen together
 
 ### Uniform noise
 
