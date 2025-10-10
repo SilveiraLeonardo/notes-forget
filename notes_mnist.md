@@ -6680,38 +6680,240 @@ Intra pattern variability
 
 #### Concurrent
 
-Training 10 patterns together with the 10 mnist digits. They are able to be learned well (both digits and patterns) and the corresponding patterns and digits are mapped together in the latent space:
+![pattern](./images_mnist/concurrent_latent_patterns_complete.png)
 
-![pattern](./images_mnist/concurrent_latent_patterns.png)
+Epoch 1, train mnist loss: 0.2739, train pt loss: 0.1263, train acc mnist: 0.9273
+val mnist loss: 0.1611, val pt loss: 0.0864, val acc mnist: 0.9508, val acc pt: 0.9803
 
+Epoch 2, train mnist loss: 0.1070, train pt loss: 0.0398, train acc mnist: 0.9672
+val mnist loss: 0.1478, val pt loss: 0.0439, val acc mnist: 0.9519, val acc pt: 0.9876
 
-Epoch 1, train loss: 0.2302, val loss: 0.2023, train acc: 0.9442, val acc: 0.9708
+Epoch 3, train mnist loss: 0.0768, train pt loss: 0.0376, train acc mnist: 0.9764
+val mnist loss: 0.1205, val pt loss: 0.0363, val acc mnist: 0.9602, val acc pt: 0.9885
 
-Pattern: loss 0.2198, acc 0.9452
+Epoch 4, train mnist loss: 0.0615, train pt loss: 0.0349, train acc mnist: 0.9803
+val mnist loss: 0.1646, val pt loss: 0.0400, val acc mnist: 0.9445, val acc pt: 0.9861
 
-Epoch 2, train loss: 0.5914, val loss: 0.1294, train acc: 0.9808, val acc: 0.9774
+Epoch 5, train mnist loss: 0.0496, train pt loss: 0.0317, train acc mnist: 0.9841
+val mnist loss: 0.1429, val pt loss: 0.0400, val acc mnist: 0.9508, val acc pt: 0.9880
 
-Pattern: loss 0.0648, acc 0.9798
+Epoch 6, train mnist loss: 0.0414, train pt loss: 0.0313, train acc mnist: 0.9870
+val mnist loss: 0.1643, val pt loss: 0.0357, val acc mnist: 0.9427, val acc pt: 0.9892
 
-Epoch 3, train loss: 0.0364, val loss: 0.0200, train acc: 0.9864, val acc: 0.9760
+Epoch 7, train mnist loss: 0.0364, train pt loss: 0.0311, train acc mnist: 0.9885
+val mnist loss: 0.1614, val pt loss: 0.0346, val acc mnist: 0.9493, val acc pt: 0.9880
 
-Pattern: loss 0.0375, acc 0.9888
+Epoch 8, train mnist loss: 0.0331, train pt loss: 0.0299, train acc mnist: 0.9895
+val mnist loss: 0.1333, val pt loss: 0.0344, val acc mnist: 0.9544, val acc pt: 0.9893
 
-Epoch 4, train loss: 0.0259, val loss: 0.0108, train acc: 0.9897, val acc: 0.9778
+Epoch 9, train mnist loss: 0.0290, train pt loss: 0.0289, train acc mnist: 0.9904
+val mnist loss: 0.1564, val pt loss: 0.0460, val acc mnist: 0.9494, val acc pt: 0.9861
 
-Pattern: loss 0.0241, acc 0.9929
+Second layer:
 
-Sparcity analysis - population sparcity: 0.5220
-
-Representation for the second layer
-
-Linear probe overall acc: 0.9815
+Linear probe overall acc: 0.9765
 
 Representation for the first layer
 
-Linear probe overall acc: 0.9830
+Linear probe overall acc: 0.9775
+
+###### Using a contrastive loss to push same class together
+
+![pattern](./images_mnist/concurrent_latent_patterns_contrastive.png)
+
+Constrastive loss term: 1.0
+
+Epoch 1, train mnist loss: 0.2861, train pt loss: 0.1286, contrast loss: -0.8456067461013794, train acc mnist: 0.9235
+val mnist loss: 0.1535, val pt loss: 0.0500, val acc mnist: 0.9562, val acc pt: 0.9833
+
+Epoch 2, train mnist loss: 0.1149, train pt loss: 0.0410, contrast loss: -0.9147069723320007, train acc mnist: 0.9665
+val mnist loss: 0.1498, val pt loss: 0.0354, val acc mnist: 0.9502, val acc pt: 0.9876
+
+Epoch 3, train mnist loss: 0.0866, train pt loss: 0.0379, contrast loss: -0.928199403591156, train acc mnist: 0.9740
+val mnist loss: 0.1110, val pt loss: 0.0480, val acc mnist: 0.9656, val acc pt: 0.9836
+
+Epoch 4, train mnist loss: 0.0692, train pt loss: 0.0352, contrast loss: -0.936788376121521, train acc mnist: 0.9792
+val mnist loss: 0.1370, val pt loss: 0.0343, val acc mnist: 0.9589, val acc pt: 0.9877
+
+Epoch 5, train mnist loss: 0.0568, train pt loss: 0.0328, contrast loss: -0.9426090757369995, train acc mnist: 0.9827
+val mnist loss: 0.1249, val pt loss: 0.0282, val acc mnist: 0.9607, val acc pt: 0.9908
+
+Epoch 6, train mnist loss: 0.0527, train pt loss: 0.0335, contrast loss: -0.9469910465431214, train acc mnist: 0.9837
+val mnist loss: 0.1286, val pt loss: 0.0256, val acc mnist: 0.9597, val acc pt: 0.9913
+
+Epoch 7, train mnist loss: 0.0460, train pt loss: 0.0313, contrast loss: -0.9511850103187561, train acc mnist: 0.9856
+val mnist loss: 0.1377, val pt loss: 0.0323, val acc mnist: 0.9548, val acc pt: 0.9891
+
+Epoch 8, train mnist loss: 0.0377, train pt loss: 0.0319, contrast loss: -0.9560186160087586, train acc mnist: 0.9882
+val mnist loss: 0.1220, val pt loss: 0.0266, val acc mnist: 0.9602, val acc pt: 0.9908
+
+Epoch 9, train mnist loss: 0.0365, train pt loss: 0.0301, contrast loss: -0.9582451774787902, train acc mnist: 0.9878
+val mnist loss: 0.1254, val pt loss: 0.0291, val acc mnist: 0.9578, val acc pt: 0.9892
+
+Sparcity analysis - population sparcity: 0.5850
+
+Representation for the second layer
+
+Linear probe overall acc: 0.9835
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9820
+
+##### Two input layers
+
+Patterns and images going to different input layers
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers.png)
+
+Epoch 1, train mnist loss: 0.2618, train pt loss: 0.1228, train acc mnist: 0.9307
+val mnist loss: 0.1149, val pt loss: 0.0334, val acc mnist: 0.9652, val acc pt: 0.9879
+
+Epoch 2, train mnist loss: 0.1044, train pt loss: 0.0408, train acc mnist: 0.9688
+val mnist loss: 0.1001, val pt loss: 0.0356, val acc mnist: 0.9708, val acc pt: 0.9872
+
+Epoch 3, train mnist loss: 0.0745, train pt loss: 0.0351, train acc mnist: 0.9767
+val mnist loss: 0.0878, val pt loss: 0.0309, val acc mnist: 0.9725, val acc pt: 0.9885
+
+Epoch 4, train mnist loss: 0.0591, train pt loss: 0.0339, train acc mnist: 0.9811
+val mnist loss: 0.0788, val pt loss: 0.0335, val acc mnist: 0.9777, val acc pt: 0.9882
+
+Epoch 5, train mnist loss: 0.0476, train pt loss: 0.0333, train acc mnist: 0.9853
+val mnist loss: 0.0845, val pt loss: 0.0358, val acc mnist: 0.9753, val acc pt: 0.9878
+
+Epoch 6, train mnist loss: 0.0404, train pt loss: 0.0334, train acc mnist: 0.9869
+val mnist loss: 0.0843, val pt loss: 0.0261, val acc mnist: 0.9741, val acc pt: 0.9899
+
+Epoch 7, train mnist loss: 0.0349, train pt loss: 0.0321, train acc mnist: 0.9888
+val mnist loss: 0.0808, val pt loss: 0.0293, val acc mnist: 0.9750, val acc pt: 0.9893
+
+Epoch 8, train mnist loss: 0.0324, train pt loss: 0.0307, train acc mnist: 0.9892
+val mnist loss: 0.0740, val pt loss: 0.0268, val acc mnist: 0.9786, val acc pt: 0.9898
+
+Epoch 9, train mnist loss: 0.0255, train pt loss: 0.0300, train acc mnist: 0.9917
+val mnist loss: 0.0792, val pt loss: 0.0288, val acc mnist: 0.9773, val acc pt: 0.9896
+
+Representation for second layer
+
+Linear probe overall acc: 0.9840
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9790
+
+##### Using contrastive loss
+
+###### To approximate positive items
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers_contrastive.png)
+
+**Constrastive loss term: 1.0**
+
+Epoch 1, train mnist loss: 0.2706, train pt loss: 0.1212, contrast loss: -0.8551947089004517, train acc mnist: 0.9288
+val mnist loss: 0.1182, val pt loss: 0.0298, val acc mnist: 0.9643, val acc pt: 0.9896
+
+Epoch 2, train mnist loss: 0.1112, train pt loss: 0.0413, contrast loss: -0.9191685096931458, train acc mnist: 0.9663
+val mnist loss: 0.0917, val pt loss: 0.0312, val acc mnist: 0.9720, val acc pt: 0.9894
+
+Epoch 3, train mnist loss: 0.0816, train pt loss: 0.0394, contrast loss: -0.9309775996780395, train acc mnist: 0.9748
+val mnist loss: 0.0842, val pt loss: 0.0278, val acc mnist: 0.9752, val acc pt: 0.9896
+
+Epoch 4, train mnist loss: 0.0657, train pt loss: 0.0347, contrast loss: -0.9381955443572998, train acc mnist: 0.9801
+val mnist loss: 0.0841, val pt loss: 0.0391, val acc mnist: 0.9738, val acc pt: 0.9865
+
+Epoch 5, train mnist loss: 0.0540, train pt loss: 0.0331, contrast loss: -0.9445680721473694, train acc mnist: 0.9835
+val mnist loss: 0.0744, val pt loss: 0.0312, val acc mnist: 0.9776, val acc pt: 0.9893
+
+Epoch 6, train mnist loss: 0.0460, train pt loss: 0.0350, contrast loss: -0.9477641638183594, train acc mnist: 0.9866
+val mnist loss: 0.0749, val pt loss: 0.0321, val acc mnist: 0.9787, val acc pt: 0.9875
+
+Epoch 7, train mnist loss: 0.0441, train pt loss: 0.0325, contrast loss: -0.9514302819442749, train acc mnist: 0.9862
+val mnist loss: 0.0752, val pt loss: 0.0320, val acc mnist: 0.9773, val acc pt: 0.9891
+
+Epoch 8, train mnist loss: 0.0388, train pt loss: 0.0305, contrast loss: -0.9547779578590393, train acc mnist: 0.9882
+val mnist loss: 0.0725, val pt loss: 0.0304, val acc mnist: 0.9780, val acc pt: 0.9874
+
+Epoch 9, train mnist loss: 0.0343, train pt loss: 0.0324, contrast loss: -0.9577497134971619, train acc mnist: 0.9895
+val mnist loss: 0.0737, val pt loss: 0.0317, val acc mnist: 0.9789, val acc pt: 0.9889
+
+Linear probe overall acc: 0.9865
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9835
+
+**Constrastive loss term: 0.5**
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers_contrastive_0_5.png)
+
+Epoch 1, train mnist loss: 0.2651, train pt loss: 0.1166, contrast loss: -0.8305395063400268, train acc mnist: 0.9277
+val mnist loss: 0.1207, val pt loss: 0.0415, val acc mnist: 0.9644, val acc pt: 0.9850
+
+Epoch 2, train mnist loss: 0.1124, train pt loss: 0.0415, contrast loss: -0.8993176351737976, train acc mnist: 0.9661
+val mnist loss: 0.0950, val pt loss: 0.0327, val acc mnist: 0.9711, val acc pt: 0.9891
+
+Epoch 3, train mnist loss: 0.0794, train pt loss: 0.0391, contrast loss: -0.9139200057792664, train acc mnist: 0.9767
+val mnist loss: 0.0851, val pt loss: 0.0256, val acc mnist: 0.9735, val acc pt: 0.9899
+
+Epoch 4, train mnist loss: 0.0640, train pt loss: 0.0345, contrast loss: -0.9218384918403626, train acc mnist: 0.9798
+val mnist loss: 0.0840, val pt loss: 0.0284, val acc mnist: 0.9737, val acc pt: 0.9895
+
+Epoch 5, train mnist loss: 0.0543, train pt loss: 0.0335, contrast loss: -0.9268907043266297, train acc mnist: 0.9830
+val mnist loss: 0.0768, val pt loss: 0.0342, val acc mnist: 0.9769, val acc pt: 0.9880
+
+Epoch 6, train mnist loss: 0.0463, train pt loss: 0.0328, contrast loss: -0.9316125977134705, train acc mnist: 0.9854
+val mnist loss: 0.0736, val pt loss: 0.0257, val acc mnist: 0.9778, val acc pt: 0.9915
+
+Epoch 7, train mnist loss: 0.0374, train pt loss: 0.0304, contrast loss: -0.9354243953895569, train acc mnist: 0.9884
+val mnist loss: 0.0755, val pt loss: 0.0270, val acc mnist: 0.9766, val acc pt: 0.9901
+
+Epoch 8, train mnist loss: 0.0344, train pt loss: 0.0322, contrast loss: -0.9382015075874328, train acc mnist: 0.9893
+val mnist loss: 0.0699, val pt loss: 0.0264, val acc mnist: 0.9787, val acc pt: 0.9909
+
+Epoch 9, train mnist loss: 0.0327, train pt loss: 0.0311, contrast loss: -0.9412337171173095, train acc mnist: 0.9893
+val mnist loss: 0.0737, val pt loss: 0.0307, val acc mnist: 0.9770, val acc pt: 0.9885
+
+Linear probe overall acc: 0.9845
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9840
+
+**Constrastive loss term: 1.0**
+
+With a term to repel negative classes:
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers_contrastive_1_negative.png)
+
+Epoch 1, train mnist loss: 0.2767, train pt loss: 0.1231, contrast loss: -0.7628932695960998, train acc mnist: 0.9264
+val mnist loss: 0.1224, val pt loss: 0.0316, val acc mnist: 0.9642, val acc pt: 0.9881
+
+Epoch 2, train mnist loss: 0.1163, train pt loss: 0.0454, contrast loss: -0.8517876470184326, train acc mnist: 0.9659
+val mnist loss: 0.0984, val pt loss: 0.0389, val acc mnist: 0.9724, val acc pt: 0.9859
+
+Epoch 3, train mnist loss: 0.0880, train pt loss: 0.0386, contrast loss: -0.8767498255157471, train acc mnist: 0.9742
+val mnist loss: 0.0932, val pt loss: 0.0334, val acc mnist: 0.9729, val acc pt: 0.9871
+
+Epoch 4, train mnist loss: 0.0740, train pt loss: 0.0375, contrast loss: -0.8916089986228943, train acc mnist: 0.9793
+val mnist loss: 0.0891, val pt loss: 0.0327, val acc mnist: 0.9734, val acc pt: 0.9885
+
+Epoch 5, train mnist loss: 0.0628, train pt loss: 0.0363, contrast loss: -0.9021346948814392, train acc mnist: 0.9812
+val mnist loss: 0.0928, val pt loss: 0.0290, val acc mnist: 0.9754, val acc pt: 0.9900
+
+Epoch 6, train mnist loss: 0.0553, train pt loss: 0.0353, contrast loss: -0.9125907045173645, train acc mnist: 0.9836
+val mnist loss: 0.0781, val pt loss: 0.0245, val acc mnist: 0.9784, val acc pt: 0.9920
+
+Epoch 7, train mnist loss: 0.0499, train pt loss: 0.0348, contrast loss: -0.9190295234489441, train acc mnist: 0.9855
+val mnist loss: 0.0850, val pt loss: 0.0231, val acc mnist: 0.9762, val acc pt: 0.9925
+
+Epoch 8, train mnist loss: 0.0460, train pt loss: 0.0299, contrast loss: -0.9250723829460143, train acc mnist: 0.9868
+val mnist loss: 0.0788, val pt loss: 0.0220, val acc mnist: 0.9792, val acc pt: 0.9907
+
+Epoch 9, train mnist loss: 0.0434, train pt loss: 0.0336, contrast loss: -0.9286726270675659, train acc mnist: 0.9875
+val mnist loss: 0.0889, val pt loss: 0.0229, val acc mnist: 0.9771, val acc pt: 0.9905
 
 
+Linear probe overall acc: 0.9835
 
-
+Linear probe overall acc: 0.9805
 
