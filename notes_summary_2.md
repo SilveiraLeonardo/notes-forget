@@ -6,7 +6,7 @@ This file documents our understanding of the phenomenon and the direction we are
 
 ## What is the problem
 
-Famous experiment by `Barnes & Underwood, 1959`, replicated on neural nets by `Michael McCloskey & Neal J . Cohen, 1989`.
+This is best described by the famous experiment by `Barnes & Underwood, 1959`, replicated with neural nets by `Michael McCloskey & Neal J . Cohen, 1989`.
 
 ```
 Teach A-B pairs of words
@@ -32,7 +32,7 @@ We replicated this experiment, and got the same result:
 ![sequential acc](./image/sequential_acc.png)
 
 
-These early studies identified two causes for this phenomenon:
+These early studies identified two *possible* causes for this phenomenon:
 
 1. The nature of gradient descent optimization; and
 2. The use of distributed representation.
