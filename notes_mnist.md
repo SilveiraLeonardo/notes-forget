@@ -6917,3 +6917,398 @@ Linear probe overall acc: 0.9835
 
 Linear probe overall acc: 0.9805
 
+**Constrastive loss term: 1.0**
+
+* No term pushing negative classes apart
+* Cross-entropy loss weighted less
+
+```
+loss = 0.5 * (loss_mnist + loss_pattern) + lambda_contrast * loss_contrast
+```
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers_contrastive_1_0_classification_0_5.png)
+
+Epoch 9, train mnist loss: 0.0364, train pt loss: 0.0319, contrast loss: -0.9722786557579041, train acc mnist: 0.9890
+val mnist loss: 0.0762, val pt loss: 0.0255, val acc mnist: 0.9771, val acc pt: 0.9914
+
+Second layer:
+
+Linear probe overall acc: 0.9820
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9790
+
+**Constrastive loss term: 1.0**
+
+* WITH term pushing negative classes apart
+* Cross-entropy loss weighted less
+
+```
+loss_contrast = -avg_pos_sim + avg_neg_sim * 0.1
+
+loss = 0.5 * (loss_mnist + loss_pattern) + lambda_contrast * loss_contrast
+```
+
+![pattern](./images_mnist/concurrent_latent_patterns_two_input_layers_contrastive_1_0_negative_0_1_classification_0_5.png)
+
+Epoch 9, train mnist loss: 0.0373, train pt loss: 0.0320, contrast loss: -0.9554709620285035, train acc mnist: 0.9891
+val mnist loss: 0.0785, val pt loss: 0.0272, val acc mnist: 0.9793, val acc pt: 0.9907
+
+Second layer:
+
+Linear probe overall acc: 0.9840
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9825
+
+### Sequential learning
+
+#### Experiment 1
+
+* Two input layers
+* cross entropy losses with weight 1.
+* contrastive loss with weight 1.
+* contrastive loss only with term to approximate positive class (no term for negative classes)
+
+Constrastive loss term: 1.0
+
+task 1, [1, 2]
+
+Epoch 1, train mnist loss: 0.2042, train pt loss: 0.1701, contrast loss: -0.8890609299834416, train acc mnist: 0.9806
+val mnist loss: 0.0286, val pt loss: 0.0159, val acc mnist: 0.9947, val acc pt: 1.0000
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task1_latent.png)
+
+task 2, [3, 4]
+
+
+Epoch 3, train mnist loss: 0.0200, train pt loss: 0.0037, contrast loss: -0.982741982851207, train acc mnist: 0.9961
+val mnist loss: 3.3944, val pt loss: 1.1698, val acc mnist: 0.4856, val acc pt: 0.4985
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task2_latent.png)
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task2_probs_digits.png)
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task2_probs_patterns.png)
+
+task 3, [5, 6]
+
+Epoch 3, train mnist loss: 0.0441, train pt loss: 0.0060, contrast loss: -0.9046006264897749, train acc mnist: 0.9876
+val mnist loss: 4.7739, val pt loss: 3.6214, val acc mnist: 0.3151, val acc pt: 0.3333
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task3_latent.png)
+
+task 4, [7, 8]
+
+
+Epoch 3, train mnist loss: 0.0317, train pt loss: 0.0139, contrast loss: -0.7910934157275463, train acc mnist: 0.9905
+val mnist loss: 5.3936, val pt loss: 4.2701, val acc mnist: 0.2524, val acc pt: 0.2541
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task4_latent.png)
+
+task 5, [9, 0]
+
+Epoch 3, train mnist loss: 0.0746, train pt loss: 0.0757, contrast loss: -0.9372042713075496, train acc mnist: 0.9931
+val mnist loss: 4.0930, val pt loss: 3.6659, val acc mnist: 0.2118, val acc pt: 0.2086
+
+Training accuracy MNIST larger than 0.98, breaking from training...
+
+Sparcity analysis - population sparcity: 0.4465
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task5_latent.png)
+
+Representation for the second layer
+
+
+Linear probe overall acc: 0.7325
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9705 | 0.9305 | 0.8964 | 0.7325 |
+| Class 0    |        |        |        |        | 0.9596 |
+| Class 1    | 0.9907 | 0.9851 | 0.9709 | 0.9602 | 0.7455 |
+| Class 2    | 0.9951 | 0.9390 | 0.8969 | 0.8325 | 0.8497 |
+| Class 3    |        | 0.9635 | 0.8922 | 0.8477 | 0.6863 |
+| Class 4    |        | 0.9952 | 0.9572 | 0.9583 | 0.4372 |
+| Class 5    |        |        | 0.8955 | 0.8352 | 0.7403 |
+| Class 6    |        |        | 0.9703 | 0.9514 | 0.9531 |
+| Class 7    |        |        |        | 0.9531 | 0.7291 |
+| Class 8    |        |        |        | 0.8213 | 0.7322 |
+| Class 9    |        |        |        |        | 0.5230 |
+
+Representation for the first layer
+
+Linear probe overall acc: 0.9315
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 1.0000 | 0.9779 | 0.9598 | 0.9395 | 0.9315 |
+| Class 0    |        |        |        |        | 0.9646 |
+| Class 1    | 1.0000 | 0.9901 | 0.9854 | 0.9779 | 0.9688 |
+| Class 2    | 1.0000 | 0.9671 | 0.9485 | 0.9212 | 0.9067 |
+| Class 3    |        | 0.9635 | 0.9216 | 0.9036 | 0.9118 |
+| Class 4    |        | 0.9903 | 0.9840 | 0.9630 | 0.9399 |
+| Class 5    |        |        | 0.9254 | 0.8977 | 0.8895 |
+| Class 6    |        |        | 0.9950 | 0.9730 | 0.9583 |
+| Class 7    |        |        |        | 0.9583 | 0.9212 |
+| Class 8    |        |        |        | 0.9130 | 0.8962 |
+| Class 9    |        |        |        |        | 0.9456 |
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task1_latent.png)
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task2_latent.png)
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task3_latent.png)
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task4_latent.png)
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_1_0_contrastive_1_0_only_positive_no_rehearsal_task5_latent.png)
+
+# Experiment 2
+
+* Continue training on all seen patterns
+* 2 input layers
+* weighting less the cross-entropy: 0.1 
+* with a term to separate negative patters in latent space
+
+```
+            # optionally pairs of different classes can be pushed far apart
+            mask_neg = 1.0 - mask_pos
+
+            # average positive similarity
+            pos_pairs = mask_pos.sum()
+            neg_pairs = mask_neg.sum()
+            
+            if pos_pairs.item() > 0:
+                avg_pos_sim = (sim_mat * mask_pos).sum() / (pos_pairs + 1e-8)
+                avg_neg_sim = (sim_mat * mask_neg).sum() / (neg_pairs + 1e-8)
+                loss_contrast = -avg_pos_sim 
+                loss_contrast = -avg_pos_sim + avg_neg_sim * 0.1
+            else:
+                loss_contrast = torch.tensor(0.0, device=device)
+
+            loss = 0.1*(loss_mnist + loss_pattern) + lambda_contrast * loss_contrast
+
+```
+
+task 1, [1, 2]
+
+Epoch 2, train mnist loss: 0.0398, train pt loss: 0.0088, contrast loss: -0.9915288927349981, train acc mnist: 0.9937
+val mnist loss: 0.0246, val pt loss: 0.0067, val acc mnist: 0.9957, val acc pt: 1.0000
+
+task 2, [3, 4]
+
+Epoch 3, train mnist loss: 0.0377, train pt loss: 0.0403, contrast loss: -0.970664125680327, train acc mnist: 0.9941
+val mnist loss: 2.4708, val pt loss: 0.0634, val acc mnist: 0.4859, val acc pt: 1.0000
+
+task 3, [5, 6]
+
+Epoch 3, train mnist loss: 0.0739, train pt loss: 0.0871, contrast loss: -0.9498181573123873, train acc mnist: 0.9882
+val mnist loss: 4.5063, val pt loss: 0.1111, val acc mnist: 0.3157, val acc pt: 0.9853
+
+
+task 4, [7, 8]
+
+Epoch 3, train mnist loss: 0.0538, train pt loss: 0.0677, contrast loss: -0.9226944796312917, train acc mnist: 0.9935
+val mnist loss: 6.1078, val pt loss: 0.0569, val acc mnist: 0.2608, val acc pt: 0.9901
+
+
+task 5, [9, 0]
+
+
+Epoch 3, train mnist loss: 0.0525, train pt loss: 0.0800, contrast loss: -0.9535008805752476, train acc mnist: 0.9946
+val mnist loss: 4.6860, val pt loss: 0.0730, val acc mnist: 0.1994, val acc pt: 0.9895
+
+
+Sparcity analysis - population sparcity: 0.5338
+
+Representation for the second layer
+
+
+Linear probe overall acc: 0.8105
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9386 | 0.9003 | 0.8583 | 0.8105 |
+| Class 0    |        |        |        |        | 0.9444 |
+| Class 1    | 0.9907 | 0.9653 | 0.9369 | 0.9204 | 0.9152 |
+| Class 2    | 0.9951 | 0.8779 | 0.8660 | 0.8128 | 0.7979 |
+| Class 3    |        | 0.9219 | 0.8039 | 0.7766 | 0.7696 |
+| Class 4    |        | 0.9903 | 0.9679 | 0.8750 | 0.7049 |
+| Class 5    |        |        | 0.8607 | 0.7670 | 0.6464 |
+| Class 6    |        |        | 0.9703 | 0.9243 | 0.9219 |
+| Class 7    |        |        |        | 0.9427 | 0.8768 |
+| Class 8    |        |        |        | 0.8357 | 0.7486 |
+| Class 9    |        |        |        |        | 0.7531 |
+
+Representation for the first layer
+
+
+Linear probe overall acc: 0.9170
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9582 | 0.9556 | 0.9270 | 0.9170 |
+| Class 0    |        |        |        |        | 0.9444 |
+| Class 1    | 0.9907 | 0.9851 | 0.9903 | 0.9779 | 0.9732 |
+| Class 2    | 0.9951 | 0.9296 | 0.9433 | 0.8867 | 0.9326 |
+| Class 3    |        | 0.9219 | 0.8922 | 0.8883 | 0.8676 |
+| Class 4    |        | 0.9952 | 0.9679 | 0.9583 | 0.8962 |
+| Class 5    |        |        | 0.9453 | 0.8580 | 0.8508 |
+| Class 6    |        |        | 0.9950 | 0.9676 | 0.9688 |
+| Class 7    |        |        |        | 0.9635 | 0.9409 |
+| Class 8    |        |        |        | 0.9034 | 0.8743 |
+| Class 9    |        |        |        |        | 0.9079 |
+
+#### Experiment 3
+
+* Continue training on all seen patterns
+* 2 input layers
+* weighting less the cross-entropy: 0.1 
+* no term to separate negative classes
+
+Epoch 2, train mnist loss: 0.0441, train pt loss: 0.0112, contrast loss: -0.9921189853060676, train acc mnist: 0.9934
+val mnist loss: 0.0277, val pt loss: 0.0065, val acc mnist: 0.9933, val acc pt: 1.0000
+
+
+task 2, [3, 4]
+
+Epoch 3, train mnist loss: 0.0397, train pt loss: 0.0285, contrast loss: -0.991889601938123, train acc mnist: 0.9944
+val mnist loss: 2.1510, val pt loss: 0.0335, val acc mnist: 0.4871, val acc pt: 1.0000
+
+
+task 3, [5, 6]
+
+Epoch 3, train mnist loss: 0.0687, train pt loss: 0.0788, contrast loss: -0.9793274154955078, train acc mnist: 0.9881
+val mnist loss: 4.6286, val pt loss: 0.0946, val acc mnist: 0.3147, val acc pt: 0.9802
+
+
+task 4, [7, 8]
+
+Epoch 3, train mnist loss: 0.0399, train pt loss: 0.0590, contrast loss: -0.989848388605344, train acc mnist: 0.9946
+val mnist loss: 4.9435, val pt loss: 0.0698, val acc mnist: 0.2661, val acc pt: 0.9892
+
+task 5, [9, 0]
+
+
+Epoch 3, train mnist loss: 0.0406, train pt loss: 0.0714, contrast loss: -0.9878029626350843, train acc mnist: 0.9960
+val mnist loss: 4.9659, val pt loss: 0.0695, val acc mnist: 0.2022, val acc pt: 0.9861
+
+Training accuracy MNIST larger than 0.98, breaking from training...
+
+Sparcity analysis - population sparcity: 0.4738
+
+Representation for the second layer
+
+
+Linear probe overall acc: 0.8270
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9521 | 0.8953 | 0.8777 | 0.8270 |
+| Class 0    |        |        |        |        | 0.9545 |
+| Class 1    | 0.9907 | 0.9802 | 0.9563 | 0.9248 | 0.9196 |
+| Class 2    | 0.9951 | 0.8873 | 0.8608 | 0.7980 | 0.8549 |
+| Class 3    |        | 0.9531 | 0.8137 | 0.8325 | 0.6814 |
+| Class 4    |        | 0.9903 | 0.9412 | 0.9167 | 0.7923 |
+| Class 5    |        |        | 0.8209 | 0.7443 | 0.6630 |
+| Class 6    |        |        | 0.9802 | 0.9514 | 0.9323 |
+| Class 7    |        |        |        | 0.9688 | 0.8424 |
+| Class 8    |        |        |        | 0.8696 | 0.7814 |
+| Class 9    |        |        |        |        | 0.8243 |
+
+Representation for the first layer
+
+
+Linear probe overall acc: 0.9195
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9668 | 0.9523 | 0.9320 | 0.9195 |
+| Class 0    |        |        |        |        | 0.9596 |
+| Class 1    | 0.9907 | 0.9802 | 0.9806 | 0.9779 | 0.9732 |
+| Class 2    | 1.0000 | 0.9484 | 0.9433 | 0.8867 | 0.9016 |
+| Class 3    |        | 0.9531 | 0.9118 | 0.9188 | 0.8971 |
+| Class 4    |        | 0.9855 | 0.9679 | 0.9676 | 0.9235 |
+| Class 5    |        |        | 0.9254 | 0.8636 | 0.8674 |
+| Class 6    |        |        | 0.9851 | 0.9730 | 0.9635 |
+| Class 7    |        |        |        | 0.9688 | 0.9113 |
+| Class 8    |        |        |        | 0.8889 | 0.8852 |
+| Class 9    |        |        |        |        | 0.9038 |
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task5_latent.png)
+
+#### Experiment 4
+
+
+task 1, [1, 2]
+
+Epoch 2, train mnist loss: 0.0374, train pt loss: 0.0105, contrast loss: -0.9922685335170623, train acc mnist: 0.9943
+val mnist loss: 0.0235, val pt loss: 0.0083, val acc mnist: 0.9966, val acc pt: 1.0000
+
+task 2, [3, 4]
+
+Epoch 3, train mnist loss: 0.0375, train pt loss: 0.0381, contrast loss: -0.9910776407215481, train acc mnist: 0.9953
+val mnist loss: 2.0625, val pt loss: 0.0725, val acc mnist: 0.4861, val acc pt: 1.0000
+
+
+task 3, [5, 6]
+
+Epoch 3, train mnist loss: 0.1347, train pt loss: 0.1855, contrast loss: -0.9776450669200937, train acc mnist: 0.9863
+val mnist loss: 3.8486, val pt loss: 0.4384, val acc mnist: 0.3112, val acc pt: 0.8807
+
+
+task 4, [7, 8]
+
+Epoch 3, train mnist loss: 0.0444, train pt loss: 0.0664, contrast loss: -0.9879261440992757, train acc mnist: 0.9927
+val mnist loss: 5.7233, val pt loss: 0.3684, val acc mnist: 0.2616, val acc pt: 0.9030
+
+
+task 5, [9, 0]
+
+Epoch 3, train mnist loss: 0.0374, train pt loss: 0.0749, contrast loss: -0.9861444186213335, train acc mnist: 0.9955
+val mnist loss: 3.9805, val pt loss: 0.2116, val acc mnist: 0.2000, val acc pt: 0.9713
+
+Sparcity analysis - population sparcity: 0.4448
+
+Representation for the second layer
+
+
+Linear probe overall acc: 0.8080
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9398 | 0.9028 | 0.8689 | 0.8080 |
+| Class 0    |        |        |        |        | 0.9242 |
+| Class 1    | 0.9907 | 0.9851 | 0.9272 | 0.9336 | 0.9286 |
+| Class 2    | 1.0000 | 0.8498 | 0.8505 | 0.8030 | 0.7565 |
+| Class 3    |        | 0.9375 | 0.8431 | 0.8173 | 0.6716 |
+| Class 4    |        | 0.9903 | 0.9305 | 0.9259 | 0.8033 |
+| Class 5    |        |        | 0.9005 | 0.7784 | 0.6354 |
+| Class 6    |        |        | 0.9653 | 0.9351 | 0.8229 |
+| Class 7    |        |        |        | 0.9531 | 0.9163 |
+| Class 8    |        |        |        | 0.7923 | 0.7322 |
+| Class 9    |        |        |        |        | 0.8452 |
+
+Representation for the first layer
+
+
+Linear probe overall acc: 0.9155
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9779 | 0.9548 | 0.9301 | 0.9155 |
+| Class 0    |        |        |        |        | 0.9545 |
+| Class 1    | 0.9953 | 0.9950 | 0.9806 | 0.9867 | 0.9732 |
+| Class 2    | 1.0000 | 0.9624 | 0.9433 | 0.9064 | 0.9223 |
+| Class 3    |        | 0.9635 | 0.9020 | 0.8934 | 0.8725 |
+| Class 4    |        | 0.9903 | 0.9626 | 0.9444 | 0.8689 |
+| Class 5    |        |        | 0.9453 | 0.8693 | 0.8674 |
+| Class 6    |        |        | 0.9950 | 0.9622 | 0.9792 |
+| Class 7    |        |        |        | 0.9740 | 0.9409 |
+| Class 8    |        |        |        | 0.8937 | 0.8525 |
+| Class 9    |        |        |        |        | 0.9079 |
+
+
+
+![pattern](./images_mnist/sequential_patterns_one_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task2_latent.png)
+
+![pattern](./images_mnist/sequential_patterns_one_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task5_latent.png)
