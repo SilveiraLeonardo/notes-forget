@@ -7312,3 +7312,131 @@ Linear probe overall acc: 0.9155
 ![pattern](./images_mnist/sequential_patterns_one_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task2_latent.png)
 
 ![pattern](./images_mnist/sequential_patterns_one_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task5_latent.png)
+
+
+### Contrastive learning, sequential learning
+
+#### No rehearsal, vanilla training
+
+As expected, the model only makes some effort to separate in latent space the last two classes (and their patterns):
+
+**Task 1, [1, 2]**
+
+![pattern](./images_mnist/sequential_contrastive_vanilla_task1_latent.png)
+
+**Task 2, [3, 4]**
+
+![pattern](./images_mnist/sequential_contrastive_vanilla_task2_latent.png)
+
+**Task 3, [5, 6]**
+
+![pattern](./images_mnist/sequential_contrastive_vanilla_task3_latent.png)
+
+**Task 4, [7, 8]**
+
+![pattern](./images_mnist/sequential_contrastive_vanilla_task4_latent.png)
+
+**Task 5, [9, 0]**
+
+![pattern](./images_mnist/sequential_contrastive_vanilla_task5_latent.png)
+
+
+Comparing with the training on cross-entropy, in that case the forgetting happened in the prediction head itself, so it sheltered the inner representations. Here the forgetting happens directly in the representations.
+
+Linear probe overall acc: 0.6895
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9177 | 0.8032 | 0.7253 | 0.6895 |
+| Class 0    |        |        |        |        | 0.8838 |
+| Class 1    | 0.9907 | 0.9604 | 0.8786 | 0.8540 | 0.8616 |
+| Class 2    | 0.9951 | 0.8263 | 0.8505 | 0.6995 | 0.6839 |
+| Class 3    |        | 0.9219 | 0.7304 | 0.5939 | 0.5931 |
+| Class 4    |        | 0.9662 | 0.8075 | 0.7593 | 0.6885 |
+| Class 5    |        |        | 0.6716 | 0.4886 | 0.4144 |
+| Class 6    |        |        | 0.8812 | 0.7459 | 0.7292 |
+| Class 7    |        |        |        | 0.9062 | 0.7980 |
+| Class 8    |        |        |        | 0.7150 | 0.6120 |
+| Class 9    |        |        |        |        | 0.5983 |
+
+#### Free access to previous data (digits and patterns)
+
+**Task 1, [1, 2]**
+
+![pattern](./images_mnist/sequential_contrastive_all_seen_classes_task1_latent.png)
+
+**Task 2, [3, 4]**
+
+![pattern](./images_mnist/sequential_contrastive_all_seen_classes_task2_latent.png)
+
+**Task 3, [5, 6]**
+
+![pattern](./images_mnist/sequential_contrastive_all_seen_classes_task3_latent.png)
+
+**Task 4, [7, 8]**
+
+![pattern](./images_mnist/sequential_contrastive_all_seen_classes_task4_latent.png)
+
+**Task 5, [9, 0]**
+
+![pattern](./images_mnist/sequential_contrastive_all_seen_classes_task5_latent.png)
+
+Linear probe overall acc: 0.9680
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9928 | 0.9828 | 0.9757 | 0.9713 | 0.9680 |
+| Class 0    |        |        |        |        | 0.9747 |
+| Class 1    | 1.0000 | 0.9901 | 1.0000 | 0.9956 | 0.9732 |
+| Class 2    | 0.9852 | 0.9671 | 0.9845 | 0.9557 | 0.9741 |
+| Class 3    |        | 0.9792 | 0.9657 | 0.9492 | 0.9608 |
+| Class 4    |        | 0.9952 | 0.9840 | 0.9861 | 0.9508 |
+| Class 5    |        |        | 0.9552 | 0.9545 | 0.9890 |
+| Class 6    |        |        | 0.9653 | 0.9730 | 0.9844 |
+| Class 7    |        |        |        | 0.9844 | 0.9803 |
+| Class 8    |        |        |        | 0.9662 | 0.9563 |
+| Class 9    |        |        |        |        | 0.9414 |
+
+##### Sequential learning - with rehearsal on the patterns
+
+**Task 1, [1, 2]**
+
+![pattern](./images_mnist/sequential_contrastive_rehearsal_task1_latent.png)
+
+**Task 2, [3, 4]**
+
+![pattern](./images_mnist/sequential_contrastive_rehearsal_task2_latent.png)
+
+**Task 3, [5, 6]**
+
+![pattern](./images_mnist/sequential_contrastive_rehearsal_task3_latent.png)
+
+**Task 4, [7, 8]**
+
+![pattern](./images_mnist/sequential_contrastive_rehearsal_task4_latent.png)
+
+**Task 5, [9, 0]**
+
+![pattern](./images_mnist/sequential_contrastive_rehearsal_task5_latent.png)
+
+
+
+Linear probe overall acc: 0.6690
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9952 | 0.9263 | 0.7848 | 0.6891 | 0.6690 |
+| Class 0    |        |        |        |        | 0.9040 |
+| Class 1    | 0.9953 | 0.9653 | 0.9078 | 0.8717 | 0.8214 |
+| Class 2    | 0.9951 | 0.8638 | 0.7887 | 0.6108 | 0.6839 |
+| Class 3    |        | 0.9271 | 0.6618 | 0.5482 | 0.5294 |
+| Class 4    |        | 0.9517 | 0.8182 | 0.7130 | 0.5191 |
+| Class 5    |        |        | 0.6915 | 0.3977 | 0.3591 |
+| Class 6    |        |        | 0.8416 | 0.7243 | 0.7969 |
+| Class 7    |        |        |        | 0.8750 | 0.7980 |
+| Class 8    |        |        |        | 0.7198 | 0.6066 |
+| Class 9    |        |        |        |        | 0.6234 |
+
+
+
+
