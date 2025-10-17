@@ -7234,10 +7234,24 @@ Linear probe overall acc: 0.9195
 | Class 8    |        |        |        | 0.8889 | 0.8852 |
 | Class 9    |        |        |        |        | 0.9038 |
 
+Task 1
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task1_latent.png)
+
+Task 2
+
+![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task2_latent.png)
+
+Task 5
+
 ![pattern](./images_mnist/sequential_patterns_two_input_layers_crossentropy_0_1_contrastive_1_0_only_positive_rehearsal_task5_latent.png)
 
 #### Experiment 4
 
+* Continue training on all seen patterns
+* 2 input layers
+* weighting less the cross-entropy: 0.1 
+* with term to separate negative classes
 
 task 1, [1, 2]
 
@@ -7437,6 +7451,117 @@ Linear probe overall acc: 0.6690
 | Class 8    |        |        |        | 0.7198 | 0.6066 |
 | Class 9    |        |        |        |        | 0.6234 |
 
+### Evaluating entanglement
+
+#### Contrastive learning
+
+* First and second layer
+
+Task 1, trained
+
+![pattern](./images_mnist/sequence_contrastive_latent_layes1_and_2_task1.png)
+
+no training
+
+![pattern](./images_mnist/sequence_contrastive_latent_layes1_and_2_task1_no_training.png)
+
+Task 2, trained
+
+![pattern](./images_mnist/sequence_contrastive_latent_layes1_and_2_task2.png)
+
+no training
+
+![pattern](./images_mnist/sequence_contrastive_latent_layes1_and_2_task2_no_training.png)
 
 
+* last layers
 
+Task 1
+
+no training
+
+![pattern](./images_mnist/sequence_contrastive_latent_task1_no_training.png)
+
+Task 2
+
+no training
+
+![pattern](./images_mnist/sequence_contrastive_latent_task2_no_training.png)
+
+
+#### Cross entropy loss
+
+##### Concurrent training
+
+no training
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_no_training.png)
+
+Training
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_w_training.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_entanglement_t_0_1.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_entanglement_t_1.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_entanglement_t_10.png)
+
+Epoch 1, train mnist loss: 0.6901, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.7994
+val mnist loss: 0.5689, val pt loss: 0.0197, val acc mnist: 0.8216, val acc pt: 0.9941
+
+Epoch 2, train mnist loss: 0.2194, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9362
+val mnist loss: 0.4169, val pt loss: 0.0121, val acc mnist: 0.8712, val acc pt: 0.9955
+
+Epoch 3, train mnist loss: 0.1720, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9500
+val mnist loss: 0.3383, val pt loss: 0.0136, val acc mnist: 0.8983, val acc pt: 0.9953
+
+Epoch 4, train mnist loss: 0.1501, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9563
+val mnist loss: 0.3108, val pt loss: 0.0124, val acc mnist: 0.9059, val acc pt: 0.9954
+
+Epoch 5, train mnist loss: 0.1350, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9599
+val mnist loss: 0.3042, val pt loss: 0.0089, val acc mnist: 0.9109, val acc pt: 0.9970
+
+Epoch 6, train mnist loss: 0.1271, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9618
+val mnist loss: 0.2906, val pt loss: 0.0067, val acc mnist: 0.9110, val acc pt: 0.9977
+
+Epoch 7, train mnist loss: 0.1199, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9643
+val mnist loss: 0.2825, val pt loss: 0.0082, val acc mnist: 0.9118, val acc pt: 0.9969
+
+Epoch 8, train mnist loss: 0.1131, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9664
+val mnist loss: 0.2471, val pt loss: 0.0100, val acc mnist: 0.9241, val acc pt: 0.9962
+
+Epoch 9, train mnist loss: 0.1066, train pt loss: 0.0000, contrast loss: 0.0, train acc mnist: 0.9683
+val mnist loss: 0.2394, val pt loss: 0.0076, val acc mnist: 0.9235, val acc pt: 0.9971
+
+Sparcity analysis - population sparcity: 0.4170
+
+Representation for the second layer
+
+
+Linear probe overall acc: 0.9255
+Class 0 accuracy on linear probing: 0.9721
+Class 1 accuracy on linear probing: 0.9720
+Class 2 accuracy on linear probing: 0.8827
+Class 3 accuracy on linear probing: 0.9113
+Class 4 accuracy on linear probing: 0.9462
+Class 5 accuracy on linear probing: 0.9027
+Class 6 accuracy on linear probing: 0.9792
+Class 7 accuracy on linear probing: 0.9159
+Class 8 accuracy on linear probing: 0.8680
+Class 9 accuracy on linear probing: 0.8990
+
+Representation for the first layer
+
+
+Linear probe overall acc: 0.9115
+Class 0 accuracy on linear probing: 0.9581
+Class 1 accuracy on linear probing: 0.9673
+Class 2 accuracy on linear probing: 0.8827
+Class 3 accuracy on linear probing: 0.8916
+Class 4 accuracy on linear probing: 0.9194
+Class 5 accuracy on linear probing: 0.8919
+Class 6 accuracy on linear probing: 0.9635
+Class 7 accuracy on linear probing: 0.9206
+Class 8 accuracy on linear probing: 0.8579
+Class 9 accuracy on linear probing: 0.8535
