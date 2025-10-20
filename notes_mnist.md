@@ -7565,3 +7565,66 @@ Class 6 accuracy on linear probing: 0.9635
 Class 7 accuracy on linear probing: 0.9206
 Class 8 accuracy on linear probing: 0.8579
 Class 9 accuracy on linear probing: 0.8535
+
+#### Applying contrastive loss to the first layer
+
+##### Temp 0.1, weight 1.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_1.png)
+
+##### Temp 0.1, weight 0.5
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_1_weight_0_5.png)
+
+##### Temp 0.1, weight 0.1
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_1_weight_0_1.png)
+
+##### Temp 0.5, weight 1.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_5.png)
+
+##### Temp 0.5, weight 5.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_5_weight_5.png)
+
+##### Temp 1, weight 5.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_1_weight_5.png)
+
+##### Temp 1, weight 10.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_1_weight_10.png)
+
+##### 3 layers, temp 1, weight 10.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_1_weight_10_3layers_1_and_2.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_1_weight_10_3layers_3.png)
+
+##### 3 layers, temp 0.5, weight 10.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_5_weight_10_3layers_1_and_2.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_0_5_weight_10_3layers_3.png)
+
+##### 3 layers, temp 10, weight 10.0
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_10_weight_10_3layers_1_and_2.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_t_10_weight_10_3layers_3.png)
+
+##### Baseline
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_w_training.png)
+
+#### MNIST: Mapping digits as patterns
+
+##### Concurrent learning
+
+Epoch 19, train mnist loss: 0.1522, train acc mnist: 0.9508
+val mnist loss: 0.1413, val acc mnist: 0.9552
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_confusion_matrix_remapping_mnist.png)
+
+![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_remapping_mnist.png)
