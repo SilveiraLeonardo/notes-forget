@@ -7628,3 +7628,174 @@ val mnist loss: 0.1413, val acc mnist: 0.9552
 ![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_confusion_matrix_remapping_mnist.png)
 
 ![pattern](./images_mnist/concurrent_latent_patterns_crossentropy_latent_remapping_mnist.png)
+
+### Pattern experiments with cross-entropy
+
+#### Pattern with rehearsal, sequential learning
+
+task 1, [1, 2]
+
+Pattern batch size:  64
+
+0, train loss 0.101644, train acc 0.987079, val loss 0.008772, val acc 0.997984
+val loss curr task 0.008772, val acc curr task 0.997984
+val loss pt 0.001356, val acc pt 1.000000
+
+Sparcity analysis - population sparcity: 0.5531
+
+task 2, [3, 4]
+
+Pattern batch size:  256
+
+0, train loss 0.372209, train acc 0.909335, val loss 3.459130, val acc 0.492708
+val loss curr task 0.020636, val acc curr task 0.994792
+val loss pt 0.001504, val acc pt 1.000000
+
+Sparcity analysis - population sparcity: 0.5399
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_pt_task2.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_pt_task2.png)
+
+* Latent space, layer 2, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_task2.png)
+
+* Latent space, layer 1, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_task2.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgettingPatterns_task2.png)
+
+* Forgetting, digits
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_task2.png)
+
+task 3, [5, 6]
+
+Pattern batch size:  384
+
+0, train loss 0.433715, train acc 0.862838, val loss 4.138622, val acc 0.323815
+val loss curr task 0.068023, val acc curr task 0.978987
+val loss pt 0.001520, val acc pt 1.000000
+
+1, train loss 0.205777, train acc 0.937729, val loss 3.062741, val acc 0.341056
+val loss curr task 0.056249, val acc curr task 0.984914
+val loss pt 0.003289, val acc pt 1.000000
+
+Sparcity analysis - population sparcity: 0.5252
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_pt_task3.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_pt_task3.png)
+
+* Latent space, layer 2, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_task3.png)
+
+* Latent space, layer 1, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_task3.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_pt_task3.png)
+
+* Forgetting, digits
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_task3.png)
+
+
+task 4, [7, 8]
+
+Pattern batch size:  512
+
+0, train loss 0.287406, train acc 0.916266, val loss 5.000688, val acc 0.269657
+val loss curr task 0.052411, val acc curr task 0.980343
+val loss pt 0.002563, val acc pt 1.000000
+
+Sparcity analysis - population sparcity: 0.4675
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_pt_task4.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_pt_task4.png)
+
+* Latent space, layer 2, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_task4.png)
+
+* Latent space, layer 1, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_task4.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_pt_task4.png)
+
+* Forgetting, digits
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_task4.png)
+
+task 5, [9, 0]
+
+Pattern batch size:  640
+
+0, train loss 0.265505, train acc 0.930780, val loss 5.868541, val acc 0.206149
+val loss curr task 0.034652, val acc curr task 0.989415
+val loss pt 0.003223, val acc pt 1.000000
+
+Sparcity analysis - population sparcity: 0.5110
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_pt_task5.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_pt_task5.png)
+
+* Latent space, layer 2, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_task5.png)
+
+* Latent space, layer 1, digits 
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_layer1_task5.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_pt_task5.png)
+
+* Forgetting, digits
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_task5.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9521 | 0.9229 | 0.8989 | 0.8760 |
+| Class 0    |        |        |        |        | 0.9300 |
+| Class 1    | 0.9952 | 0.9950 | 0.9903 | 0.9644 | 0.9641 |
+| Class 2    | 1.0000 | 0.9057 | 0.8860 | 0.8867 | 0.8446 |
+| Class 3    |        | 0.9211 | 0.8725 | 0.8426 | 0.8137 |
+| Class 4    |        | 0.9851 | 0.9516 | 0.9395 | 0.8743 |
+| Class 5    |        |        | 0.8750 | 0.8466 | 0.8167 |
+| Class 6    |        |        | 0.9602 | 0.9514 | 0.9219 |
+| Class 7    |        |        |        | 0.9375 | 0.8966 |
+| Class 8    |        |        |        | 0.8107 | 0.8087 |
+| Class 9    |        |        |        |        | 0.8703 |
+
+
