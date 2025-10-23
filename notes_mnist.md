@@ -7643,6 +7643,10 @@ val loss pt 0.001356, val acc pt 1.000000
 
 Sparcity analysis - population sparcity: 0.5531
 
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_preds_pt_task1.png)
+
 task 2, [3, 4]
 
 Pattern batch size:  256
@@ -7652,6 +7656,10 @@ val loss curr task 0.020636, val acc curr task 0.994792
 val loss pt 0.001504, val acc pt 1.000000
 
 Sparcity analysis - population sparcity: 0.5399
+
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_preds_pt_task2.png)
 
 * Latent space, layer 2, digits and patterns
 
@@ -7671,7 +7679,7 @@ Sparcity analysis - population sparcity: 0.5399
 
 * Forgetting, patterns
 
-![pattern](./images_mnist/sequential_cross_entropy_patterns_forgettingPatterns_task2.png)
+![pattern](./images_mnist/sequential_cross_entropy_patterns_forgetting_pt_task2.png)
 
 * Forgetting, digits
 
@@ -7690,6 +7698,10 @@ val loss curr task 0.056249, val acc curr task 0.984914
 val loss pt 0.003289, val acc pt 1.000000
 
 Sparcity analysis - population sparcity: 0.5252
+
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_preds_pt_task3.png)
 
 * Latent space, layer 2, digits and patterns
 
@@ -7726,6 +7738,10 @@ val loss pt 0.002563, val acc pt 1.000000
 
 Sparcity analysis - population sparcity: 0.4675
 
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_preds_pt_task4.png)
+
 * Latent space, layer 2, digits and patterns
 
 ![pattern](./images_mnist/sequential_cross_entropy_patterns_layer2_pt_task4.png)
@@ -7759,6 +7775,10 @@ val loss curr task 0.034652, val acc curr task 0.989415
 val loss pt 0.003223, val acc pt 1.000000
 
 Sparcity analysis - population sparcity: 0.5110
+
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_patterns_preds_pt_task5.png)
 
 * Latent space, layer 2, digits and patterns
 
@@ -7797,5 +7817,142 @@ Sparcity analysis - population sparcity: 0.5110
 | Class 7    |        |        |        | 0.9375 | 0.8966 |
 | Class 8    |        |        |        | 0.8107 | 0.8087 |
 | Class 9    |        |        |        |        | 0.8703 |
+
+#### Two inputs, no rehearsal so far (nor pattern nor digits)
+
+Model:
+
+```
+class MLPDouble(nn.Module):
+    def __init__(self, input_dim=784, n_classes=10, prob=0.2):
+        super().__init__()
+
+        self.mlp_pt = MLPPattern(input_dim=input_dim)
+
+        self.fc1 = nn.Linear(input_dim, 120, bias=False)
+        self.bn1 = nn.BatchNorm1d(120)
+        self.fc2 = nn.Linear(120, 84, bias=False)
+        self.bn2 = nn.BatchNorm1d(84)
+        self.fc3 = nn.Linear(84, n_classes)
+
+    def forward(self, x=None, pt=None):
+
+        if pt is not None:
+            h1 = self.mlp_pt(pt)
+        else:
+            h1 = F.relu(self.bn1(self.fc1(x)))
+        h2 = F.relu(self.bn2(self.fc2(h1)))
+        logits = self.fc3(h2)
+        return logits, (h1, h2)
+
+class MLPPattern(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+
+        self.fc1 = nn.Linear(input_dim, 120, bias=False)
+        self.bn1 = nn.BatchNorm1d(120)
+        self.fc2 = nn.Linear(120, 120, bias=False)
+        self.bn2 = nn.BatchNorm1d(120)
+
+    def forward(self, x):
+
+        h1 = F.relu(self.bn1(self.fc1(x)))
+        h2 = F.relu(self.bn2(self.fc2(h1)))
+        return h2
+```
+
+task 1, [1, 2]
+
+0, train loss 0.115611, train acc 0.983333, val loss 0.017537, val acc 0.995464
+train loss pt 0.014016, train acc pt 0.995793,  val loss pt 0.000865, val acc pt 1.000000
+[mnist] val loss curr task 0.017537, val acc curr task 0.995464
+
+* Latent space, layer 2, digits and patterns, predictions (this plot is not from the same experiment as the others)
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_preds_pt_task1.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer2_task1.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer1_task1.png)
+
+task 2, [3, 4]
+
+0, train loss 0.382198, train acc 0.914062, val loss 3.581217, val acc 0.494792
+train loss pt 0.016239, train acc pt 0.995393,  val loss pt 1.243810, val acc pt 0.509375
+[mnist] val loss curr task 0.010373, val acc curr task 0.997917
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_preds_pt_task2.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer2_task2.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer1_task2.png)
+
+task 3, [5, 6]
+
+0, train loss 0.510685, train acc 0.892113, val loss 4.588852, val acc 0.327047
+train loss pt 0.016035, train acc pt 0.994892,  val loss pt 3.704368, val acc pt 0.339978
+[mnist] val loss curr task 0.028714, val acc curr task 0.991379
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_preds_pt_task3.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer2_task3.png)
+
+task 4, [7, 8]
+
+0, train loss 0.511280, train acc 0.892217, val loss 5.566704, val acc 0.257560
+train loss pt 0.020300, train acc pt 0.993490,  val loss pt 3.324573, val acc pt 0.264617
+[mnist] val loss curr task 0.021934, val acc curr task 0.991935
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_preds_pt_task4.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer2_task4.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer1_task4.png)
+
+
+task 5, [9, 0]
+
+0, train loss 0.490890, train acc 0.903511, val loss 5.680315, val acc 0.205141
+train loss pt 0.011255, train acc pt 0.997095,  val loss pt 4.154459, val acc pt 0.230847
+[mnist] val loss curr task 0.015410, val acc curr task 0.994456
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_preds_pt_task5.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer2_task5.png)
+
+* Latent space, layer 1, digits and patterns
+
+![pattern](./images_mnist/sequential_cross_entropy_two_inputs_patterns_layer1_task5.png)
+
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.9607 | 0.9464 | 0.9220 | 0.9105 |
+| Class 0    |        |        |        |        | 0.9550 |
+| Class 1    | 0.9952 | 0.9950 | 0.9806 | 0.9822 | 0.9641 |
+| Class 2    | 1.0000 | 0.9104 | 0.9637 | 0.8768 | 0.9067 |
+| Class 3    |        | 0.9474 | 0.8971 | 0.8782 | 0.8824 |
+| Class 4    |        | 0.9901 | 0.9677 | 0.9721 | 0.8689 |
+| Class 5    |        |        | 0.8900 | 0.8352 | 0.8389 |
+| Class 6    |        |        | 0.9801 | 0.9730 | 0.9583 |
+| Class 7    |        |        |        | 0.9583 | 0.9310 |
+| Class 8    |        |        |        | 0.8835 | 0.8907 |
+| Class 9    |        |        |        |        | 0.8954 |
 
 
