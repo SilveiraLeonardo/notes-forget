@@ -7955,4 +7955,142 @@ train loss pt 0.011255, train acc pt 0.997095,  val loss pt 4.154459, val acc pt
 | Class 8    |        |        |        | 0.8835 | 0.8907 |
 | Class 9    |        |        |        |        | 0.8954 |
 
+#### Domain adversarial approach
 
+With reheasel in the patterns
+
+task 1, [1, 2]
+
+9, train loss class 0.004016, train acc 0.998848, train loss domain 3.4639141208086257, train acc domain 0.5
+val loss class 0.012392, val acc 0.995968, val loss domain 0.6932650496882777, val acc domain 0.5
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task1.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task1.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task1.png)
+
+
+task 2, [3, 4]
+
+9, train loss class 0.083822, train acc 0.974679, train loss domain 2.4219677845637, train acc domain 0.7994791666666666
+val loss class 1.461110, val acc 0.659375, val loss domain 0.8376036624113719, val acc domain 0.5
+Sparcity analysis - population sparcity: 0.8242
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task2.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task2.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task2.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_preds_layer3_task2.png)
+
+task 3, [5, 6]
+
+9, train loss class 0.142656, train acc 0.953411, train loss domain 1.9885786527242415, train acc domain 0.8566563644688645
+val loss class 4.513689, val acc 0.390086, val loss domain 0.960216526327462, val acc domain 0.5
+Sparcity analysis - population sparcity: 0.8770
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task3.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task3.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task3.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_preds_layer3_task3.png)
+
+task 4, [7, 8]
+
+9, train loss class 0.100352, train acc 0.969707, train loss domain 1.7136141718962254, train acc domain 0.8888221153846154
+val loss class 6.523623, val acc 0.250000, val loss domain 1.0037142980483271, val acc domain 0.5
+Sparcity analysis - population sparcity: 0.8770
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task4.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task4.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task4.png)
+
+
+task 5, [9, 0]
+
+0, train loss class 0.836161, train acc 0.803467, train loss domain 1.4326031284454541, train acc domain 0.9090909090909091
+val loss class 7.110494, val acc 0.198085, val loss domain 1.0475320066175153, val acc domain 0.5
+1, train loss class 0.129933, train acc 0.962759, train loss domain 1.4891768097877502, train acc domain 0.9090909090909091
+val loss class 11.415832, val acc 0.217238, val loss domain 1.213700294494629, val acc domain 0.5
+2, train loss class 0.095027, train acc 0.969114, train loss domain 1.5018576857371209, train acc domain 0.9090726981351981
+val loss class 10.560003, val acc 0.215222, val loss domain 1.2883397417683755, val acc domain 0.5
+3, train loss class 0.091170, train acc 0.970462, train loss domain 1.50671829474278, train acc domain 0.9090726981351981
+val loss class 10.169609, val acc 0.206149, val loss domain 1.126376090511199, val acc domain 0.5
+4, train loss class 0.088352, train acc 0.971026, train loss domain 1.4807499203926477, train acc domain 0.9090544871794872
+val loss class 8.636071, val acc 0.214214, val loss domain 1.3193680470989597, val acc domain 0.5
+5, train loss class 0.098204, train acc 0.968368, train loss domain 1.4870936213395534, train acc domain 0.9089816433566433
+val loss class 8.320720, val acc 0.222278, val loss domain 1.2996703693943639, val acc domain 0.5
+6, train loss class 0.094292, train acc 0.970862, train loss domain 1.4799003769189885, train acc domain 0.90910912004662
+val loss class 6.549344, val acc 0.185484, val loss domain 1.1664409675905782, val acc domain 0.5
+7, train loss class 0.117273, train acc 0.964161, train loss domain 1.4678302437831194, train acc domain 0.9070330710955711
+val loss class 7.776452, val acc 0.210685, val loss domain 1.1502427977900351, val acc domain 0.5
+8, train loss class 0.133356, train acc 0.958424, train loss domain 1.5043467741746168, train acc domain 0.9080528846153846
+val loss class 12.812063, val acc 0.188004, val loss domain 1.103166526363742, val acc domain 0.5
+9, train loss class 0.102244, train acc 0.968477, train loss domain 1.4750778415264227, train acc domain 0.9090180652680653
+val loss class 25.715411, val acc 0.099294, val loss domain 1.1553451053557857, val acc domain 0.5
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task5.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task5.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task5.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_preds_layer3_task5.png)
+
+Sparcity analysis - population sparcity: 0.8675
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 0.9976 | 0.8698 | 0.6709 | 0.5724 | 0.5025 |
+| Class 0    |        |        |        |        | 0.7550 |
+| Class 1    | 0.9952 | 0.9453 | 0.8835 | 0.8978 | 0.8969 |
+| Class 2    | 1.0000 | 0.7123 | 0.5699 | 0.4089 | 0.3679 |
+| Class 3    |        | 0.8789 | 0.7647 | 0.3909 | 0.3480 |
+| Class 4    |        | 0.9455 | 0.6989 | 0.7302 | 0.4372 |
+| Class 5    |        |        | 0.3900 | 0.2216 | 0.2778 |
+| Class 6    |        |        | 0.7015 | 0.6054 | 0.7031 |
+| Class 7    |        |        |        | 0.7656 | 0.6207 |
+| Class 8    |        |        |        | 0.4709 | 0.1749 |
+| Class 9    |        |        |        |        | 0.3724 |
