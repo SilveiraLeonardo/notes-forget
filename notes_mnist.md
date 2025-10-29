@@ -8094,3 +8094,383 @@ Sparcity analysis - population sparcity: 0.8675
 | Class 7    |        |        |        | 0.7656 | 0.6207 |
 | Class 8    |        |        |        | 0.4709 | 0.1749 |
 | Class 9    |        |        |        |        | 0.3724 |
+
+#### Training with balanced datasets in the domain classification
+
+task 1, [1, 2]
+Pattern batch size:  64
+
+6, train loss class 0.008664, train acc 0.997696, train loss domain 3.4682786479974403, train acc domain 0.49984975961538464
+val loss class 0.009592, val acc 0.996976, val loss domain 0.6916511424126164, val acc domain 0.5
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task1_balanced.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task1_balanced.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task1_balanced.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task1_balanced.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task1_balanced.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task1_balanced.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task1_balanced.png)
+
+task 2, [3, 4]
+Pattern batch size:  128
+
+9, train loss class 0.099011, train acc 0.968283, train loss domain 3.291401921174465, train acc domain 0.561348157051282
+val loss class 2.003111, val acc 0.512500, val loss domain 0.6015163123607635, val acc domain 0.59453125
+Sparcity analysis - population sparcity: 0.8589
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task2_balanced.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task2_balanced.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task2_balanced.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task2_balanced.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task2_balanced.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task2_balanced.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task2_balanced.png)
+
+task 3, [5, 6]
+Pattern batch size:  192
+
+9, train loss class 0.264664, train acc 0.906356, train loss domain 3.2088985118736217, train acc domain 0.5714817176870748
+val loss class 6.633350, val acc 0.328125, val loss domain 0.5987822536764473, val acc domain 0.6958512931034483
+Sparcity analysis - population sparcity: 0.8694
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task3_balanced.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task3_balanced.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task3_balanced.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task3_balanced.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task3_balanced.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task3_balanced.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task3_balanced.png)
+
+task 4, [7, 8]
+Pattern batch size:  256
+
+9, train loss class 0.222438, train acc 0.927724, train loss domain 3.199777516034933, train acc domain 0.5869391025641025
+val loss class 10.871503, val acc 0.238911, val loss domain 0.4802798186579058, val acc domain 0.6819556451612904
+Sparcity analysis - population sparcity: 0.8683
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task4_balanced.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task4_balanced.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task4_balanced.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task4_balanced.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task4_balanced.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task4_balanced.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task4_balanced.png)
+
+task 5, [9, 0]
+Pattern batch size:  320
+
+9, train loss class 0.197418, train acc 0.931243, train loss domain 2.878424678530012, train acc domain 0.6520900974025974
+val loss class 7.882863, val acc 0.221270, val loss domain 0.5133608574828794, val acc domain 0.7371471774193549
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task5_balanced.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task5_balanced.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task5_balanced.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task5_balanced.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task5_balanced.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task5_balanced.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task5_balanced.png)
+Sparcity analysis - population sparcity: 0.8497
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 1.0000 | 0.7838 | 0.6240 | 0.5943 | 0.5910 |
+| Class 0    |        |        |        |        | 0.8200 |
+| Class 1    | 1.0000 | 0.9104 | 0.8641 | 0.8400 | 0.8879 |
+| Class 2    | 1.0000 | 0.4434 | 0.3575 | 0.2956 | 0.4819 |
+| Class 3    |        | 0.8053 | 0.7255 | 0.5025 | 0.4167 |
+| Class 4    |        | 0.9851 | 0.7312 | 0.7395 | 0.5355 |
+| Class 5    |        |        | 0.1750 | 0.3409 | 0.3278 |
+| Class 6    |        |        | 0.8706 | 0.6378 | 0.6198 |
+| Class 7    |        |        |        | 0.9010 | 0.6897 |
+| Class 8    |        |        |        | 0.4563 | 0.4262 |
+| Class 9    |        |        |        |        | 0.6192 |
+
+
+#### Balanced dataset, larger batch size (128), dropout
+
+task 1, [1, 2]
+Pattern batch size:  128
+
+6, train loss class 0.010365, train acc 0.996845, train loss domain 3.4719338508752675, train acc domain 0.49989983974358976
+val loss class 0.009061, val acc 0.997917, val loss domain 0.6945941885312398, val acc domain 0.5
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task1_balanced_dropout.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task1_balanced_dropout.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task1_balanced_dropout.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task1_balanced_dropout.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task1_balanced_dropout.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task1_balanced_dropout.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task1_balanced_dropout.png)
+
+
+task 2, [3, 4]
+Pattern batch size:  256
+
+19, train loss class 0.181291, train acc 0.939870, train loss domain 3.359821918683174, train acc domain 0.5388621794871795
+val loss class 1.926681, val acc 0.525000, val loss domain 0.6120435198148092, val acc domain 0.5302083333333333
+Sparcity analysis - population sparcity: 0.8957
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task2_balanced_dropout.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task2_balanced_dropout.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task2_balanced_dropout.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task2_balanced_dropout.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task2_balanced_dropout.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task2_balanced_dropout.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task2_balanced_dropout.png)
+
+task 3, [5, 6]
+Pattern batch size:  384
+
+19, train loss class 0.325786, train acc 0.888083, train loss domain 3.3011911764536817, train acc domain 0.5513698630136986
+val loss class 3.106293, val acc 0.381138, val loss domain 0.5911913854735238, val acc domain 0.5638950892857143
+Sparcity analysis - population sparcity: 0.8912
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task3_balanced_dropout.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task3_balanced_dropout.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task3_balanced_dropout.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task3_balanced_dropout.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task3_balanced_dropout.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task3_balanced_dropout.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task3_balanced_dropout.png)
+
+task 4, [7, 8]
+Pattern batch size:  512
+
+19, train loss class 0.494457, train acc 0.828986, train loss domain 3.1410579559130545, train acc domain 0.5929987980769231
+val loss class 2.520173, val acc 0.331250, val loss domain 0.49644235173861184, val acc domain 0.7395833333333334
+Sparcity analysis - population sparcity: 0.9201
+
+* Activations
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task4_balanced_dropout.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task4_balanced_dropout.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task4_balanced_dropout.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task4_balanced_dropout.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task4_balanced_dropout.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task4_balanced_dropout.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task4_balanced_dropout.png)
+
+task 5, [9, 0]
+Pattern batch size:  640
+
+19, train loss class 0.722385, train acc 0.713981, train loss domain 3.0936472323033715, train acc domain 0.6146002435064936
+val loss class 2.772351, val acc 0.265104, val loss domain 0.7517603913942973, val acc domain 0.5
+Sparcity analysis - population sparcity: 0.9434
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/activations_task5_balanced_dropout.png)
+
+* Latent space, layer 2, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer2_task5_balanced_dropout.png)
+
+* Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_task5_balanced_dropout.png)
+
+* Predictions, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_task5_balanced_dropout.png)
+
+* Predictions domain, Latent space, layer 3, digits and patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/latent_layer3_preds_domain_task5_balanced_dropout.png)
+
+* Forgetting
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_task5_balanced_dropout.png)
+
+* Forgetting, patterns
+
+![pattern](./images_mnist/adversarial/single_input_rehearsal/forgetting_pt_task5_balanced_dropout.png)
+
+| Accuracy    | Task 1 | Task 2 | Task 3 | Task 4 | Task 5 |
+|------------|------- |------- |------- |------- |------- |
+| Classifier | 1.0000 | 0.7125 | 0.6206 | 0.4594 | 0.3885 |
+| Class 0    |        |        |        |        | 0.9450 |
+| Class 1    | 1.0000 | 0.8693 | 0.5805 | 0.2489 | 0.6233 |
+| Class 2    | 1.0000 | 0.2067 | 0.3438 | 0.0149 | 0.0104 |
+| Class 3    |        | 0.8783 | 0.7960 | 0.5306 | 0.1127 |
+| Class 4    |        | 1.0000 | 0.5215 | 0.4019 | 0.1913 |
+| Class 5    |        |        | 0.5477 | 0.0341 | 0.0000 |
+| Class 6    |        |        | 0.9645 | 0.6230 | 0.5208 |
+| Class 7    |        |        |        | 0.9791 | 0.6601 |
+| Class 8    |        |        |        | 0.8867 | 0.0929 |
+| Class 9    |        |        |        |        | 0.5774 |
